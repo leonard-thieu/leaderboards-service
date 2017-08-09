@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("toofz Leaderboards Service")]
 [assembly: AssemblyCopyright("Copyright © Leonard Thieu 2015")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.1.*")]
+[assembly: AssemblyVersion("2.0.*")]
 
 [assembly: InternalsVisibleTo("toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests")]
 
