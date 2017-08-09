@@ -1,0 +1,20 @@
+version: 2.0.{build}
+image: Visual Studio 2017
+
+configuration:
+  - Release
+cache:
+  - packages -> **\packages.config
+notifications:
+  - provider: Slack
+    incoming_webhook:
+      secure: c7l1UmXHWpIDLL1awU4r0QYVPToYM/XjV8trFyD1oHArKxs/vBTYiKYScr1EhCUgmEX6sAFBTvkUHF/k5B+cGjzqRBR2XkAO+lzk8cHQ1FI=
+
+before_build:
+  - appveyor-retry nuget restore -DisableParallelProcessing
+build:
+  project: toofz.NecroDancer.Leaderboards.LeaderboardsService.sln
+  verbosity: minimal
+
+test_script:
+  - vstest.console /logger:Appveyor "toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests\bin\%CONFIGURATION%\toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests.dll"
