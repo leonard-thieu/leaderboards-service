@@ -26,7 +26,7 @@ test_script:
   - vstest.console /logger:Appveyor "%PROJECT%.Tests\bin\%CONFIGURATION%\%PROJECT%.Tests.dll"
 
 deploy:
-  provider: Environment
-  name: production
-  on:
-    appveyor_repo_tag: true
+  - provider: Environment
+    name: production
+    on:
+      appveyor_repo_tag: true
