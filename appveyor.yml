@@ -1,11 +1,14 @@
 version: 2.0.{build}
 image: Visual Studio 2017
 
-artifacts:
-  - path: Installer\bin\$(configuration)\toofz-leaderboards-service-v$(APPVEYOR_BUILD_VERSION).msi
-    name: toofz Leaderboards Service
 configuration:
   - Release
+environment:
+  PROJECT: toofz.NecroDancer.Leaderboards.LeaderboardsService
+  PROJECT_PACKAGE: toofz-leaderboards-service-v%APPVEYOR_BUILD_VERSION%.msi
+artifacts:
+  - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
+    name: LeaderboardsService
 cache:
   - packages -> **\packages.config
 notifications:
@@ -16,8 +19,14 @@ notifications:
 before_build:
   - appveyor-retry nuget restore -DisableParallelProcessing
 build:
-  project: toofz.NecroDancer.Leaderboards.LeaderboardsService.sln
+  project: $(PROJECT).sln
   verbosity: minimal
 
 test_script:
-  - vstest.console /logger:Appveyor "toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests\bin\%CONFIGURATION%\toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests.dll"
+  - vstest.console /logger:Appveyor "%PROJECT%.Tests\bin\%CONFIGURATION%\%PROJECT%.Tests.dll"
+
+deploy:
+  provider: Environment
+  name: production
+  on:
+    appveyor_repo_tag: true
