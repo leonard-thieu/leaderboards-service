@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?define ComponentRules="OneToOne"?>
+  <!-- SourceDir instructs IsWiX the location of the directory that contains files for this merge module -->
+  <?define SourceDir="..\Deploy"?>
+  <Module Id="InstallerMM" Language="1033" Version="1.0.0.0">
+    <Package Id="9bc9f190-d4f5-4cf7-bded-0d212a189cd9" Manufacturer="toofz" InstallerVersion="200" Keywords="toofz leaderboards services" />
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="MergeRedirectFolder">
+        <Component Id="owc73F0394A22FE8E3A382B6736AF24B1B5" Guid="5d1a8002-e826-eacb-b930-577135fd067e">
+          <File Id="owf73F0394A22FE8E3A382B6736AF24B1B5" Source="$(var.SourceDir)\ApplicationInsights.config" KeyPath="yes" />
+        </Component>
+        <Component Id="owc26A192B8451F5142030ED047326B15C5" Guid="491ac24b-078d-9f47-1313-e6ff3e7ced2c">
+          <File Id="owf26A192B8451F5142030ED047326B15C5" Source="$(var.SourceDir)\EntityFramework.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcBBB39913228532D4BAB1CEE53395BA69" Guid="c123e70d-df49-c6ef-e053-668f2afcd11a">
+          <File Id="owfBBB39913228532D4BAB1CEE53395BA69" Source="$(var.SourceDir)\EntityFramework.SqlServer.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc41BE39A696D33CEE4C43F7C20804FD2B" Guid="39cfa1ce-5659-0792-1b94-9f53cbcea37a">
+          <File Id="owf41BE39A696D33CEE4C43F7C20804FD2B" Source="$(var.SourceDir)\Flurl.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcAB363B17C795A18D347155317C425A11" Guid="cdd0763d-9df9-dcd7-7e3d-253f0987348a">
+          <File Id="owfAB363B17C795A18D347155317C425A11" Source="$(var.SourceDir)\Humanizer.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc52846A01E14D3FA5EFB278275A6315ED" Guid="cff5c56a-e5fc-7b85-bd4f-41b52c8fcce0">
+          <File Id="owf52846A01E14D3FA5EFB278275A6315ED" Source="$(var.SourceDir)\LeaderboardsService.exe" KeyPath="yes" />
+          <ServiceInstall Id="si5C1EC7CFA893E7588320DBA5232DFD10" Name="toofz Leaderboards Service" DisplayName="toofz Leaderboards Service" Description="Provides Steam leaderboard data." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes" />
+          <ServiceControl Id="sc5C1EC7CFA893E7588320DBA5232DFD10" Name="toofz Leaderboards Service" Start="install" Stop="both" Remove="both" Wait="yes" />
+        </Component>
+        <Component Id="owc2EB64394D594F56BBA072A470D0F1EDC" Guid="10f0453b-1a44-708d-c043-0112e85fbe1a">
+          <File Id="owf2EB64394D594F56BBA072A470D0F1EDC" Source="$(var.SourceDir)\LeaderboardsService.exe.config" KeyPath="yes" />
+        </Component>
+        <Component Id="owc950044A998A8F98BC77BE1E291270381" Guid="70fec58d-9680-3f0f-fdc5-60569c380afe">
+          <File Id="owf950044A998A8F98BC77BE1E291270381" Source="$(var.SourceDir)\log.config" KeyPath="yes" />
+        </Component>
+        <Component Id="owc8ECFD31F3DCC6C811A1C29BFB88DD264" Guid="ba6f1796-8646-546b-8ac1-319aabec7a7f">
+          <File Id="owf8ECFD31F3DCC6C811A1C29BFB88DD264" Source="$(var.SourceDir)\log4net.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc118F0E43E9B5B17343DFDCE8B6DE1121" Guid="687359a5-37ca-5a8b-797b-160b55165be8">
+          <File Id="owf118F0E43E9B5B17343DFDCE8B6DE1121" Source="$(var.SourceDir)\Microsoft.AI.Agent.Intercept.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc968026ACD70063A9AB531713D8C48857" Guid="f0887d58-2e53-846a-29a3-8e7ac48ca3be">
+          <File Id="owf968026ACD70063A9AB531713D8C48857" Source="$(var.SourceDir)\Microsoft.AI.DependencyCollector.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc62BAF8B3DAAC0956F5F0DD5FBB6E9485" Guid="793307ab-ad86-a854-df45-ddec060a98d4">
+          <File Id="owf62BAF8B3DAAC0956F5F0DD5FBB6E9485" Source="$(var.SourceDir)\Microsoft.AI.PerfCounterCollector.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc591DC65DC8487351953387B45509EC8D" Guid="6db9a127-c022-e0a0-bf1a-e9a9cb0352c6">
+          <File Id="owf591DC65DC8487351953387B45509EC8D" Source="$(var.SourceDir)\Microsoft.AI.ServerTelemetryChannel.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc34D4CF9DE66EECA8322DB8C2B4DBE298" Guid="26e99f33-cc86-e1a8-fa0a-252b38f46605">
+          <File Id="owf34D4CF9DE66EECA8322DB8C2B4DBE298" Source="$(var.SourceDir)\Microsoft.AI.WindowsServer.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc28DBC1F626DF0B1D68E0A14890A4DB6D" Guid="40160830-50f3-45b6-baf7-89014b268d57">
+          <File Id="owf28DBC1F626DF0B1D68E0A14890A4DB6D" Source="$(var.SourceDir)\Microsoft.ApplicationInsights.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcE29C0323F1841E760A72449B62AB5D0B" Guid="b3ad119c-3fd2-daf9-0957-23b82604f249">
+          <File Id="owfE29C0323F1841E760A72449B62AB5D0B" Source="$(var.SourceDir)\Microsoft.ApplicationInsights.Log4NetAppender.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcFA00D7145B7D14B89754AE971AE39D75" Guid="daf90fc7-52a9-d05d-b34d-a7438c3d42d5">
+          <File Id="owfFA00D7145B7D14B89754AE971AE39D75" Source="$(var.SourceDir)\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc3FC8434C1A84605AEEBC6A100CA2F3E1" Guid="47d7e276-db6d-424e-d797-1a69e1e24b3b">
+          <File Id="owf3FC8434C1A84605AEEBC6A100CA2F3E1" Source="$(var.SourceDir)\Newtonsoft.Json.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcED4CA0C587B1FFB62753FB5DED9C7587" Guid="c81d2020-653a-ed0b-7d1a-b67616f88462">
+          <File Id="owfED4CA0C587B1FFB62753FB5DED9C7587" Source="$(var.SourceDir)\protobuf-net.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc41F7B3F0C33A7EFD53DF77D3E96F57DF" Guid="fd4f42dd-0217-e939-4fcd-058f93a5ed7d">
+          <File Id="owf41F7B3F0C33A7EFD53DF77D3E96F57DF" Source="$(var.SourceDir)\settings.json" KeyPath="yes" />
+        </Component>
+        <Component Id="owc84FB49F3465E33D8154C1860795BF195" Guid="791141d4-a7af-f4e0-fd2b-74cd57d0bb5b">
+          <File Id="owf84FB49F3465E33D8154C1860795BF195" Source="$(var.SourceDir)\SqlBulkUpsert.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc473279DC6169D7140DB32234B99BB2BB" Guid="f6143307-7474-3a97-42aa-250ef28429a3">
+          <File Id="owf473279DC6169D7140DB32234B99BB2BB" Source="$(var.SourceDir)\SteamKit2.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcBC11F886BA2AB9469783C04435BCA0B9" Guid="2c483d72-1aea-aa8b-f71a-6566569838c7">
+          <File Id="owfBC11F886BA2AB9469783C04435BCA0B9" Source="$(var.SourceDir)\System.Diagnostics.DiagnosticSource.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcE7C4094F57B0A8D61E66E0978388F384" Guid="027d5f35-a2dc-f7c0-ff9c-d88765e456f3">
+          <File Id="owfE7C4094F57B0A8D61E66E0978388F384" Source="$(var.SourceDir)\System.Net.Http.Formatting.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcCE4898A459220AFB82CE5C29F65FEB28" Guid="d6cfc0fe-0141-1a96-5403-d9390c17e896">
+          <File Id="owfCE4898A459220AFB82CE5C29F65FEB28" Source="$(var.SourceDir)\System.Threading.Tasks.Dataflow.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcF719C5F01913951F80887C901C3807F4" Guid="d32204d3-a32f-e912-0016-a93dbfa23399">
+          <File Id="owfF719C5F01913951F80887C901C3807F4" Source="$(var.SourceDir)\toofz.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcDDA9626CD9162B10D303FBA6E1A1DBC8" Guid="c9f28c3d-e59e-bc52-569c-23de5f900d9d">
+          <File Id="owfDDA9626CD9162B10D303FBA6E1A1DBC8" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcEF71CA9941E07E83BF048FEA745163EE" Guid="f580d0c7-0840-5b5d-90c7-d0253ca4a1ba">
+          <File Id="owfEF71CA9941E07E83BF048FEA745163EE" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.Services.Common.dll" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </Directory>
+    <ComponentGroupRef Id="Custom" />
+  </Module>
+</Wix>
