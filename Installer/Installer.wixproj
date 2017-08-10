@@ -5,7 +5,6 @@
     <ProductVersion>3.7</ProductVersion>
     <ProjectGuid>{c9f58570-2403-498e-bf30-936962b8f20e}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>toofz-leaderboards-service</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
@@ -13,6 +12,7 @@
     <MSIProductVersion Condition=" '$(MSIProductVersion)' == '' AND '$(APPVEYOR_BUILD_VERSION)' != '' ">$(APPVEYOR_BUILD_VERSION)</MSIProductVersion>
     <!-- Default to 0.0.1 for developer builds -->
     <MSIProductVersion Condition=" '$(MSIProductVersion)' == '' ">0.0.1</MSIProductVersion>
+    <OutputName>toofz-leaderboards-service-v$(MSIProductVersion)</OutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>

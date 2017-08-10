@@ -2,7 +2,7 @@ version: 2.0.{build}
 image: Visual Studio 2017
 
 artifacts:
-  - path: Installer\bin\$(configuration)\toofz-leaderboards-service.msi
+  - path: Installer\bin\$(configuration)\toofz-leaderboards-service-v$(APPVEYOR_BUILD_VERSION).msi
     name: toofz Leaderboards Service
 configuration:
   - Release
