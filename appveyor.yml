@@ -39,14 +39,26 @@ test_script:
         -filter:'+[LeaderboardsService*]*'
 after_test:
   - ps: |
+      $pr = $env:APPVEYOR_PULL_REQUEST_NUMBER
       $coveralls_repo_token = $env:COVERALLS_REPO_TOKEN
 
-      [xml]$xml = Get-Content "$env:PROJECT.Tests\packages.config"
-      $version = ($xml.packages.package | ? { $_.id -eq 'coveralls.io' }).version
+      if ($pr -ne '') {
+        $msg = 'The environment variable "COVERALLS_REPO_TOKEN" is a secure environment variable. ' + `
+               'Secure environment variables are not available during pull request builds. ' + `
+               'Code coverage results were not uploaded.'
+        Write-Output $msg
+      } elseif ($coveralls_repo_token -eq '') {
+        $msg = 'The environment variable "COVERALLS_REPO_TOKEN" is not set. ' + `
+               'Code coverage results were not uploaded.'
+        Write-Warning $msg
+      } else {
+        [xml]$xml = Get-Content "$env:PROJECT.Tests\packages.config"
+        $version = ($xml.packages.package | ? { $_.id -eq 'coveralls.io' }).version
 
-      & "packages\coveralls.io.$version\tools\coveralls.net.exe" `
-        --opencover results.xml `
-        -r $coveralls_repo_token
+        & "packages\coveralls.io.$version\tools\coveralls.net.exe" `
+          --opencover results.xml `
+          -r $coveralls_repo_token
+      }
 
 deploy:
   - provider: Environment
