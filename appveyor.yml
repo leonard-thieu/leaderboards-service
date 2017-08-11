@@ -6,6 +6,8 @@ configuration:
 environment:
   PROJECT: toofz.NecroDancer.Leaderboards.LeaderboardsService
   PROJECT_PACKAGE: toofz-leaderboards-service-v%APPVEYOR_BUILD_VERSION%.msi
+  COVERALLS_REPO_TOKEN:
+    secure: a1r9kZtVxhlqjupy+BjSTg7vOxO0RVFMQzf9D1DVU9AGeroonpzehiEsSjs39kWu
 artifacts:
   - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
     name: LeaderboardsService
@@ -23,7 +25,28 @@ build:
   verbosity: minimal
 
 test_script:
-  - vstest.console /logger:Appveyor "%PROJECT%.Tests\bin\%CONFIGURATION%\%PROJECT%.Tests.dll"
+  - ps: |
+      $project = $env:PROJECT
+      $configuration = $env:CONFIGURATION
+
+      [xml]$xml = Get-Content "$project.Tests\packages.config"
+      $version = ($xml.packages.package | ? { $_.id -eq 'OpenCover' }).version
+
+      & "packages\OpenCover.$version\tools\OpenCover.Console.exe" `
+        -register:user `
+        -target:'vstest.console.exe' `
+        -targetargs:".\$project.Tests\bin\$configuration\$project.Tests.dll" `
+        -filter:'+[LeaderboardsService*]*'
+after_test:
+  - ps: |
+      $coveralls_repo_token = $env:COVERALLS_REPO_TOKEN
+
+      [xml]$xml = Get-Content "$env:PROJECT.Tests\packages.config"
+      $version = ($xml.packages.package | ? { $_.id -eq 'coveralls.io' }).version
+
+      & "packages\coveralls.io.$version\tools\coveralls.net.exe" `
+        --opencover results.xml `
+        -r $coveralls_repo_token
 
 deploy:
   - provider: Environment
