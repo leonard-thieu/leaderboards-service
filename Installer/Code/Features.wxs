@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<?include Configuration.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="CompanyFolder" Name="toofz">
-          <Directory Id="INSTALLLOCATION" Name="toofz Leaderboards Service">
+          <Directory Id="INSTALLLOCATION" Name="$(var.ProductName)">
             <Merge Id="InstallerMM" SourceFile="$(var.InstallerMM.TargetPath)" DiskId="1" Language="1033" />
           </Directory>
         </Directory>
       </Directory>
     </Directory>
-    <Feature Id="Installer" Title="toofz Leaderboards Service" Description="Installs all the files needed for toofz Leaderboards Service." Level="1" AllowAdvertise="no" ConfigurableDirectory="INSTALLLOCATION" Absent="disallow">
+    <Feature Id="Installer" Title="$(var.ProductName)" Description="Installs all the files needed for $(var.ProductName)." Level="1" AllowAdvertise="no" ConfigurableDirectory="INSTALLLOCATION" Absent="disallow">
       <MergeRef Id="InstallerMM" />
     </Feature>
   </Fragment>

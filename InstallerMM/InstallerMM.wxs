@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<?include ..\Installer\Code\Configuration.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define ComponentRules="OneToOne"?>
-  <!-- SourceDir instructs IsWiX the location of the directory that contains files for this merge module -->
   <?define SourceDir="..\toofz.NecroDancer.Leaderboards.LeaderboardsService\bin\Debug"?>
   <?define SourceDir="$(var.toofz.NecroDancer.Leaderboards.LeaderboardsService.TargetDir)"?>
   <Module Id="InstallerMM" Language="1033" Version="1.0.0.0">
-    <Package Id="9bc9f190-d4f5-4cf7-bded-0d212a189cd9" Manufacturer="toofz" InstallerVersion="200" Keywords="toofz leaderboards services" />
+    <Package Id="9bc9f190-d4f5-4cf7-bded-0d212a189cd9" Manufacturer="$(var.Manufacturer)" InstallerVersion="200" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="MergeRedirectFolder">
         <Component Id="owc73F0394A22FE8E3A382B6736AF24B1B5" Guid="5d1a8002-e826-eacb-b930-577135fd067e">
@@ -25,8 +25,8 @@
         </Component>
         <Component Id="owc52846A01E14D3FA5EFB278275A6315ED" Guid="cff5c56a-e5fc-7b85-bd4f-41b52c8fcce0">
           <File Id="owf52846A01E14D3FA5EFB278275A6315ED" Source="$(var.SourceDir)\LeaderboardsService.exe" KeyPath="yes" />
-          <ServiceInstall Id="si5C1EC7CFA893E7588320DBA5232DFD10" Name="toofz Leaderboards Service" DisplayName="toofz Leaderboards Service" Description="Provides Steam leaderboard data." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes" />
-          <ServiceControl Id="sc5C1EC7CFA893E7588320DBA5232DFD10" Name="toofz Leaderboards Service" Start="install" Stop="both" Remove="both" Wait="yes" />
+          <ServiceInstall Id="si5C1EC7CFA893E7588320DBA5232DFD10" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves Crypt of the NecroDancer leaderboard data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes" />
+          <ServiceControl Id="sc5C1EC7CFA893E7588320DBA5232DFD10" Name="$(var.ProductName)" Start="install" Stop="both" Remove="both" Wait="yes" />
         </Component>
         <Component Id="owc2EB64394D594F56BBA072A470D0F1EDC" Guid="10f0453b-1a44-708d-c043-0112e85fbe1a">
           <File Id="owf2EB64394D594F56BBA072A470D0F1EDC" Source="$(var.SourceDir)\LeaderboardsService.exe.config" KeyPath="yes" />
