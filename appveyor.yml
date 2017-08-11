@@ -37,17 +37,15 @@ test_script:
         -target:'vstest.console.exe' `
         -targetargs:".\$project.Tests\bin\$configuration\$project.Tests.dll" `
         -filter:'+[LeaderboardsService*]*'
+      if ($LASTEXITCODE -ne 0) { throw "Execution failed with exit code $LASTEXITCODE" }
 after_test:
   - ps: |
-      $pr = $env:APPVEYOR_PULL_REQUEST_NUMBER
-      $coveralls_repo_token = $env:COVERALLS_REPO_TOKEN
-
-      if ($pr -ne '') {
+      if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
         $msg = 'The environment variable "COVERALLS_REPO_TOKEN" is a secure environment variable. ' + `
                'Secure environment variables are not available during pull request builds. ' + `
                'Code coverage results were not uploaded.'
         Write-Output $msg
-      } elseif ($coveralls_repo_token -eq '') {
+      } elseif (!(Test-Path Env:\COVERALLS_REPO_TOKEN)) {
         $msg = 'The environment variable "COVERALLS_REPO_TOKEN" is not set. ' + `
                'Code coverage results were not uploaded.'
         Write-Warning $msg
@@ -57,7 +55,11 @@ after_test:
 
         & "packages\coveralls.io.$version\tools\coveralls.net.exe" `
           --opencover results.xml `
-          -r $coveralls_repo_token
+          -r $env:COVERALLS_REPO_TOKEN
+        # coveralls.net does not return a non-zero exist code on error.
+        if ($LASTEXITCODE -ne 0) { throw "Execution failed with exit code $LASTEXITCODE" }
+
+        Write-Output 'Code coverage results have been uploaded.'
       }
 
 deploy:
