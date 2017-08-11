@@ -104,8 +104,8 @@
     <Reference Include="toofz, Version=2.3.0.10355, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.2.3.0\lib\net45\toofz.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.NecroDancer.Leaderboards, Version=3.0.6429.22954, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.3.0.0\lib\net45\toofz.NecroDancer.Leaderboards.dll</HintPath>
+    <Reference Include="toofz.NecroDancer.Leaderboards, Version=3.0.2.29365, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.3.0.8\lib\net45\toofz.NecroDancer.Leaderboards.dll</HintPath>
     </Reference>
     <Reference Include="toofz.NecroDancer.Leaderboards.Services.Common, Version=2.0.6429.24735, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.NecroDancer.Leaderboards.Services.Common.2.0.0\lib\net45\toofz.NecroDancer.Leaderboards.Services.Common.dll</HintPath>
