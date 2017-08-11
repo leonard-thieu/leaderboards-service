@@ -2,7 +2,8 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define ComponentRules="OneToOne"?>
   <!-- SourceDir instructs IsWiX the location of the directory that contains files for this merge module -->
-  <?define SourceDir="..\Deploy"?>
+  <?define SourceDir="..\toofz.NecroDancer.Leaderboards.LeaderboardsService\bin\Debug"?>
+  <?define SourceDir="$(var.toofz.NecroDancer.Leaderboards.LeaderboardsService.TargetDir)"?>
   <Module Id="InstallerMM" Language="1033" Version="1.0.0.0">
     <Package Id="9bc9f190-d4f5-4cf7-bded-0d212a189cd9" Manufacturer="toofz" InstallerVersion="200" Keywords="toofz leaderboards services" />
     <Directory Id="TARGETDIR" Name="SourceDir">
