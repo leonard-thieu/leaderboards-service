@@ -18,7 +18,7 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug;MSIProductVersion=$(MSIProductVersion)</DefineConstants>
-    <WixVariables>WixUIBannerBmp=Resources\Banner.jpg;WixUIDialogBmp=Resources\Dialog.jpg;WixUILicenseRtf=Resources\EULA.rtf</WixVariables>
+    <WixVariables>WixUIBannerBmp=Resources\Banner.jpg;WixUIDialogBmp=Resources\Dialog.jpg</WixVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -52,9 +52,9 @@
     <Folder Include="Resources" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Code\Configuration.wxi" />
     <Content Include="Resources\Banner.jpg" />
     <Content Include="Resources\Dialog.jpg" />
-    <Content Include="Resources\EULA.rtf" />
     <Content Include="Resources\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
