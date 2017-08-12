@@ -25,42 +25,9 @@ build:
   verbosity: minimal
 
 test_script:
-  - ps: |
-      $project = $env:PROJECT
-      $configuration = $env:CONFIGURATION
-
-      [xml]$xml = Get-Content "$project.Tests\packages.config"
-      $version = ($xml.packages.package | ? { $_.id -eq 'OpenCover' }).version
-
-      & "packages\OpenCover.$version\tools\OpenCover.Console.exe" `
-        -register:user `
-        -target:'vstest.console.exe' `
-        -targetargs:".\$project.Tests\bin\$configuration\$project.Tests.dll" `
-        -filter:'+[LeaderboardsService*]*'
-      if ($LASTEXITCODE -ne 0) { throw "Execution failed with exit code $LASTEXITCODE" }
+  - ps: .\Test-Project.ps1 -Assembly LeaderboardsService
 after_test:
-  - ps: |
-      if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
-        $msg = 'The environment variable "COVERALLS_REPO_TOKEN" is a secure environment variable. ' + `
-               'Secure environment variables are not available during pull request builds. ' + `
-               'Code coverage results were not uploaded.'
-        Write-Output $msg
-      } elseif (!(Test-Path Env:\COVERALLS_REPO_TOKEN)) {
-        $msg = 'The environment variable "COVERALLS_REPO_TOKEN" is not set. ' + `
-               'Code coverage results were not uploaded.'
-        Write-Warning $msg
-      } else {
-        [xml]$xml = Get-Content "$env:PROJECT.Tests\packages.config"
-        $version = ($xml.packages.package | ? { $_.id -eq 'coveralls.io' }).version
-
-        & "packages\coveralls.io.$version\tools\coveralls.net.exe" `
-          --opencover results.xml `
-          -r $env:COVERALLS_REPO_TOKEN
-        # coveralls.net does not return a non-zero exist code on error.
-        if ($LASTEXITCODE -ne 0) { throw "Execution failed with exit code $LASTEXITCODE" }
-
-        Write-Output 'Code coverage results have been uploaded.'
-      }
+  - ps: .\Submit-CodeCoverageResults.ps1
 
 deploy:
   - provider: Environment

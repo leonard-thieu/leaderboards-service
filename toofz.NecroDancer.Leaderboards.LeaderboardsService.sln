@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution 
 		appveyor.yml = appveyor.yml
 		NuGet.Config = NuGet.Config
 		README.md = README.md
+		Submit-CodeCoverageResults.ps1 = Submit-CodeCoverageResults.ps1
+		Test-Project.ps1 = Test-Project.ps1
 	EndProjectSection
 EndProject
 Global
