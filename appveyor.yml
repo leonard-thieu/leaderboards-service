@@ -8,6 +8,8 @@ environment:
   PROJECT_PACKAGE: toofz-leaderboards-service-v%APPVEYOR_BUILD_VERSION%.msi
   COVERALLS_REPO_TOKEN:
     secure: a1r9kZtVxhlqjupy+BjSTg7vOxO0RVFMQzf9D1DVU9AGeroonpzehiEsSjs39kWu
+  COVERALLS_SERVICE_NAME: appveyor
+  COVERALLS_SERVICE_JOB_ID: '%APPVEYOR_JOB_ID%'
 artifacts:
   - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
     name: LeaderboardsService
