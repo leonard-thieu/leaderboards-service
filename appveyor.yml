@@ -20,6 +20,9 @@ notifications:
     incoming_webhook:
       secure: c7l1UmXHWpIDLL1awU4r0QYVPToYM/XjV8trFyD1oHArKxs/vBTYiKYScr1EhCUgmEX6sAFBTvkUHF/k5B+cGjzqRBR2XkAO+lzk8cHQ1FI=
 
+install:
+  - git clone https://github.com/leonard-thieu/toofz-build.git Scripts
+
 before_build:
   - appveyor-retry nuget restore -DisableParallelProcessing
 build:
@@ -27,9 +30,9 @@ build:
   verbosity: minimal
 
 test_script:
-  - ps: .\Test-Project.ps1 -Assembly LeaderboardsService
+  - ps: .\Scripts\Test-Project.ps1 -Assembly LeaderboardsService
 after_test:
-  - ps: .\Submit-CodeCoverageResults.ps1
+  - ps: .\Scripts\Submit-CodeCoverageResults.ps1
 
 deploy:
   - provider: Environment
