@@ -11,6 +11,12 @@
         <Component Id="owc73F0394A22FE8E3A382B6736AF24B1B5" Guid="5d1a8002-e826-eacb-b930-577135fd067e">
           <File Id="owf73F0394A22FE8E3A382B6736AF24B1B5" Source="$(var.SourceDir)\ApplicationInsights.config" KeyPath="yes" />
         </Component>
+        <Component Id="owc523BC49DB2FD1EC220293911369DFE42" Guid="2487ef4e-f8ea-25ac-4bbc-b215c48bc10d">
+          <File Id="owf523BC49DB2FD1EC220293911369DFE42" Source="$(var.SourceDir)\CredentialManagement.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcBC7B72247F75E62DA3DA60C7A5C07DC0" Guid="00250be0-d5c8-b5f4-b6e1-05e3cbc8c679">
+          <File Id="owfBC7B72247F75E62DA3DA60C7A5C07DC0" Source="$(var.SourceDir)\CredMan.ps1" KeyPath="yes" />
+        </Component>
         <Component Id="owc26A192B8451F5142030ED047326B15C5" Guid="491ac24b-078d-9f47-1313-e6ff3e7ced2c">
           <File Id="owf26A192B8451F5142030ED047326B15C5" Source="$(var.SourceDir)\EntityFramework.dll" KeyPath="yes" />
         </Component>
@@ -69,6 +75,9 @@
         </Component>
         <Component Id="owc41F7B3F0C33A7EFD53DF77D3E96F57DF" Guid="fd4f42dd-0217-e939-4fcd-058f93a5ed7d">
           <File Id="owf41F7B3F0C33A7EFD53DF77D3E96F57DF" Source="$(var.SourceDir)\settings.json" KeyPath="yes" />
+        </Component>
+        <Component Id="owc9C3C68945CE6B418C82AA70C31BC9CA1" Guid="f5acb650-06d4-edb1-a311-dbf66726a853">
+          <File Id="owf9C3C68945CE6B418C82AA70C31BC9CA1" Source="$(var.SourceDir)\Setup-Environment.ps1" KeyPath="yes" />
         </Component>
         <Component Id="owc84FB49F3465E33D8154C1860795BF195" Guid="791141d4-a7af-f4e0-fd2b-74cd57d0bb5b">
           <File Id="owf84FB49F3465E33D8154C1860795BF195" Source="$(var.SourceDir)\SqlBulkUpsert.dll" KeyPath="yes" />
