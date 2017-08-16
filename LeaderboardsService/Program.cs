@@ -1,7 +1,7 @@
 ﻿using System;
 using log4net;
 using Microsoft.ApplicationInsights.Extensibility;
-using toofz.NecroDancer.Leaderboards.Services.Common;
+using toofz.NecroDancer.Leaderboards.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
