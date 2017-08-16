@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using CredentialManagement;
 using log4net;
 using toofz.NecroDancer.Leaderboards.EntityFramework;
-using toofz.NecroDancer.Leaderboards.Services.Common;
+using toofz.NecroDancer.Leaderboards.Services;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
