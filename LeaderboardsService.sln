@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "toofz.NecroDancer.Leaderboards.LeaderboardsService", "toofz.NecroDancer.Leaderboards.LeaderboardsService\toofz.NecroDancer.Leaderboards.LeaderboardsService.csproj", "{1678334C-DE8C-4DC4-B493-4454BC209E18}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaderboardsService", "LeaderboardsService\LeaderboardsService.csproj", "{1678334C-DE8C-4DC4-B493-4454BC209E18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests", "toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests\toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests.csproj", "{45E158FD-FCBB-409D-A09B-D54EDD758910}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaderboardsService.Tests", "LeaderboardsService.Tests\LeaderboardsService.Tests.csproj", "{45E158FD-FCBB-409D-A09B-D54EDD758910}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "InstallerMM", "InstallerMM\InstallerMM.wixproj", "{077BD9CE-BCB1-4362-B7E4-6735BF2CD18F}"
 EndProject

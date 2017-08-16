@@ -4,7 +4,7 @@ image: Visual Studio 2017
 configuration:
   - Release
 environment:
-  PROJECT: toofz.NecroDancer.Leaderboards.LeaderboardsService
+  PROJECT: LeaderboardsService
   PROJECT_PACKAGE: toofz-leaderboards-service-v%APPVEYOR_BUILD_VERSION%.msi
   COVERALLS_REPO_TOKEN:
     secure: a1r9kZtVxhlqjupy+BjSTg7vOxO0RVFMQzf9D1DVU9AGeroonpzehiEsSjs39kWu
@@ -12,7 +12,7 @@ environment:
   COVERALLS_SERVICE_JOB_ID: '%APPVEYOR_JOB_ID%'
 artifacts:
   - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
-    name: LeaderboardsService
+    name: $(PROJECT)
 cache:
   - packages -> **\packages.config
 notifications:
@@ -30,7 +30,7 @@ build:
   verbosity: minimal
 
 test_script:
-  - ps: .\Scripts\Test-Project.ps1 -Assembly LeaderboardsService
+  - ps: .\Scripts\Test-Project.ps1 -Assembly $env:PROJECT
 after_test:
   - ps: .\Scripts\Submit-CodeCoverageResults.ps1
 

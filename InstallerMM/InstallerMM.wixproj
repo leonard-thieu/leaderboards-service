@@ -24,8 +24,8 @@
     <Compile Include="InstallerMMcustom.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\toofz.NecroDancer.Leaderboards.LeaderboardsService\toofz.NecroDancer.Leaderboards.LeaderboardsService.csproj">
-      <Name>toofz.NecroDancer.Leaderboards.LeaderboardsService</Name>
+    <ProjectReference Include="..\LeaderboardsService\LeaderboardsService.csproj">
+      <Name>LeaderboardsService</Name>
       <Project>{1678334c-de8c-4dc4-b493-4454bc209e18}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>

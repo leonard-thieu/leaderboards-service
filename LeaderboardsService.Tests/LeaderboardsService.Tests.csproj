@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests</RootNamespace>
-    <AssemblyName>toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests</AssemblyName>
+    <AssemblyName>LeaderboardsService.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -129,9 +129,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\toofz.NecroDancer.Leaderboards.LeaderboardsService\toofz.NecroDancer.Leaderboards.LeaderboardsService.csproj">
+    <ProjectReference Include="..\LeaderboardsService\LeaderboardsService.csproj">
       <Project>{1678334c-de8c-4dc4-b493-4454bc209e18}</Project>
-      <Name>toofz.NecroDancer.Leaderboards.LeaderboardsService</Name>
+      <Name>LeaderboardsService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
