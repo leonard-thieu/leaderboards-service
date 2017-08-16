@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CredentialManagement;
 using log4net;
 using toofz.NecroDancer.Leaderboards.EntityFramework;
 using toofz.NecroDancer.Leaderboards.Services.Common;
@@ -23,9 +24,29 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
-            var userName = Util.GetEnvVar("SteamUserName");
-            var password = Util.GetEnvVar("SteamPassword");
-            var leaderboardsConnectionString = Util.GetEnvVar("LeaderboardsConnectionString");
+            string userName;
+            string password;
+            using (var cred = new Credential { Target = "toofz/Steam", PersistanceType = PersistanceType.LocalComputer })
+            {
+                if (!cred.Load())
+                {
+                    throw new InvalidOperationException("Could not load credentials for 'toofz/Steam'.");
+                }
+
+                userName = cred.Username;
+                password = cred.Password;
+            }
+
+            string leaderboardsConnectionString;
+            using (var cred = new Credential { Target = "toofz/LeaderboardsConnectionString", PersistanceType = PersistanceType.LocalComputer })
+            {
+                if (!cred.Load())
+                {
+                    throw new InvalidOperationException("Could not load credentials for 'toofz/LeaderboardsConnectionString'.");
+                }
+
+                leaderboardsConnectionString = cred.Password;
+            }
 
             var storeClient = new LeaderboardsStoreClient(leaderboardsConnectionString);
 
