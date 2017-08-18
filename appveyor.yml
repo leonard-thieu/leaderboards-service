@@ -19,6 +19,10 @@ notifications:
   - provider: Slack
     incoming_webhook:
       secure: c7l1UmXHWpIDLL1awU4r0QYVPToYM/XjV8trFyD1oHArKxs/vBTYiKYScr1EhCUgmEX6sAFBTvkUHF/k5B+cGjzqRBR2XkAO+lzk8cHQ1FI=
+assembly_info:
+  patch: true
+  file: AssemblyInfo.cs
+  assembly_version: $(appveyor_build_version)
 
 install:
   - git clone https://github.com/leonard-thieu/toofz-build.git Scripts
