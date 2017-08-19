@@ -12,13 +12,15 @@ using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    sealed class WorkerRole : WorkerRoleBase<Settings>
+    sealed class WorkerRole : WorkerRoleBase
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
         const uint AppId = 247080;
 
         public WorkerRole() : base("toofz Leaderboards Service") { }
+
+        public override TimeSpan UpdateInterval => TimeSpan.FromSeconds(120);
 
         protected override void OnStartOverride() { }
 

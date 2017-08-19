@@ -25,16 +25,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
                 var mockILeaderboardsStoreClient = new Mock<ILeaderboardsStoreClient>();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
                     return workerRole.UpdateLeaderboardsAsync(
                         null,
                         mockILeaderboardsStoreClient.Object);
                 });
-
-                // Assert
-                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
 
             [TestMethod]
@@ -45,16 +42,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
                 var mockISteamClientApiClient = new Mock<ISteamClientApiClient>();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
                     return workerRole.UpdateLeaderboardsAsync(
                         mockISteamClientApiClient.Object,
                         null);
                 });
-
-                // Assert
-                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
 
             [TestMethod]
@@ -100,17 +94,14 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var mockILeaderboardsStoreClient = new Mock<ILeaderboardsStoreClient>();
                 var mockLeaderboardsContext = new Mock<LeaderboardsContext>();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
                     return workerRole.UpdateDailyLeaderboardsAsync(
                         null,
                         mockILeaderboardsStoreClient.Object,
                         mockLeaderboardsContext.Object);
                 });
-
-                // Assert
-                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
 
             [TestMethod]
@@ -122,17 +113,14 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var mockISteamClientApiClient = new Mock<ISteamClientApiClient>();
                 var mockLeaderboardsContext = new Mock<LeaderboardsContext>();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
                     return workerRole.UpdateDailyLeaderboardsAsync(
                         mockISteamClientApiClient.Object,
                         null,
                         mockLeaderboardsContext.Object);
                 });
-
-                // Assert
-                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
 
             [TestMethod]
@@ -144,17 +132,14 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var mockILeaderboardsStoreClient = new Mock<ILeaderboardsStoreClient>();
                 var mockISteamClientApiClient = new Mock<ISteamClientApiClient>();
 
-                // Act
-                var ex = await Record.ExceptionAsync(() =>
+                // Act -> Assert
+                await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
                 {
                     return workerRole.UpdateDailyLeaderboardsAsync(
                         mockISteamClientApiClient.Object,
                         mockILeaderboardsStoreClient.Object,
                         null);
                 });
-
-                // Assert
-                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
 
             [TestMethod]
