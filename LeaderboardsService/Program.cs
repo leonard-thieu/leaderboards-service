@@ -19,7 +19,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 Log.Warn($"The environment variable 'LeaderboardsInstrumentationKey' is not set. Telemetry is disabled.");
                 TelemetryConfiguration.Active.DisableTelemetry = true;
             }
-            Application.Run<WorkerRole, Settings>();
+            Application.Run<WorkerRole>();
         }
     }
 }
