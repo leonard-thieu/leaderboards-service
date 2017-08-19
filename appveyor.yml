@@ -24,9 +24,9 @@ install:
   - git clone https://github.com/leonard-thieu/toofz-build.git Scripts
 
 before_build:
-  - appveyor-retry nuget restore -DisableParallelProcessing
-  - choco install opencover.portable
-  - choco install codecov
+  - appveyor-retry nuget restore -Verbosity quiet -NonInteractive
+  - choco install opencover.portable --confirm --limit-output
+  - choco install codecov --confirm --limit-output
 build:
   project: $(PROJECT).sln
   verbosity: minimal
