@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyVersion("2.1.2.0")]
+[assembly: AssemblyVersion("2.1.2.1")]
 
 [assembly: AssemblyCopyright("Copyright © Leonard Thieu 2017")]
 [assembly: AssemblyProduct("toofz")]
@@ -12,5 +12,6 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly: InternalsVisibleTo("LeaderboardsService.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 [assembly: log4net.Config.XmlConfigurator(Watch = true, ConfigFile = "log.config")]

@@ -4,9 +4,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CredentialManagement;
 using log4net;
 using toofz.NecroDancer.Leaderboards.EntityFramework;
+using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.NecroDancer.Leaderboards.Services;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 
@@ -16,44 +16,27 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
-        const uint AppId = 247080;
+        public WorkerRole() : base("toofz Leaderboards Service")
+        {
+            DelayBeforeGC = Settings.Default.DelayBeforeGC;
+        }
 
-        public WorkerRole() : base("toofz Leaderboards Service") { }
-
-        public override TimeSpan UpdateInterval => TimeSpan.FromSeconds(120);
+        public override TimeSpan UpdateInterval => Settings.Default.UpdateInterval;
 
         protected override void OnStartOverride() { }
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
-            string userName;
-            string password;
-            using (var cred = new Credential { Target = "toofz/Steam", PersistanceType = PersistanceType.LocalComputer })
-            {
-                if (!cred.Load())
-                {
-                    throw new InvalidOperationException("Could not load credentials for 'toofz/Steam'.");
-                }
+            var settings = Settings.Default;
 
-                userName = cred.Username;
-                password = cred.Password;
-            }
+            var userName = settings.SteamUserName;
+            var password = settings.SteamPassword.Decrypt();
 
-            string leaderboardsConnectionString;
-            using (var cred = new Credential { Target = "toofz/LeaderboardsConnectionString", PersistanceType = PersistanceType.LocalComputer })
-            {
-                if (!cred.Load())
-                {
-                    throw new InvalidOperationException("Could not load credentials for 'toofz/LeaderboardsConnectionString'.");
-                }
-
-                leaderboardsConnectionString = cred.Password;
-            }
-
-            var storeClient = new LeaderboardsStoreClient(leaderboardsConnectionString);
+            var leaderboardsConnectionString = settings.LeaderboardsConnectionString.Decrypt();
 
             using (var steamClient = new SteamClientApiClient(userName, password))
             {
+                var storeClient = new LeaderboardsStoreClient(leaderboardsConnectionString);
                 await UpdateLeaderboardsAsync(steamClient, storeClient, cancellationToken).ConfigureAwait(false);
 
                 using (var db = new LeaderboardsContext(leaderboardsConnectionString))
@@ -87,6 +70,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 {
                     steamClient.Progress = download.Progress;
 
+                    var characters = leaderboardCategories["characters"];
+                    var runs = leaderboardCategories["runs"];
+
                     var leaderboardTasks = new List<Task<Leaderboard>>();
                     foreach (var header in headers)
                     {
@@ -97,13 +83,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                             var leaderboard = new Leaderboard
                             {
                                 LeaderboardId = header.id,
-                                CharacterId = leaderboardCategories.GetItemId("characters", header.character),
-                                RunId = leaderboardCategories.GetItemId("runs", header.run),
+                                CharacterId = characters[header.character].Id,
+                                RunId = runs[header.run].Id,
                                 LastUpdate = DateTime.UtcNow,
                             };
 
                             var response =
-                                await steamClient.GetLeaderboardEntriesAsync(AppId, header.id, cancellationToken).ConfigureAwait(false);
+                                await steamClient.GetLeaderboardEntriesAsync(Settings.Default.AppId, header.id, cancellationToken).ConfigureAwait(false);
 
                             leaderboard.EntriesCount = response.EntryCount;
                             var leaderboardEntries = response.Entries.Select(e =>
@@ -177,6 +163,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 IEnumerable<DailyLeaderboardHeader> todaysDailies;
                 var leaderboardCategories = LeaderboardsResources.ReadLeaderboardCategories();
                 var today = DateTime.Today;
+                var products = leaderboardCategories["products"];
 
                 var staleDailies = await (from l in db.DailyLeaderboards
                                           orderby l.LastUpdate
@@ -197,7 +184,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     {
                         id = staleDaily.LeaderboardId,
                         date = staleDaily.Date,
-                        product = leaderboardCategories.GetItemName("products", staleDaily.ProductId),
+                        product = products.GetName(staleDaily.ProductId),
                         production = staleDaily.IsProduction,
                     };
                     headers.Add(header);
@@ -220,15 +207,15 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                                  {
                                      id = l.LeaderboardId,
                                      date = l.Date,
-                                     product = leaderboardCategories.GetItemName("products", l.ProductId),
+                                     product = products.GetName(l.ProductId),
                                      production = l.IsProduction,
                                  })
                                  .ToList();
 
-                if (todaysDailies.Count() != leaderboardCategories.GetCategory("products").Count)
+                if (todaysDailies.Count() != products.Count)
                 {
                     var headerTasks = new List<Task<DailyLeaderboardHeader>>();
-                    foreach (var p in leaderboardCategories["products"])
+                    foreach (var p in products)
                     {
                         headerTasks.Add(GetDailyLeaderboardHeaderAsync());
 
@@ -236,7 +223,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                         {
                             var isProduction = true;
                             var name = GetDailyLeaderboardName(p.Key, today, isProduction);
-                            var leaderboard = await steamClient.FindLeaderboardAsync(AppId, name, cancellationToken).ConfigureAwait(false);
+                            var leaderboard = await steamClient.FindLeaderboardAsync(Settings.Default.AppId, name, cancellationToken).ConfigureAwait(false);
 
                             return new DailyLeaderboardHeader
                             {
@@ -287,13 +274,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                             {
                                 LeaderboardId = header.id,
                                 Date = header.date,
-                                ProductId = leaderboardCategories.GetItemId("products", header.product),
+                                ProductId = products[header.product].Id,
                                 IsProduction = header.production,
                                 LastUpdate = DateTime.UtcNow,
                             };
 
                             var response =
-                                await steamClient.GetLeaderboardEntriesAsync(AppId, header.id, cancellationToken).ConfigureAwait(false);
+                                await steamClient.GetLeaderboardEntriesAsync(Settings.Default.AppId, header.id, cancellationToken).ConfigureAwait(false);
 
                             var leaderboardEntries = response.Entries.Select(e =>
                             {

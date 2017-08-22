@@ -83,6 +83,9 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.1.18\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Options, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Options.5.3.0.1\lib\net4-client\Mono.Options.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.7.99.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.7.99\lib\net45\Moq.dll</HintPath>
     </Reference>
@@ -92,8 +95,8 @@
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="RichardSzalay.MockHttp, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RichardSzalay.MockHttp.1.5.0\lib\net45\RichardSzalay.MockHttp.dll</HintPath>
+    <Reference Include="RichardSzalay.MockHttp, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RichardSzalay.MockHttp.1.5.1\lib\net45\RichardSzalay.MockHttp.dll</HintPath>
     </Reference>
     <Reference Include="SqlBulkUpsert, Version=2.1.5.51, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.SqlBulkUpsert.2.1.5\lib\net45\SqlBulkUpsert.dll</HintPath>
@@ -115,14 +118,20 @@
       <HintPath>..\packages\Microsoft.Tpl.Dataflow.4.5.24\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="toofz, Version=4.0.0.73, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.4.0.0\lib\net45\toofz.dll</HintPath>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.NecroDancer.Leaderboards, Version=3.0.2.29365, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.3.0.8\lib\net45\toofz.NecroDancer.Leaderboards.dll</HintPath>
+    <Reference Include="toofz, Version=4.3.0.101, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.4.3.0\lib\net45\toofz.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.NecroDancer.Leaderboards.Services, Version=3.0.1.26, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.Services.3.0.1\lib\net45\toofz.NecroDancer.Leaderboards.Services.dll</HintPath>
+    <Reference Include="toofz.NecroDancer.Leaderboards, Version=4.0.0.83, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.4.0.0\lib\net45\toofz.NecroDancer.Leaderboards.dll</HintPath>
+    </Reference>
+    <Reference Include="toofz.NecroDancer.Leaderboards.EntityFramework, Version=1.0.1.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.EntityFramework.1.0.1\lib\net45\toofz.NecroDancer.Leaderboards.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="toofz.NecroDancer.Leaderboards.Services, Version=4.0.0.45, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.Services.4.0.0\lib\net45\toofz.NecroDancer.Leaderboards.Services.dll</HintPath>
     </Reference>
     <Reference Include="toofz.TestsShared, Version=2.0.0.57, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.TestsShared.2.0.0\lib\net45\toofz.TestsShared.dll</HintPath>
@@ -149,7 +158,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArgsParserTests.cs" />
+    <Compile Include="TestsSetup.cs" />
     <Compile Include="WorkerRoleTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
