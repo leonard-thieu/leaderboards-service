@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Configuration;
+using System.Linq;
 using log4net;
 using Microsoft.ApplicationInsights.Extensibility;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
@@ -14,19 +14,15 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         static int Main(string[] args)
         {
             Log.Debug("Initialized logging.");
-
-            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-            Log.Info($"Local user config path: {config.FilePath}");
+            Secrets.Iterations = 200000;
 
             // Args are only allowed while running as a console as they may require user input.
-            if (Environment.UserInteractive)
+            if (Environment.UserInteractive && args.Any())
             {
                 var parser = new ArgsParser(Console.In, Console.Out, Console.Error);
                 var exitCode = parser.Parse(args, Settings.Default);
-                if (exitCode != 0)
-                {
-                    return exitCode;
-                }
+
+                return exitCode;
             }
 
             var instrumentationKey = Settings.Default.LeaderboardsInstrumentationKey;

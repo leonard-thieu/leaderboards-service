@@ -24,6 +24,19 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
         }
         
         /// <summary>
+        /// The version of the settings file format.
+        /// </summary>
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("The version of the settings file format.")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int Version {
+            get {
+                return ((int)(this["Version"]));
+            }
+        }
+        
+        /// <summary>
         /// The product&apos;s application ID.
         /// </summary>
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
@@ -42,6 +55,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsDescriptionAttribute("The minimum amount of time that should pass between each cycle.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:02:00")]
         public global::System.TimeSpan UpdateInterval {
             get {
                 return ((global::System.TimeSpan)(this["UpdateInterval"]));
@@ -57,6 +71,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsDescriptionAttribute("The amount of time to wait after a cycle to perform garbage collection.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
         public global::System.TimeSpan DelayBeforeGC {
             get {
                 return ((global::System.TimeSpan)(this["DelayBeforeGC"]));

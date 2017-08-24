@@ -101,8 +101,8 @@
     <Reference Include="RichardSzalay.MockHttp, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RichardSzalay.MockHttp.1.5.1\lib\net45\RichardSzalay.MockHttp.dll</HintPath>
     </Reference>
-    <Reference Include="SqlBulkUpsert, Version=2.1.5.51, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.SqlBulkUpsert.2.1.5\lib\net45\SqlBulkUpsert.dll</HintPath>
+    <Reference Include="SqlBulkUpsert, Version=2.1.6.56, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.SqlBulkUpsert.2.1.6\lib\net45\SqlBulkUpsert.dll</HintPath>
     </Reference>
     <Reference Include="SteamKit2, Version=1.8.3.0, Culture=neutral, PublicKeyToken=ed3ce47ed5aad940, processorArchitecture=MSIL">
       <HintPath>..\packages\SteamKit2.1.8.3\lib\net45\SteamKit2.dll</HintPath>
@@ -124,8 +124,8 @@
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
-    <Reference Include="toofz, Version=4.3.0.101, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.4.3.0\lib\net45\toofz.dll</HintPath>
+    <Reference Include="toofz, Version=5.0.3.148, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.5.0.3\lib\net45\toofz.dll</HintPath>
     </Reference>
     <Reference Include="toofz.NecroDancer.Leaderboards, Version=4.0.0.83, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.NecroDancer.Leaderboards.4.0.0\lib\net45\toofz.NecroDancer.Leaderboards.dll</HintPath>
@@ -136,8 +136,8 @@
     <Reference Include="toofz.NecroDancer.Leaderboards.Services, Version=4.0.0.45, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.NecroDancer.Leaderboards.Services.4.0.0\lib\net45\toofz.NecroDancer.Leaderboards.Services.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.TestsShared, Version=2.0.0.57, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.TestsShared.2.0.0\lib\net45\toofz.TestsShared.dll</HintPath>
+    <Reference Include="toofz.TestsShared, Version=2.0.1.61, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.TestsShared.2.0.1\lib\net45\toofz.TestsShared.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -162,7 +162,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgsParserTests.cs" />
-    <Compile Include="TestsSetup.cs" />
     <Compile Include="WorkerRoleTests.cs" />
   </ItemGroup>
   <ItemGroup>

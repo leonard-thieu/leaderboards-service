@@ -191,18 +191,17 @@ options:
             }
 
             [TestMethod]
-            public void IntervalIsNotSpecified_SetsUpdateIntervalToItsCurrentValue()
+            public void IntervalIsNotSpecified_DoesNotSetUpdateInterval()
             {
                 // Arrange
                 string[] args = new string[0];
-                var interval = TimeSpan.FromSeconds(20);
-                mockSettings.SetupProperty(settings => settings.UpdateInterval, interval);
+                mockSettings.SetupProperty(settings => settings.UpdateInterval);
 
                 // Act
                 parser.Parse(args, settings);
 
                 // Assert
-                mockSettings.VerifySet(settings => settings.UpdateInterval = interval);
+                mockSettings.VerifySet(settings => settings.UpdateInterval = It.IsAny<TimeSpan>(), Times.Never);
             }
 
             [TestMethod]
@@ -221,18 +220,17 @@ options:
             }
 
             [TestMethod]
-            public void DelayIsNotSpecified_SetsDelayBeforeGCToItsCurrentValue()
+            public void DelayIsNotSpecified_DoesNotSetDelayBeforeGC()
             {
                 // Arrange
                 string[] args = new string[0];
-                var interval = TimeSpan.FromSeconds(20);
-                mockSettings.SetupProperty(settings => settings.DelayBeforeGC, interval);
+                mockSettings.SetupProperty(settings => settings.DelayBeforeGC);
 
                 // Act
                 parser.Parse(args, settings);
 
                 // Assert
-                mockSettings.VerifySet(settings => settings.DelayBeforeGC = interval);
+                mockSettings.VerifySet(settings => settings.DelayBeforeGC = It.IsAny<TimeSpan>(), Times.Never);
             }
 
             [TestMethod]
@@ -240,8 +238,8 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--delay=00:10:00" };
-                var interval = TimeSpan.FromSeconds(20);
-                mockSettings.SetupProperty(settings => settings.DelayBeforeGC, interval);
+                var delay = TimeSpan.FromSeconds(20);
+                mockSettings.SetupProperty(settings => settings.DelayBeforeGC, delay);
 
                 // Act
                 parser.Parse(args, settings);

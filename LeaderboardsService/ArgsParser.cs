@@ -44,8 +44,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
 
-            var updateInterval = settings.UpdateInterval;
-            var delayBeforeGC = settings.DelayBeforeGC;
+            TimeSpan? updateInterval = null;
+            TimeSpan? delayBeforeGC = null;
             string steamUserName = null;
             string steamPassword = "";
             string leaderboardsConnectionString = "";
@@ -87,10 +87,23 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 return 0;
             }
 
-            // Set these values even if they're defaults so that they're persisted to user.config.
-            // This makes it easier to modify the configuration by hand.
-            settings.UpdateInterval = updateInterval;
-            settings.DelayBeforeGC = delayBeforeGC;
+            #region UpdateInterval
+
+            if (updateInterval != null)
+            {
+                settings.UpdateInterval = updateInterval.Value;
+            }
+
+            #endregion
+
+            #region DelayBeforeGC
+
+            if (delayBeforeGC != null)
+            {
+                settings.DelayBeforeGC = delayBeforeGC.Value;
+            }
+
+            #endregion
 
             #region SteamUserName
 
