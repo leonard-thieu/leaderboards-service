@@ -16,10 +16,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
-        public WorkerRole() : base("toofz Leaderboards Service")
-        {
-            DelayBeforeGC = Settings.Default.DelayBeforeGC;
-        }
+        public WorkerRole() : base("toofz Leaderboards Service") { }
 
         public override TimeSpan UpdateInterval => Settings.Default.UpdateInterval;
 
@@ -28,10 +25,25 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
             var settings = Settings.Default;
+            settings.Reload();
 
+            DelayBeforeGC = settings.DelayBeforeGC;
+
+            if (string.IsNullOrEmpty(settings.SteamUserName))
+            {
+                throw new InvalidOperationException($"{nameof(settings.SteamUserName)} is not set.");
+            }
             var userName = settings.SteamUserName;
+            if (settings.SteamPassword == null)
+            {
+                throw new InvalidOperationException($"{nameof(settings.SteamPassword)} is not set.");
+            }
             var password = settings.SteamPassword.Decrypt();
 
+            if (settings.LeaderboardsConnectionString == null)
+            {
+                throw new InvalidOperationException($"{nameof(settings.LeaderboardsConnectionString)} is not set.");
+            }
             var leaderboardsConnectionString = settings.LeaderboardsConnectionString.Decrypt();
 
             using (var steamClient = new SteamClientApiClient(userName, password))
@@ -52,9 +64,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (steamClient == null)
-                throw new ArgumentNullException(nameof(steamClient), $"{nameof(steamClient)} is null.");
+                throw new ArgumentNullException(nameof(steamClient));
             if (storeClient == null)
-                throw new ArgumentNullException(nameof(storeClient), $"{nameof(storeClient)} is null.");
+                throw new ArgumentNullException(nameof(storeClient));
 
             using (new UpdateNotifier(Log, "leaderboards"))
             {
@@ -150,11 +162,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             CancellationToken cancellationToken = default(CancellationToken))
         {
             if (steamClient == null)
-                throw new ArgumentNullException(nameof(steamClient), $"{nameof(steamClient)} is null.");
+                throw new ArgumentNullException(nameof(steamClient));
             if (storeClient == null)
-                throw new ArgumentNullException(nameof(storeClient), $"{nameof(storeClient)} is null.");
+                throw new ArgumentNullException(nameof(storeClient));
             if (db == null)
-                throw new ArgumentNullException(nameof(db), $"{nameof(db)} is null.");
+                throw new ArgumentNullException(nameof(db));
 
             using (new UpdateNotifier(Log, "daily leaderboards"))
             {
