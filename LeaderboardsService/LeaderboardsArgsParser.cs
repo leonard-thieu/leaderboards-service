@@ -51,7 +51,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 settings.SteamPassword = new EncryptedSecret(options.SteamPassword);
             }
 
-            // When steamPassword == null, the user has indicated that they wish to be prompted to enter the password.
+            // When options.SteamPassword == null, the user has indicated that they wish to be prompted to enter the password.
             while (settings.SteamPassword == null || options.SteamPassword == null)
             {
                 OutWriter.Write("Steam password: ");
@@ -78,7 +78,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 }
                 else
                 {
-                    // When leaderboardsConnectionString == null, the user has indicated that they wish to be prompted to enter the connection string.
+                    // When options.LeaderboardsConnectionString == null, the user has indicated that they wish to be prompted to enter the connection string.
                     while (options.LeaderboardsConnectionString == null)
                     {
                         OutWriter.Write("Leaderboards connection string: ");
