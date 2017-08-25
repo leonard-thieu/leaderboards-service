@@ -15,7 +15,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
-        public WorkerRole() : base("toofz Leaderboards Service") { }
+        public WorkerRole() : base("leaderboards") { }
 
         public override ILeaderboardsSettings Settings => Properties.Settings.Default;
 
