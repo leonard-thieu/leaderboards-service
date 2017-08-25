@@ -133,8 +133,8 @@
     <Reference Include="toofz.NecroDancer.Leaderboards.EntityFramework, Version=1.0.2.10, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.NecroDancer.Leaderboards.EntityFramework.1.0.2\lib\net45\toofz.NecroDancer.Leaderboards.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.NecroDancer.Leaderboards.Services, Version=4.0.1.47, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.Services.4.0.1\lib\net45\toofz.NecroDancer.Leaderboards.Services.dll</HintPath>
+    <Reference Include="toofz.Services, Version=5.0.1.94, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.Services.5.0.1\lib\net45\toofz.Services.dll</HintPath>
     </Reference>
     <Reference Include="toofz.TestsShared, Version=2.0.1.61, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.TestsShared.2.0.1\lib\net45\toofz.TestsShared.dll</HintPath>
@@ -147,9 +147,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Properties\" />
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
@@ -161,11 +162,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArgsParserTests.cs" />
+    <Compile Include="LeaderboardsArgsParserTests.cs" />
     <Compile Include="WorkerRoleTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

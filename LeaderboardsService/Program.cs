@@ -4,7 +4,7 @@ using System.Linq;
 using log4net;
 using Microsoft.ApplicationInsights.Extensibility;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
-using toofz.NecroDancer.Leaderboards.Services;
+using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
@@ -23,10 +23,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             // Args are only allowed while running as a console as they may require user input.
             if (Environment.UserInteractive && args.Any())
             {
-                var parser = new ArgsParser(Console.In, Console.Out, Console.Error);
-                var exitCode = parser.Parse(args, settings);
+                var parser = new LeaderboardsArgsParser(Console.In, Console.Out, Console.Error);
 
-                return exitCode;
+                return parser.Parse(args, settings);
             }
 
             var instrumentationKey = settings.LeaderboardsInstrumentationKey;
@@ -37,7 +36,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 TelemetryConfiguration.Active.DisableTelemetry = true;
             }
 
-            Application.Run<WorkerRole>();
+            Application.Run<WorkerRole, ILeaderboardsSettings>();
 
             return 0;
         }

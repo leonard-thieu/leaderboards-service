@@ -116,28 +116,27 @@
     <Reference Include="toofz.NecroDancer.Leaderboards.EntityFramework, Version=1.0.2.10, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.NecroDancer.Leaderboards.EntityFramework.1.0.2\lib\net45\toofz.NecroDancer.Leaderboards.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.NecroDancer.Leaderboards.Services, Version=4.0.1.47, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.Services.4.0.1\lib\net45\toofz.NecroDancer.Leaderboards.Services.dll</HintPath>
+    <Reference Include="toofz.Services, Version=5.0.1.94, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.Services.5.0.1\lib\net45\toofz.Services.dll</HintPath>
     </Reference>
     <Reference Include="toofz.Telemetry, Version=1.0.2.12, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.Telemetry.1.0.2\lib\net45\toofz.Telemetry.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArgsParser.cs" />
-    <Compile Include="ISettings.cs" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Program.cs" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Settings.cs">
-      <DependentUpon>ISettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WorkerRole.cs">
-      <SubType>Component</SubType>
     </Compile>
     <None Include="App.config">
       <SubType>Designer</SubType>
@@ -153,14 +152,18 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Compile Include="ILeaderboardsSettings.cs" />
+    <Compile Include="Settings.cs">
+      <DependentUpon>ILeaderboardsSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LeaderboardsArgsParser.cs" />
+    <Compile Include="LeaderboardsOptions.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="WorkerRole.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
