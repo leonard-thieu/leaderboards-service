@@ -6,45 +6,37 @@ using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using toofz.NecroDancer.Leaderboards.EntityFramework;
-using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
-using toofz.NecroDancer.Leaderboards.Services;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
+using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    sealed class WorkerRole : WorkerRoleBase
+    sealed class WorkerRole : WorkerRoleBase<ILeaderboardsSettings>
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
         public WorkerRole() : base("toofz Leaderboards Service") { }
 
-        public override TimeSpan UpdateInterval => Settings.Default.UpdateInterval;
-
-        protected override void OnStartOverride() { }
+        public override ILeaderboardsSettings Settings => Properties.Settings.Default;
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
-            var settings = Settings.Default;
-            settings.Reload();
-
-            DelayBeforeGC = settings.DelayBeforeGC;
-
-            if (string.IsNullOrEmpty(settings.SteamUserName))
+            if (string.IsNullOrEmpty(Settings.SteamUserName))
             {
-                throw new InvalidOperationException($"{nameof(settings.SteamUserName)} is not set.");
+                throw new InvalidOperationException($"{nameof(Settings.SteamUserName)} is not set.");
             }
-            var userName = settings.SteamUserName;
-            if (settings.SteamPassword == null)
+            var userName = Settings.SteamUserName;
+            if (Settings.SteamPassword == null)
             {
-                throw new InvalidOperationException($"{nameof(settings.SteamPassword)} is not set.");
+                throw new InvalidOperationException($"{nameof(Settings.SteamPassword)} is not set.");
             }
-            var password = settings.SteamPassword.Decrypt();
+            var password = Settings.SteamPassword.Decrypt();
 
-            if (settings.LeaderboardsConnectionString == null)
+            if (Settings.LeaderboardsConnectionString == null)
             {
-                throw new InvalidOperationException($"{nameof(settings.LeaderboardsConnectionString)} is not set.");
+                throw new InvalidOperationException($"{nameof(Settings.LeaderboardsConnectionString)} is not set.");
             }
-            var leaderboardsConnectionString = settings.LeaderboardsConnectionString.Decrypt();
+            var leaderboardsConnectionString = Settings.LeaderboardsConnectionString.Decrypt();
 
             using (var steamClient = new SteamClientApiClient(userName, password))
             {
@@ -101,7 +93,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                             };
 
                             var response =
-                                await steamClient.GetLeaderboardEntriesAsync(Settings.Default.AppId, header.id, cancellationToken).ConfigureAwait(false);
+                                await steamClient.GetLeaderboardEntriesAsync(Settings.AppId, header.id, cancellationToken).ConfigureAwait(false);
 
                             leaderboard.EntriesCount = response.EntryCount;
                             var leaderboardEntries = response.Entries.Select(e =>
@@ -235,7 +227,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                         {
                             var isProduction = true;
                             var name = GetDailyLeaderboardName(p.Key, today, isProduction);
-                            var leaderboard = await steamClient.FindLeaderboardAsync(Settings.Default.AppId, name, cancellationToken).ConfigureAwait(false);
+                            var leaderboard = await steamClient.FindLeaderboardAsync(Settings.AppId, name, cancellationToken).ConfigureAwait(false);
 
                             return new DailyLeaderboardHeader
                             {
@@ -292,7 +284,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                             };
 
                             var response =
-                                await steamClient.GetLeaderboardEntriesAsync(Settings.Default.AppId, header.id, cancellationToken).ConfigureAwait(false);
+                                await steamClient.GetLeaderboardEntriesAsync(Settings.AppId, header.id, cancellationToken).ConfigureAwait(false);
 
                             var leaderboardEntries = response.Entries.Select(e =>
                             {

@@ -98,7 +98,7 @@
           <File Id="owf39B439B72D5825C7A8E0188A779803B2" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.EntityFramework.dll" KeyPath="yes" />
         </Component>
         <Component Id="owcEF71CA9941E07E83BF048FEA745163EE" Guid="f580d0c7-0840-5b5d-90c7-d0253ca4a1ba">
-          <File Id="owfEF71CA9941E07E83BF048FEA745163EE" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.Services.dll" KeyPath="yes" />
+          <File Id="owfEF71CA9941E07E83BF048FEA745163EE" Source="$(var.SourceDir)\toofz.Services.dll" KeyPath="yes" />
         </Component>
       </Directory>
     </Directory>
