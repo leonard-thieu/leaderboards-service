@@ -6,6 +6,7 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
+    [ExcludeFromCodeCoverage]
     static class Program
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(Program));
@@ -18,7 +19,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         /// 0 - The application ran successfully.
         /// 1 - There was an error parsing <paramref name="args"/>.
         /// </returns>
-        [ExcludeFromCodeCoverage]
         static int Main(string[] args)
         {
             var settings = Settings.Default;
