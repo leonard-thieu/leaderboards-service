@@ -107,8 +107,8 @@
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
-    <Reference Include="toofz, Version=5.0.4.151, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.5.0.4\lib\net45\toofz.dll</HintPath>
+    <Reference Include="toofz, Version=6.2.0.163, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.6.2.0\lib\net45\toofz.dll</HintPath>
     </Reference>
     <Reference Include="toofz.NecroDancer.Leaderboards, Version=4.0.1.88, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.NecroDancer.Leaderboards.4.0.1\lib\net45\toofz.NecroDancer.Leaderboards.dll</HintPath>
@@ -116,11 +116,11 @@
     <Reference Include="toofz.NecroDancer.Leaderboards.EntityFramework, Version=1.0.2.10, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.NecroDancer.Leaderboards.EntityFramework.1.0.2\lib\net45\toofz.NecroDancer.Leaderboards.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.Services, Version=5.0.1.94, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.Services.5.0.1\lib\net45\toofz.Services.dll</HintPath>
+    <Reference Include="toofz.Services, Version=8.0.0.139, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.Services.8.0.0\lib\net45\toofz.Services.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.Telemetry, Version=1.0.2.12, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.Telemetry.1.0.2\lib\net45\toofz.Telemetry.dll</HintPath>
+    <Reference Include="toofz.Telemetry, Version=1.0.3.15, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.Telemetry.1.0.3\lib\net45\toofz.Telemetry.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -133,10 +133,16 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    <Compile Include="Properties\ILeaderboardsSettings.cs">
       <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.cs">
+      <DependentUpon>ILeaderboardsSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <DependentUpon>ILeaderboardsSettings.cs</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
     </Compile>
     <None Include="App.config">
       <SubType>Designer</SubType>
@@ -154,10 +160,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILeaderboardsSettings.cs" />
-    <Compile Include="Settings.cs">
-      <DependentUpon>ILeaderboardsSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="LeaderboardsArgsParser.cs" />
     <Compile Include="LeaderboardsOptions.cs" />
     <Compile Include="Program.cs" />

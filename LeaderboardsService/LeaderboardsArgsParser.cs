@@ -11,7 +11,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         internal const string DefaultLeaderboardsConnectionString = "Data Source=localhost;Initial Catalog=NecroDancer;Integrated Security=SSPI;";
 
-        public LeaderboardsArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter) : base(inReader, outWriter, errorWriter) { }
+        public LeaderboardsArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter, int iterations) :
+            base(inReader, outWriter, errorWriter)
+        {
+            this.iterations = iterations;
+        }
+
+        readonly int iterations;
 
         protected override string EntryAssemblyFileName { get; } = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
 
@@ -22,7 +28,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             optionSet.Add("username=", GetDescription(settingsType, nameof(Settings.SteamUserName)), username => options.SteamUserName = username);
             optionSet.Add("password:", GetDescription(settingsType, nameof(Settings.SteamPassword)), password => options.SteamPassword = password);
             optionSet.Add("connection:", GetDescription(settingsType, nameof(Settings.LeaderboardsConnectionString)), connection => options.LeaderboardsConnectionString = connection);
-            optionSet.Add("ikey=", GetDescription(settingsType, nameof(Settings.LeaderboardsInstrumentationKey)), key => options.LeaderboardsInstrumentationKey = key);
         }
 
         protected override void OnParsed(LeaderboardsOptions options, ILeaderboardsSettings settings)
@@ -31,73 +36,46 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
             #region SteamUserName
 
-            if (!string.IsNullOrEmpty(options.SteamUserName))
+            var steamUserName = options.SteamUserName;
+            if (!string.IsNullOrEmpty(steamUserName))
             {
-                settings.SteamUserName = options.SteamUserName;
+                settings.SteamUserName = steamUserName;
             }
-
-            while (string.IsNullOrEmpty(settings.SteamUserName))
+            else if (string.IsNullOrEmpty(settings.SteamUserName))
             {
-                OutWriter.Write("Steam user name: ");
-                settings.SteamUserName = InReader.ReadLine();
+                settings.SteamUserName = ReadOption("Steam user name");
             }
 
             #endregion
 
             #region SteamPassword
 
-            if (!string.IsNullOrEmpty(options.SteamPassword))
+            var steamPassword = options.SteamPassword;
+            if (ShouldPromptForRequiredSetting(steamPassword, settings.SteamPassword))
             {
-                settings.SteamPassword = new EncryptedSecret(options.SteamPassword);
+                steamPassword = ReadOption("Steam password");
             }
 
-            // When options.SteamPassword == null, the user has indicated that they wish to be prompted to enter the password.
-            while (settings.SteamPassword == null || options.SteamPassword == null)
+            if (steamPassword != "")
             {
-                OutWriter.Write("Steam password: ");
-                options.SteamPassword = InReader.ReadLine();
-                if (!string.IsNullOrEmpty(options.SteamPassword))
-                {
-                    settings.SteamPassword = new EncryptedSecret(options.SteamPassword);
-                }
+                settings.SteamPassword = new EncryptedSecret(steamPassword, iterations);
             }
 
             #endregion
 
             #region LeaderboardsConnectionString
 
-            if (!string.IsNullOrEmpty(options.LeaderboardsConnectionString))
+            var leaderboardsConnectionString = options.LeaderboardsConnectionString;
+            if (!string.IsNullOrEmpty(leaderboardsConnectionString))
             {
-                settings.LeaderboardsConnectionString = new EncryptedSecret(options.LeaderboardsConnectionString);
+                settings.LeaderboardsConnectionString = new EncryptedSecret(leaderboardsConnectionString, iterations);
             }
-            else
+            else if (settings.LeaderboardsConnectionString == null)
             {
-                if (options.LeaderboardsConnectionString == "" && settings.LeaderboardsConnectionString == null)
-                {
-                    settings.LeaderboardsConnectionString = new EncryptedSecret(DefaultLeaderboardsConnectionString);
-                }
-                else
-                {
-                    // When options.LeaderboardsConnectionString == null, the user has indicated that they wish to be prompted to enter the connection string.
-                    while (options.LeaderboardsConnectionString == null)
-                    {
-                        OutWriter.Write("Leaderboards connection string: ");
-                        options.LeaderboardsConnectionString = InReader.ReadLine();
-                        if (!string.IsNullOrEmpty(options.LeaderboardsConnectionString))
-                        {
-                            settings.LeaderboardsConnectionString = new EncryptedSecret(options.LeaderboardsConnectionString);
-                        }
-                    }
-                }
-            }
-
-            #endregion
-
-            #region LeaderboardsInstrumentationKey
-
-            if (!string.IsNullOrEmpty(options.LeaderboardsInstrumentationKey))
-            {
-                settings.LeaderboardsInstrumentationKey = options.LeaderboardsInstrumentationKey;
+                leaderboardsConnectionString = leaderboardsConnectionString == "" ?
+                    DefaultLeaderboardsConnectionString :
+                    ReadOption("Leaderboards connection string");
+                settings.LeaderboardsConnectionString = new EncryptedSecret(leaderboardsConnectionString, iterations);
             }
 
             #endregion

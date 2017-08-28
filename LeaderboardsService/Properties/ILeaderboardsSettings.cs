@@ -1,6 +1,6 @@
 ﻿using toofz.Services;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties
 {
     interface ILeaderboardsSettings : ISettings
     {
@@ -20,9 +20,5 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         /// The connection string used to connect to the leaderboards database.
         /// </summary>
         EncryptedSecret LeaderboardsConnectionString { get; set; }
-        /// <summary>
-        /// An Application Insights instrumentation key.
-        /// </summary>
-        string LeaderboardsInstrumentationKey { get; set; }
     }
 }

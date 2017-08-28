@@ -14,6 +14,12 @@
     <Setting Name="DelayBeforeGC" Description="The amount of time to wait after a cycle to perform garbage collection." Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">00:00:00</Value>
     </Setting>
+    <Setting Name="InstrumentationKey" Description="An Application Insights instrumentation key." GenerateDefaultValueInCode="false" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="KeyDerivationIterations" Description="The number of rounds to execute a key derivation function." Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20000</Value>
+    </Setting>
     <Setting Name="SteamUserName" Description="The user name used to log on to Steam." GenerateDefaultValueInCode="false" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
@@ -21,9 +27,6 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="LeaderboardsConnectionString" Description="The connection string used to connect to the leaderboards database." GenerateDefaultValueInCode="false" Type="toofz.EncryptedSecret" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="LeaderboardsInstrumentationKey" Description="An Application Insights instrumentation key." GenerateDefaultValueInCode="false" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
