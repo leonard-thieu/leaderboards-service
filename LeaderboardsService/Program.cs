@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using log4net;
-using Microsoft.ApplicationInsights.Extensibility;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.Services;
 
@@ -12,33 +10,30 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
+        /// <summary>
+        /// The main entry point of the application.
+        /// </summary>
+        /// <param name="args">Arguments passed in.</param>
+        /// <returns>
+        /// 0 - The application ran successfully.
+        /// 1 - There was an error parsing <paramref name="args"/>.
+        /// </returns>
+        [ExcludeFromCodeCoverage]
         static int Main(string[] args)
         {
-            Log.Debug("Initialized logging.");
-            Secrets.Iterations = 200000;
-
-            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
             var settings = Settings.Default;
 
-            // Args are only allowed while running as a console as they may require user input.
-            if (Environment.UserInteractive && args.Any())
+            using (var worker = new WorkerRole(settings))
             {
-                var parser = new LeaderboardsArgsParser(Console.In, Console.Out, Console.Error);
-
-                return parser.Parse(args, settings);
+                return Application.Run(
+                    args,
+                    new EnvironmentAdapter(),
+                    settings,
+                    worker,
+                    new LeaderboardsArgsParser(Console.In, Console.Out, Console.Error, settings.KeyDerivationIterations),
+                    new ServiceBaseAdapter(),
+                    Log);
             }
-
-            var instrumentationKey = settings.LeaderboardsInstrumentationKey;
-            if (!string.IsNullOrEmpty(instrumentationKey)) { TelemetryConfiguration.Active.InstrumentationKey = instrumentationKey; }
-            else
-            {
-                Log.Warn($"The setting 'LeaderboardsInstrumentationKey' is not set. Telemetry is disabled.");
-                TelemetryConfiguration.Active.DisableTelemetry = true;
-            }
-
-            Application.Run<WorkerRole, ILeaderboardsSettings>();
-
-            return 0;
         }
     }
 }

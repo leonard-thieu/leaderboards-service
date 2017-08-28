@@ -82,6 +82,37 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
         }
         
         /// <summary>
+        /// An Application Insights instrumentation key.
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("An Application Insights instrumentation key.")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public string InstrumentationKey {
+            get {
+                return ((string)(this["InstrumentationKey"]));
+            }
+            set {
+                this["InstrumentationKey"] = value;
+            }
+        }
+        
+        /// <summary>
+        /// The number of rounds to execute a key derivation function.
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("The number of rounds to execute a key derivation function.")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20000")]
+        public int KeyDerivationIterations {
+            get {
+                return ((int)(this["KeyDerivationIterations"]));
+            }
+            set {
+                this["KeyDerivationIterations"] = value;
+            }
+        }
+        
+        /// <summary>
         /// The user name used to log on to Steam.
         /// </summary>
         [global::System.Configuration.UserScopedSettingAttribute()]
@@ -123,21 +154,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
             }
             set {
                 this["LeaderboardsConnectionString"] = value;
-            }
-        }
-        
-        /// <summary>
-        /// An Application Insights instrumentation key.
-        /// </summary>
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.SettingsDescriptionAttribute("An Application Insights instrumentation key.")]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public string LeaderboardsInstrumentationKey {
-            get {
-                return ((string)(this["LeaderboardsInstrumentationKey"]));
-            }
-            set {
-                this["LeaderboardsInstrumentationKey"] = value;
             }
         }
     }

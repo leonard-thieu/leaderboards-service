@@ -21,7 +21,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             public async Task SteamClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleLeaderboardsSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockILeaderboardsStoreClient = new Mock<ILeaderboardsStoreClient>();
 
@@ -38,7 +39,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             public async Task LeaderboardsSqlClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleLeaderboardsSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockISteamClientApiClient = new Mock<ISteamClientApiClient>();
 
@@ -52,10 +54,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             }
 
             [TestMethod]
-            public async Task ValidParams_UpdatesLeaderboards()
+            public async Task UpdatesLeaderboards()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleLeaderboardsSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockILeaderboardEntriesCallback = new Mock<ILeaderboardEntriesCallback>();
                 mockILeaderboardEntriesCallback
@@ -89,7 +92,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             public async Task SteamClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleLeaderboardsSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockILeaderboardsStoreClient = new Mock<ILeaderboardsStoreClient>();
                 var mockLeaderboardsContext = new Mock<LeaderboardsContext>();
@@ -108,7 +112,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             public async Task LeaderboardsSqlClientIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleLeaderboardsSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockISteamClientApiClient = new Mock<ISteamClientApiClient>();
                 var mockLeaderboardsContext = new Mock<LeaderboardsContext>();
@@ -127,7 +132,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             public async Task DbIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleLeaderboardsSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockILeaderboardsStoreClient = new Mock<ILeaderboardsStoreClient>();
                 var mockISteamClientApiClient = new Mock<ISteamClientApiClient>();
@@ -143,10 +149,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             }
 
             [TestMethod]
-            public async Task ValidParams_UpdatesDailyLeaderboards()
+            public async Task UpdatesDailyLeaderboards()
             {
                 // Arrange
-                var workerRole = new WorkerRole();
+                var settings = new SimpleLeaderboardsSettings();
+                var workerRole = new WorkerRole(settings);
 
                 var mockIFindOrCreateLeaderboardCallback = new Mock<IFindOrCreateLeaderboardCallback>();
 

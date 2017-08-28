@@ -21,7 +21,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="InstallerMM.wxs" />
-    <Compile Include="InstallerMMcustom.wxs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LeaderboardsService\LeaderboardsService.csproj">
