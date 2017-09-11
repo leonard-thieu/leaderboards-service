@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using log4net;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.Services;
 
@@ -8,6 +9,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     [ExcludeFromCodeCoverage]
     static class Program
     {
+        static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+
         /// <summary>
         /// The main entry point of the application.
         /// </summary>
@@ -28,7 +31,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     settings,
                     worker,
                     new LeaderboardsArgsParser(Console.In, Console.Out, Console.Error),
-                    new ServiceBaseAdapter());
+                    new ServiceBaseAdapter(),
+                    Log);
             }
         }
     }

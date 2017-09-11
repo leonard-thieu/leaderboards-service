@@ -115,8 +115,8 @@
     <Reference Include="toofz.NecroDancer.Leaderboards.EntityFramework, Version=1.0.2.10, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.NecroDancer.Leaderboards.EntityFramework.1.0.2\lib\net45\toofz.NecroDancer.Leaderboards.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.Services, Version=9.0.0.162, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.Services.9.0.0\lib\net45\toofz.Services.dll</HintPath>
+    <Reference Include="toofz.Services, Version=9.0.1.207, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.Services.9.0.1\lib\net45\toofz.Services.dll</HintPath>
     </Reference>
     <Reference Include="toofz.TestsShared, Version=3.0.0.76, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.TestsShared.3.0.0\lib\net45\toofz.TestsShared.dll</HintPath>
