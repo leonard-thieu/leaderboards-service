@@ -42,8 +42,8 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Flurl, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.2.4.0\lib\net40\Flurl.dll</HintPath>
+    <Reference Include="Flurl, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.2.5.0\lib\net40\Flurl.dll</HintPath>
     </Reference>
     <Reference Include="Humanizer, Version=2.2.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
       <HintPath>..\packages\Humanizer.Core.2.2.0\lib\netstandard1.0\Humanizer.dll</HintPath>
@@ -69,8 +69,8 @@
     <Reference Include="Microsoft.ApplicationInsights, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.4.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationInsights.Log4NetAppender, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.Log4NetAppender.2.4.0\lib\net45\Microsoft.ApplicationInsights.Log4NetAppender.dll</HintPath>
+    <Reference Include="Microsoft.ApplicationInsights.Log4NetAppender, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Log4NetAppender.2.4.1\lib\net45\Microsoft.ApplicationInsights.Log4NetAppender.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
@@ -84,8 +84,8 @@
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="SqlBulkUpsert, Version=2.1.6.56, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.SqlBulkUpsert.2.1.6\lib\net45\SqlBulkUpsert.dll</HintPath>
+    <Reference Include="SqlBulkUpsert, Version=4.1.0.101, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.SqlBulkUpsert.4.1.0\lib\net45\SqlBulkUpsert.dll</HintPath>
     </Reference>
     <Reference Include="SteamKit2, Version=1.8.3.0, Culture=neutral, PublicKeyToken=ed3ce47ed5aad940, processorArchitecture=MSIL">
       <HintPath>..\packages\SteamKit2.1.8.3\lib\net45\SteamKit2.dll</HintPath>
@@ -116,8 +116,8 @@
     <Reference Include="toofz.NecroDancer.Leaderboards.EntityFramework, Version=1.0.2.10, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.NecroDancer.Leaderboards.EntityFramework.1.0.2\lib\net45\toofz.NecroDancer.Leaderboards.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.Services, Version=8.0.0.139, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.Services.8.0.0\lib\net45\toofz.Services.dll</HintPath>
+    <Reference Include="toofz.Services, Version=9.0.0.162, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.Services.9.0.0\lib\net45\toofz.Services.dll</HintPath>
     </Reference>
     <Reference Include="toofz.Telemetry, Version=1.0.3.15, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.Telemetry.1.0.3\lib\net45\toofz.Telemetry.dll</HintPath>

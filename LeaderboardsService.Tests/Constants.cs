@@ -2,6 +2,6 @@
 {
     static class Constants
     {
-        public const int Iterations = 1000;
+        public const int KeyDerivationIterations = 1;
     }
 }

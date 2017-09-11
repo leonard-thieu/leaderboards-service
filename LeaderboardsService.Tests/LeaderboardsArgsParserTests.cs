@@ -14,7 +14,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             public Parse()
             {
                 inReader = mockInReader.Object;
-                parser = new LeaderboardsArgsParser(inReader, outWriter, errorWriter, Constants.Iterations);
+                parser = new LeaderboardsArgsParser(inReader, outWriter, errorWriter);
             }
 
             Mock<TextReader> mockInReader = new Mock<TextReader>(MockBehavior.Strict);
@@ -35,7 +35,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 parser.Parse(args, settings);
 
                 // Assert
-                AssertHelper.NormalizedAreEqual(@"
+                Assert.That.NormalizedAreEqual(@"
 Usage: LeaderboardsService.exe [options]
 
 options:
@@ -57,10 +57,11 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--username=myUserName" };
-                ILeaderboardsSettings settings = new SimpleLeaderboardsSettings
+                ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
-                    SteamPassword = new EncryptedSecret("a", Constants.Iterations),
+                    SteamPassword = new EncryptedSecret("a", Constants.KeyDerivationIterations),
+                    KeyDerivationIterations = Constants.KeyDerivationIterations,
                 };
 
                 // Act
@@ -75,10 +76,11 @@ options:
             {
                 // Arrange
                 string[] args = new string[0];
-                ILeaderboardsSettings settings = new SimpleLeaderboardsSettings
+                ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = null,
-                    SteamPassword = new EncryptedSecret("a", Constants.Iterations),
+                    SteamPassword = new EncryptedSecret("a", Constants.KeyDerivationIterations),
+                    KeyDerivationIterations = Constants.KeyDerivationIterations,
                 };
                 mockInReader
                     .SetupSequence(r => r.ReadLine())
@@ -99,7 +101,8 @@ options:
                 var mockSettings = new Mock<ILeaderboardsSettings>();
                 mockSettings
                     .SetupProperty(s => s.SteamUserName, "myUserName")
-                    .SetupProperty(s => s.SteamPassword, new EncryptedSecret("a", Constants.Iterations));
+                    .SetupProperty(s => s.SteamPassword, new EncryptedSecret("a", Constants.KeyDerivationIterations))
+                    .SetupProperty(s => s.KeyDerivationIterations, Constants.KeyDerivationIterations);
                 var settings = mockSettings.Object;
 
                 // Act
@@ -118,17 +121,18 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--password=myPassword" };
-                ILeaderboardsSettings settings = new SimpleLeaderboardsSettings
+                ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
-                    SteamPassword = new EncryptedSecret("a", Constants.Iterations),
+                    SteamPassword = new EncryptedSecret("a", Constants.KeyDerivationIterations),
+                    KeyDerivationIterations = Constants.KeyDerivationIterations,
                 };
 
                 // Act
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myPassword", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myPassword", Constants.KeyDerivationIterations);
                 Assert.AreEqual(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
             }
 
@@ -137,10 +141,11 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--password" };
-                ILeaderboardsSettings settings = new SimpleLeaderboardsSettings
+                ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
-                    SteamPassword = new EncryptedSecret("a", Constants.Iterations),
+                    SteamPassword = new EncryptedSecret("a", Constants.KeyDerivationIterations),
+                    KeyDerivationIterations = Constants.KeyDerivationIterations,
                 };
                 mockInReader
                     .SetupSequence(r => r.ReadLine())
@@ -150,7 +155,7 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myPassword", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myPassword", Constants.KeyDerivationIterations);
                 Assert.AreEqual(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
             }
 
@@ -159,10 +164,11 @@ options:
             {
                 // Arrange
                 string[] args = new string[0];
-                ILeaderboardsSettings settings = new SimpleLeaderboardsSettings
+                ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
                     SteamPassword = null,
+                    KeyDerivationIterations = Constants.KeyDerivationIterations,
                 };
                 mockInReader
                     .SetupSequence(r => r.ReadLine())
@@ -172,7 +178,7 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myPassword", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myPassword", Constants.KeyDerivationIterations);
                 Assert.AreEqual(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
             }
 
@@ -184,7 +190,8 @@ options:
                 var mockSettings = new Mock<ILeaderboardsSettings>();
                 mockSettings
                     .SetupProperty(s => s.SteamUserName, "myUserName")
-                    .SetupProperty(s => s.SteamPassword, new EncryptedSecret("a", Constants.Iterations));
+                    .SetupProperty(s => s.SteamPassword, new EncryptedSecret("a", Constants.KeyDerivationIterations))
+                    .SetupProperty(s => s.KeyDerivationIterations, Constants.KeyDerivationIterations);
                 var settings = mockSettings.Object;
 
                 // Act
@@ -203,17 +210,18 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--connection=myConnectionString" };
-                ILeaderboardsSettings settings = new SimpleLeaderboardsSettings
+                ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
-                    SteamPassword = new EncryptedSecret("a", Constants.Iterations),
+                    SteamPassword = new EncryptedSecret("a", Constants.KeyDerivationIterations),
+                    KeyDerivationIterations = Constants.KeyDerivationIterations,
                 };
 
                 // Act
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myConnectionString", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myConnectionString", Constants.KeyDerivationIterations);
                 Assert.AreEqual(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
             }
 
@@ -222,10 +230,11 @@ options:
             {
                 // Arrange
                 string[] args = new[] { "--connection" };
-                ILeaderboardsSettings settings = new SimpleLeaderboardsSettings
+                ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
-                    SteamPassword = new EncryptedSecret("a", Constants.Iterations),
+                    SteamPassword = new EncryptedSecret("a", Constants.KeyDerivationIterations),
+                    KeyDerivationIterations = Constants.KeyDerivationIterations,
                 };
                 mockInReader
                     .SetupSequence(r => r.ReadLine())
@@ -235,7 +244,7 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret("myConnectionString", Constants.Iterations);
+                var encrypted = new EncryptedSecret("myConnectionString", Constants.KeyDerivationIterations);
                 Assert.AreEqual(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
             }
 
@@ -244,17 +253,18 @@ options:
             {
                 // Arrange
                 string[] args = new string[0];
-                ILeaderboardsSettings settings = new SimpleLeaderboardsSettings
+                ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
-                    SteamPassword = new EncryptedSecret("a", Constants.Iterations),
+                    SteamPassword = new EncryptedSecret("a", Constants.KeyDerivationIterations),
+                    KeyDerivationIterations = Constants.KeyDerivationIterations,
                 };
 
                 // Act
                 parser.Parse(args, settings);
 
                 // Assert
-                var encrypted = new EncryptedSecret(LeaderboardsArgsParser.DefaultLeaderboardsConnectionString, Constants.Iterations);
+                var encrypted = new EncryptedSecret(LeaderboardsArgsParser.DefaultLeaderboardsConnectionString, Constants.KeyDerivationIterations);
                 Assert.AreEqual(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
             }
 
@@ -266,8 +276,8 @@ options:
                 var mockSettings = new Mock<ILeaderboardsSettings>();
                 mockSettings
                     .SetupProperty(s => s.SteamUserName, "myUserName")
-                    .SetupProperty(s => s.SteamPassword, new EncryptedSecret("a", Constants.Iterations))
-                    .SetupProperty(s => s.LeaderboardsConnectionString, new EncryptedSecret("a", Constants.Iterations));
+                    .SetupProperty(s => s.SteamPassword, new EncryptedSecret("a", Constants.KeyDerivationIterations))
+                    .SetupProperty(s => s.LeaderboardsConnectionString, new EncryptedSecret("a", Constants.KeyDerivationIterations));
                 var settings = mockSettings.Object;
 
                 // Act

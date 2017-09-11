@@ -3,7 +3,7 @@ using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    sealed class SimpleLeaderboardsSettings : ILeaderboardsSettings
+    sealed class StubLeaderboardsSettings : ILeaderboardsSettings
     {
         public uint AppId => 247080;
 
@@ -15,16 +15,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         public string InstrumentationKey { get; set; }
         public int KeyDerivationIterations { get; set; }
 
-        public void Reload()
-        {
-            SteamUserName = default(string);
-            SteamPassword = default(EncryptedSecret);
-            LeaderboardsConnectionString = default(EncryptedSecret);
-            UpdateInterval = default(TimeSpan);
-            DelayBeforeGC = default(TimeSpan);
-            InstrumentationKey = default(string);
-            KeyDerivationIterations = default(int);
-        }
+        public void Reload() { }
 
         public void Save() { }
     }

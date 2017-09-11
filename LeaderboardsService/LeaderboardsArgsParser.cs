@@ -11,13 +11,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         internal const string DefaultLeaderboardsConnectionString = "Data Source=localhost;Initial Catalog=NecroDancer;Integrated Security=SSPI;";
 
-        public LeaderboardsArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter, int iterations) :
+        public LeaderboardsArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter) :
             base(inReader, outWriter, errorWriter)
         {
-            this.iterations = iterations;
-        }
 
-        readonly int iterations;
+        }
 
         protected override string EntryAssemblyFileName { get; } = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
 
@@ -33,6 +31,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         protected override void OnParsed(LeaderboardsOptions options, ILeaderboardsSettings settings)
         {
             base.OnParsed(options, settings);
+
+            var iterations = settings.KeyDerivationIterations;
 
             #region SteamUserName
 

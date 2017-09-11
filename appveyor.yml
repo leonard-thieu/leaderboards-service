@@ -31,7 +31,7 @@ build:
   verbosity: minimal
 
 test_script:
-  - ps: .\Scripts\Test-Project.ps1
+  - ps: .\Scripts\Test-Project.ps1 -AsLocalSystem
 after_test:
   - ps: .\Scripts\Submit-CodeCoverageResults.ps1
 
