@@ -13,7 +13,7 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    sealed class WorkerRole : WorkerRoleBase<ILeaderboardsSettings>
+    class WorkerRole : WorkerRoleBase<ILeaderboardsSettings>
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
@@ -28,6 +28,15 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             if (Settings.LeaderboardsConnectionString == null)
                 throw new InvalidOperationException($"{nameof(Settings.LeaderboardsConnectionString)} is not set.");
 
+            var leaderboardCategories = LeaderboardsResources.ReadLeaderboardCategories();
+            var products = leaderboardCategories["products"];
+            var runs = leaderboardCategories["runs"];
+            var characters = leaderboardCategories["characters"];
+
+            if (Settings.DailyLeaderboardsPerUpdate < products.Count)
+                throw new InvalidOperationException($"{nameof(Settings.DailyLeaderboardsPerUpdate)} is set to less than the number of products ({products.Count}).");
+            var dailyLeaderboardsPerUpdate = Settings.DailyLeaderboardsPerUpdate;
+
             var userName = Settings.SteamUserName;
             var password = Settings.SteamPassword.Decrypt();
             var leaderboardsConnectionString = Settings.LeaderboardsConnectionString.Decrypt();
@@ -36,8 +45,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 using (new UpdateNotifier(Log, "leaderboards"))
                 {
-                    var headers = GetStaleLeaderboards();
-                    var leaderboards = await DownloadLeaderboardsAsync(headers, steamClient, cancellationToken).ConfigureAwait(false);
+                    var headers = GetLeaderboardHeaders();
+                    var leaderboards = await DownloadLeaderboardsAsync(runs, characters, headers, steamClient, cancellationToken).ConfigureAwait(false);
 
                     using (var connection = new SqlConnection(leaderboardsConnectionString))
                     {
@@ -53,11 +62,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     IEnumerable<DailyLeaderboardHeader> headers;
                     using (var db = new LeaderboardsContext(leaderboardsConnectionString))
                     {
-                        headers = await GetStaleDailyLeaderboardsAsync(db, steamClient, cancellationToken).ConfigureAwait(false);
+                        headers = await GetDailyLeaderboardHeadersAsync(products, dailyLeaderboardsPerUpdate, db, steamClient, cancellationToken).ConfigureAwait(false);
                     }
-
-                    var leaderboards = await DownloadDailyLeaderboardsAsync(headers, steamClient, cancellationToken).ConfigureAwait(false);
-
+                    var leaderboards = await GetDailyLeaderboardsAsync(products, headers, steamClient, cancellationToken).ConfigureAwait(false);
                     using (var connection = new SqlConnection(leaderboardsConnectionString))
                     {
                         await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
@@ -71,12 +78,14 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         #region Leaderboards
 
-        internal IEnumerable<LeaderboardHeader> GetStaleLeaderboards()
+        internal IEnumerable<LeaderboardHeader> GetLeaderboardHeaders()
         {
             return LeaderboardsResources.ReadLeaderboardHeaders();
         }
 
         internal async Task<IEnumerable<Leaderboard>> DownloadLeaderboardsAsync(
+            Category runs,
+            Category characters,
             IEnumerable<LeaderboardHeader> headers,
             ISteamClientApiClient steamClient,
             CancellationToken cancellationToken)
@@ -85,59 +94,57 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 steamClient.Progress = download.Progress;
 
-                var leaderboardCategories = LeaderboardsResources.ReadLeaderboardCategories();
-                var characters = leaderboardCategories["characters"];
-                var runs = leaderboardCategories["runs"];
-
                 var leaderboardTasks = new List<Task<Leaderboard>>();
                 foreach (var header in headers)
                 {
-                    leaderboardTasks.Add(MapLeaderboardEntries());
-
-                    // TODO: Consider making this non-local.
-                    async Task<Leaderboard> MapLeaderboardEntries()
-                    {
-                        var leaderboard = new Leaderboard
-                        {
-                            LeaderboardId = header.Id,
-                            CharacterId = characters[header.Character].Id,
-                            RunId = runs[header.Run].Id,
-                            LastUpdate = DateTime.UtcNow,
-                        };
-
-                        var response =
-                            await steamClient.GetLeaderboardEntriesAsync(Settings.AppId, header.Id, cancellationToken).ConfigureAwait(false);
-
-                        leaderboard.EntriesCount = response.EntryCount;
-                        var leaderboardEntries = response.Entries.Select(e =>
-                        {
-                            var entry = new Entry
-                            {
-                                LeaderboardId = header.Id,
-                                Rank = e.GlobalRank,
-                                SteamId = (long)(ulong)e.SteamID,
-                                Score = e.Score,
-                                Zone = e.Details[0],
-                                Level = e.Details[1],
-                            };
-                            var ugcId = (long)(ulong)e.UGCId;
-                            switch (ugcId)
-                            {
-                                case -1:
-                                case 0: entry.ReplayId = null; break;
-                                default: entry.ReplayId = ugcId; break;
-                            }
-
-                            return entry;
-                        });
-                        leaderboard.Entries.AddRange(leaderboardEntries);
-
-                        return leaderboard;
-                    }
+                    var leaderboardTask = DownloadLeaderboardAsync(
+                        steamClient,
+                        header.Id,
+                        runs[header.Run].Id,
+                        characters[header.Character].Id,
+                        cancellationToken);
+                    leaderboardTasks.Add(leaderboardTask);
                 }
 
                 return await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
             }
+        }
+
+        internal async Task<Leaderboard> DownloadLeaderboardAsync(
+            ISteamClientApiClient steamClient,
+            int leaderboardId,
+            int runId,
+            int characterId,
+            CancellationToken cancellationToken)
+        {
+            var response = await steamClient
+                .GetLeaderboardEntriesAsync(Settings.AppId, leaderboardId, cancellationToken)
+                .ConfigureAwait(false);
+
+            var leaderboard = new Leaderboard
+            {
+                LeaderboardId = leaderboardId,
+                RunId = runId,
+                CharacterId = characterId,
+                LastUpdate = DateTime.UtcNow,
+            };
+
+            leaderboard.EntriesCount = response.EntryCount;
+            foreach (var entry in response.Entries)
+            {
+                leaderboard.Entries.Add(new Entry
+                {
+                    LeaderboardId = leaderboardId,
+                    Rank = entry.GlobalRank,
+                    SteamId = entry.SteamID.ToInt64(),
+                    Score = entry.Score,
+                    Zone = entry.Details[0],
+                    Level = entry.Details[1],
+                    ReplayId = entry.UGCId.ToReplayId(),
+                });
+            }
+
+            return leaderboard;
         }
 
         internal async Task StoreLeaderboardsAsync(
@@ -184,17 +191,35 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         #region Daily Leaderboards
 
-        internal async Task<IEnumerable<DailyLeaderboardHeader>> GetStaleDailyLeaderboardsAsync(
+        internal async Task<List<DailyLeaderboardHeader>> GetDailyLeaderboardHeadersAsync(
+            Category products,
+            int dailyLeaderboardsPerUpdate,
             LeaderboardsContext db,
-            ISteamClientApiClient steamClient,
+            SteamClientApiClient steamClient,
             CancellationToken cancellationToken)
         {
             var headers = new List<DailyLeaderboardHeader>();
 
             var today = DateTime.UtcNow.Date;
-            var limit = 100;
-            var leaderboardCategories = LeaderboardsResources.ReadLeaderboardCategories();
-            var products = leaderboardCategories["products"];
+
+            var limit = dailyLeaderboardsPerUpdate - products.Count;
+            var staleDailies = await GetStaleDailyLeaderboardHeadersAsync(products, db, today, limit, cancellationToken).ConfigureAwait(false);
+            headers.AddRange(staleDailies);
+
+            var currentDailies = await GetCurrentDailyLeaderboardHeadersAsync(products, db, steamClient, today, cancellationToken).ConfigureAwait(false);
+            headers.AddRange(currentDailies);
+
+            return headers;
+        }
+
+        internal async Task<IEnumerable<DailyLeaderboardHeader>> GetStaleDailyLeaderboardHeadersAsync(
+            Category products,
+            LeaderboardsContext db,
+            DateTime today,
+            int limit,
+            CancellationToken cancellationToken)
+        {
+            var headers = new List<DailyLeaderboardHeader>();
 
             var staleDailies = await (from l in db.DailyLeaderboards
                                       orderby l.LastUpdate
@@ -206,9 +231,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                                           l.ProductId,
                                           l.IsProduction,
                                       })
-                                      .Take(limit - products.Count)
+                                      .Take(limit)
                                       .ToListAsync(cancellationToken)
                                       .ConfigureAwait(false);
+
             foreach (var staleDaily in staleDailies)
             {
                 var header = new DailyLeaderboardHeader
@@ -221,7 +247,19 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 headers.Add(header);
             }
 
-            var existingCurrentDailies =
+            return headers;
+        }
+
+        internal async Task<IEnumerable<DailyLeaderboardHeader>> GetCurrentDailyLeaderboardHeadersAsync(
+            Category products,
+            LeaderboardsContext db,
+            ISteamClientApiClient steamClient,
+            DateTime today,
+            CancellationToken cancellationToken)
+        {
+            var dailyLeaderboardHeaders = new List<DailyLeaderboardHeader>();
+
+            var existingCurrentDailyLeaderboards =
                 await (from l in db.DailyLeaderboards
                        where l.Date == today
                        select new
@@ -233,70 +271,70 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                        })
                        .ToListAsync(cancellationToken)
                        .ConfigureAwait(false);
-            IEnumerable<DailyLeaderboardHeader> currentDailies =
-                (from l in existingCurrentDailies
-                 select new DailyLeaderboardHeader
-                 {
-                     Id = l.LeaderboardId,
-                     Date = l.Date,
-                     Product = products.GetName(l.ProductId),
-                     IsProduction = l.IsProduction,
-                 })
-                 .ToList();
+            var existingCurrentDailyLeaderboardHeaders = from l in existingCurrentDailyLeaderboards
+                                                         select new DailyLeaderboardHeader
+                                                         {
+                                                             Id = l.LeaderboardId,
+                                                             Date = l.Date,
+                                                             Product = products.GetName(l.ProductId),
+                                                             IsProduction = l.IsProduction,
+                                                         };
+            dailyLeaderboardHeaders.AddRange(existingCurrentDailyLeaderboardHeaders);
 
-            // TODO: Should check which products are missing instead of assuming all are missing
-            if (currentDailies.Count() != products.Count)
+            var missingProducts = products.Keys.Except(existingCurrentDailyLeaderboardHeaders.Select(e => e.Product));
+            var headerTasks = new List<Task<DailyLeaderboardHeader>>();
+            foreach (var missingProduct in missingProducts)
             {
-                var headerTasks = new List<Task<DailyLeaderboardHeader>>();
-                foreach (var p in products)
-                {
-                    headerTasks.Add(GetDailyLeaderboardHeaderAsync());
-
-                    // TODO: Consider making this non-local.
-                    async Task<DailyLeaderboardHeader> GetDailyLeaderboardHeaderAsync()
-                    {
-                        var isProduction = true;
-                        var name = GetDailyLeaderboardName(p.Key, today, isProduction);
-                        var leaderboard = await steamClient.FindLeaderboardAsync(Settings.AppId, name, cancellationToken).ConfigureAwait(false);
-
-                        return new DailyLeaderboardHeader
-                        {
-                            Id = leaderboard.ID,
-                            Date = today,
-                            Product = p.Key,
-                            IsProduction = isProduction,
-                        };
-                    }
-                }
-                currentDailies = await Task.WhenAll(headerTasks).ConfigureAwait(false);
-
-                // TODO: Consider making this non-local.
-                string GetDailyLeaderboardName(string product, DateTime date, bool isProduction)
-                {
-                    var tokens = new List<string>();
-
-                    switch (product)
-                    {
-                        case "amplified": tokens.Add("DLC"); break;
-                        case "classic": break;
-                        default:
-                            throw new ArgumentException($"'{product}' is not a valid product.");
-                    }
-
-                    tokens.Add(date.ToString("d/M/yyyy"));
-
-                    var name = string.Join(" ", tokens);
-                    if (isProduction) { name += "_PROD"; }
-
-                    return name;
-                }
+                var headerTask = GetDailyLeaderboardHeaderAsync(steamClient, missingProduct, today, true, cancellationToken);
+                headerTasks.Add(headerTask);
             }
-            headers.AddRange(currentDailies);
+            var missingHeaders = await Task.WhenAll(headerTasks).ConfigureAwait(false);
+            dailyLeaderboardHeaders.AddRange(missingHeaders);
 
-            return headers;
+            return dailyLeaderboardHeaders;
         }
 
-        internal async Task<IEnumerable<DailyLeaderboard>> DownloadDailyLeaderboardsAsync(
+        internal async Task<DailyLeaderboardHeader> GetDailyLeaderboardHeaderAsync(
+            ISteamClientApiClient steamClient,
+            string product,
+            DateTime date,
+            bool isProduction,
+            CancellationToken cancellationToken)
+        {
+            var name = GetDailyLeaderboardName(product, date, isProduction);
+            var leaderboard = await steamClient.FindLeaderboardAsync(Settings.AppId, name, cancellationToken).ConfigureAwait(false);
+
+            return new DailyLeaderboardHeader
+            {
+                Id = leaderboard.ID,
+                Product = product,
+                Date = date,
+                IsProduction = isProduction,
+            };
+        }
+
+        internal static string GetDailyLeaderboardName(string product, DateTime date, bool isProduction)
+        {
+            var tokens = new List<string>();
+
+            switch (product)
+            {
+                case "amplified": tokens.Add("DLC"); break;
+                case "classic": break;
+                default:
+                    throw new ArgumentException($"'{product}' is not a valid product.");
+            }
+
+            tokens.Add(date.ToString("d/M/yyyy"));
+
+            var name = string.Join(" ", tokens);
+            if (isProduction) { name += "_PROD"; }
+
+            return name;
+        }
+
+        internal async Task<IEnumerable<DailyLeaderboard>> GetDailyLeaderboardsAsync(
+            Category products,
             IEnumerable<DailyLeaderboardHeader> headers,
             ISteamClientApiClient steamClient,
             CancellationToken cancellationToken)
@@ -306,57 +344,58 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 steamClient.Progress = download.Progress;
 
-                var leaderboardCategories = LeaderboardsResources.ReadLeaderboardCategories();
-                var products = leaderboardCategories["products"];
-
                 foreach (var header in headers)
                 {
-                    leaderboardTasks.Add(MapLeaderboardEntries());
-
-                    // TODO: Consider making this non-local.
-                    async Task<DailyLeaderboard> MapLeaderboardEntries()
-                    {
-                        var leaderboard = new DailyLeaderboard
-                        {
-                            LeaderboardId = header.Id,
-                            Date = header.Date,
-                            ProductId = products[header.Product].Id,
-                            IsProduction = header.IsProduction,
-                            LastUpdate = DateTime.UtcNow,
-                        };
-
-                        var response =
-                            await steamClient.GetLeaderboardEntriesAsync(Settings.AppId, header.Id, cancellationToken).ConfigureAwait(false);
-
-                        var leaderboardEntries = response.Entries.Select(e =>
-                        {
-                            var entry = new DailyEntry
-                            {
-                                LeaderboardId = header.Id,
-                                Rank = e.GlobalRank,
-                                SteamId = (long)(ulong)e.SteamID,
-                                Score = e.Score,
-                                Zone = e.Details[0],
-                                Level = e.Details[1],
-                            };
-                            var ugcId = (long)(ulong)e.UGCId;
-                            switch (ugcId)
-                            {
-                                case -1:
-                                case 0: entry.ReplayId = null; break;
-                                default: entry.ReplayId = ugcId; break;
-                            }
-
-                            return entry;
-                        });
-                        leaderboard.Entries.AddRange(leaderboardEntries);
-
-                        return leaderboard;
-                    }
+                    var leaderboardTask = GetDailyLeaderboardEntriesAsync(
+                        steamClient,
+                        header.Id,
+                        products[header.Product].Id,
+                        header.Date,
+                        header.IsProduction,
+                        cancellationToken);
+                    leaderboardTasks.Add(leaderboardTask);
                 }
 
                 return await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
             }
+        }
+
+        internal async Task<DailyLeaderboard> GetDailyLeaderboardEntriesAsync(
+            ISteamClientApiClient steamClient,
+            int leaderboardId,
+            int productId,
+            DateTime date,
+            bool isProduction,
+            CancellationToken cancellationToken)
+        {
+            var leaderboard = new DailyLeaderboard
+            {
+                LeaderboardId = leaderboardId,
+                Date = date,
+                ProductId = productId,
+                IsProduction = isProduction,
+                LastUpdate = DateTime.UtcNow,
+            };
+
+            var response = await steamClient
+                .GetLeaderboardEntriesAsync(Settings.AppId, leaderboardId, cancellationToken)
+                .ConfigureAwait(false);
+
+            foreach (var entry in response.Entries)
+            {
+                leaderboard.Entries.Add(new DailyEntry
+                {
+                    LeaderboardId = leaderboardId,
+                    Rank = entry.GlobalRank,
+                    SteamId = entry.SteamID.ToInt64(),
+                    Score = entry.Score,
+                    Zone = entry.Details[0],
+                    Level = entry.Details[1],
+                    ReplayId = entry.UGCId.ToReplayId(),
+                });
+            }
+
+            return leaderboard;
         }
 
         internal async Task StoreDailyLeaderboardsAsync(

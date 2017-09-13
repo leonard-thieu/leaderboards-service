@@ -26,6 +26,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             optionSet.Add("username=", GetDescription(settingsType, nameof(Settings.SteamUserName)), username => options.SteamUserName = username);
             optionSet.Add("password:", GetDescription(settingsType, nameof(Settings.SteamPassword)), password => options.SteamPassword = password);
             optionSet.Add("connection:", GetDescription(settingsType, nameof(Settings.LeaderboardsConnectionString)), connection => options.LeaderboardsConnectionString = connection);
+            optionSet.Add("dailies=", GetDescription(settingsType, nameof(Settings.DailyLeaderboardsPerUpdate)), (int? dailies) => options.DailyLeaderboardsPerUpdate = dailies);
         }
 
         protected override void OnParsed(LeaderboardsOptions options, ILeaderboardsSettings settings)
@@ -76,6 +77,16 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     DefaultLeaderboardsConnectionString :
                     ReadOption("Leaderboards connection string");
                 settings.LeaderboardsConnectionString = new EncryptedSecret(leaderboardsConnectionString, iterations);
+            }
+
+            #endregion
+
+            #region DailyLeaderboardsPerUpdate
+
+            var dailyLeaderboardsPerUpdate = options.DailyLeaderboardsPerUpdate;
+            if (dailyLeaderboardsPerUpdate != null)
+            {
+                settings.DailyLeaderboardsPerUpdate = dailyLeaderboardsPerUpdate.Value;
             }
 
             #endregion

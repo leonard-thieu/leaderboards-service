@@ -132,19 +132,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\ILeaderboardsSettings.cs" />
     <None Include="Properties\Settings.settings">
+      <SubType>Designer</SubType>
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
+      <DependentUpon>ILeaderboardsSettings.cs</DependentUpon>
     </None>
-    <Compile Include="Properties\ILeaderboardsSettings.cs">
+    <Compile Include="Properties\Settings.cs">
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.cs">
-      <DependentUpon>ILeaderboardsSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
-      <DependentUpon>ILeaderboardsSettings.cs</DependentUpon>
+      <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
     </Compile>
@@ -167,6 +166,8 @@
     <Compile Include="LeaderboardsArgsParser.cs" />
     <Compile Include="LeaderboardsOptions.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="SteamIDExtensions.cs" />
+    <Compile Include="UGCHandleExtensions.cs" />
     <Compile Include="WorkerRole.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -47,6 +47,7 @@ options:
   --username=VALUE      The user name used to log on to Steam.
   --password[=VALUE]    The password used to log on to Steam.
   --connection[=VALUE]  The connection string used to connect to the leaderboards database.
+  --dailies=VALUE       The maxinum number of daily leaderboards to update per cycle.
 ", outWriter.ToString());
             }
 
@@ -285,6 +286,48 @@ options:
 
                 // Assert
                 mockSettings.VerifySet(s => s.LeaderboardsConnectionString = It.IsAny<EncryptedSecret>(), Times.Never);
+            }
+
+            #endregion
+
+            #region DailyLeaderboardsPerUpdate
+
+            [TestMethod]
+            public void DailiesIsSpecified_SetsDailyLeaderboardsPerUpdate()
+            {
+                // Arrange
+                string[] args = new[] { "--dailies=10" };
+                ILeaderboardsSettings settings = new StubLeaderboardsSettings
+                {
+                    SteamUserName = "a",
+                    SteamPassword = new EncryptedSecret("a", Constants.KeyDerivationIterations),
+                    KeyDerivationIterations = Constants.KeyDerivationIterations,
+                };
+
+                // Act
+                parser.Parse(args, settings);
+
+                // Assert
+                Assert.AreEqual(10, settings.DailyLeaderboardsPerUpdate);
+            }
+
+            [TestMethod]
+            public void DailiesIsNotSpecified_DoesNotSetDailyLeaderboardsPerUpdate()
+            {
+                // Arrange
+                string[] args = new string[0];
+                var mockSettings = new Mock<ILeaderboardsSettings>();
+                mockSettings
+                    .SetupProperty(s => s.SteamUserName, "myUserName")
+                    .SetupProperty(s => s.SteamPassword, new EncryptedSecret("a", Constants.KeyDerivationIterations))
+                    .SetupProperty(s => s.KeyDerivationIterations, Constants.KeyDerivationIterations);
+                var settings = mockSettings.Object;
+
+                // Act
+                parser.Parse(args, settings);
+
+                // Assert
+                mockSettings.VerifySet(s => s.DailyLeaderboardsPerUpdate = It.IsAny<int>(), Times.Never);
             }
 
             #endregion

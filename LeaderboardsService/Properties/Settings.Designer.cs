@@ -156,5 +156,21 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
                 this["LeaderboardsConnectionString"] = value;
             }
         }
+        
+        /// <summary>
+        /// The maxinum number of daily leaderboards to update per cycle.
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("The maxinum number of daily leaderboards to update per cycle.")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int DailyLeaderboardsPerUpdate {
+            get {
+                return ((int)(this["DailyLeaderboardsPerUpdate"]));
+            }
+            set {
+                this["DailyLeaderboardsPerUpdate"] = value;
+            }
+        }
     }
 }

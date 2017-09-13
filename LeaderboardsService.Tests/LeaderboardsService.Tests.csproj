@@ -149,7 +149,10 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="LeaderboardsArgsParserTests.cs" />
+    <Compile Include="SteamIDExtensionsTests.cs" />
     <Compile Include="StubLeaderboardsSettings.cs" />
+    <Compile Include="UGCHandleExtensionsTests.cs" />
+    <Compile Include="WorkerRoleTests.cs" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -29,5 +29,8 @@
     <Setting Name="LeaderboardsConnectionString" Description="The connection string used to connect to the leaderboards database." GenerateDefaultValueInCode="false" Type="toofz.EncryptedSecret" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="DailyLeaderboardsPerUpdate" Description="The maxinum number of daily leaderboards to update per cycle." Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
