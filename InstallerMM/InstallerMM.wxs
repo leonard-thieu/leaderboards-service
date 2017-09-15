@@ -82,11 +82,8 @@
         <Component Id="owcE7C4094F57B0A8D61E66E0978388F384" Guid="027d5f35-a2dc-f7c0-ff9c-d88765e456f3">
           <File Id="owfE7C4094F57B0A8D61E66E0978388F384" Source="$(var.SourceDir)\System.Net.Http.Formatting.dll" KeyPath="yes" />
         </Component>
-        <Component Id="owcCE4898A459220AFB82CE5C29F65FEB28" Guid="d6cfc0fe-0141-1a96-5403-d9390c17e896">
-          <File Id="owfCE4898A459220AFB82CE5C29F65FEB28" Source="$(var.SourceDir)\System.Threading.Tasks.Dataflow.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="owcE4E6B570ADBEC007C10E9A65C0D3809D" Guid="505ee0c9-d5a3-8e70-221f-48e70d9ec096">
-          <File Id="owfE4E6B570ADBEC007C10E9A65C0D3809D" Source="$(var.SourceDir)\System.ValueTuple.dll" KeyPath="yes" />
+        <Component Id="owcD0A940C4737AEDDE1A3178260CF6D5E9" Guid="288adc1d-48d5-8344-5b22-8745adf79316">
+          <File Id="owfD0A940C4737AEDDE1A3178260CF6D5E9" Source="$(var.SourceDir)\System.Web.Http.dll" KeyPath="yes" />
         </Component>
         <Component Id="owcF719C5F01913951F80887C901C3807F4" Guid="d32204d3-a32f-e912-0016-a93dbfa23399">
           <File Id="owfF719C5F01913951F80887C901C3807F4" Source="$(var.SourceDir)\toofz.dll" KeyPath="yes" />
