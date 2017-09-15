@@ -11,11 +11,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         internal const string DefaultLeaderboardsConnectionString = "Data Source=localhost;Initial Catalog=NecroDancer;Integrated Security=SSPI;";
 
-        public LeaderboardsArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter) :
-            base(inReader, outWriter, errorWriter)
-        {
-
-        }
+        public LeaderboardsArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter) : base(inReader, outWriter, errorWriter) { }
 
         protected override string EntryAssemblyFileName { get; } = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
 
