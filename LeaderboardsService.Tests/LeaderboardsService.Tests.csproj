@@ -147,7 +147,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
     <Compile Include="LeaderboardsArgsParserTests.cs" />
     <Compile Include="SteamIDExtensionsTests.cs" />
     <Compile Include="StubLeaderboardsSettings.cs" />
