@@ -92,7 +92,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         {
             using (var download = new DownloadNotifier(Log, "leaderboards"))
             {
-                steamClient.Progress = download.Progress;
+                steamClient.Progress = download;
 
                 var leaderboardTasks = new List<Task<Leaderboard>>();
                 foreach (var header in headers)
@@ -106,7 +106,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     leaderboardTasks.Add(leaderboardTask);
                 }
 
-                return await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
+                var leaderboards = await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
+
+                steamClient.Progress = null;
+
+                return leaderboards;
             }
         }
 
@@ -152,24 +156,24 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IEnumerable<Leaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
-            using (var notifier = new StoreNotifier(Log, "leaderboards"))
+            using (var storeNotifier = new StoreNotifier(Log, "leaderboards"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                notifier.Progress.Report(rowsAffected);
+                storeNotifier.Report(rowsAffected);
             }
 
             var entries = leaderboards.SelectMany(e => e.Entries).ToList();
 
-            using (var notifier = new StoreNotifier(Log, "players"))
+            using (var storeNotifier = new StoreNotifier(Log, "players"))
             {
                 var players = entries.Select(e => e.SteamId)
                                 .Distinct()
                                 .Select(s => new Player { SteamId = s });
                 var rowsAffected = await storeClient.SaveChangesAsync(players, false, cancellationToken).ConfigureAwait(false);
-                notifier.Progress.Report(rowsAffected);
+                storeNotifier.Report(rowsAffected);
             }
 
-            using (var notifier = new StoreNotifier(Log, "replays"))
+            using (var storeNotifier = new StoreNotifier(Log, "replays"))
             {
                 var replayIds = new HashSet<long>(from e in entries
                                                   where e.ReplayId != null
@@ -177,13 +181,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 var replays = from e in replayIds
                               select new Replay { ReplayId = e };
                 var rowsAffected = await storeClient.SaveChangesAsync(replays, false, cancellationToken).ConfigureAwait(false);
-                notifier.Progress.Report(rowsAffected);
+                storeNotifier.Report(rowsAffected);
             }
 
-            using (var notifier = new StoreNotifier(Log, "entries"))
+            using (var storeNotifier = new StoreNotifier(Log, "entries"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(entries).ConfigureAwait(false);
-                notifier.Progress.Report(rowsAffected);
+                storeNotifier.Report(rowsAffected);
             }
         }
 
@@ -342,7 +346,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             var leaderboardTasks = new List<Task<DailyLeaderboard>>();
             using (var download = new DownloadNotifier(Log, "daily leaderboards"))
             {
-                steamClient.Progress = download.Progress;
+                steamClient.Progress = download;
 
                 foreach (var header in headers)
                 {
@@ -356,7 +360,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     leaderboardTasks.Add(leaderboardTask);
                 }
 
-                return await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
+                var leaderboards = await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
+
+                steamClient.Progress = null;
+
+                return leaderboards;
             }
         }
 
@@ -403,24 +411,24 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IEnumerable<DailyLeaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
-            using (var notifier = new StoreNotifier(Log, "daily leaderboards"))
+            using (var storeNotifier = new StoreNotifier(Log, "daily leaderboards"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                notifier.Progress.Report(rowsAffected);
+                storeNotifier.Report(rowsAffected);
             }
 
             var entries = leaderboards.SelectMany(e => e.Entries).ToList();
 
-            using (var notifier = new StoreNotifier(Log, "players"))
+            using (var storeNotifier = new StoreNotifier(Log, "players"))
             {
                 var players = entries.Select(e => e.SteamId)
                                 .Distinct()
                                 .Select(s => new Player { SteamId = s });
                 var rowsAffected = await storeClient.SaveChangesAsync(players, false, cancellationToken).ConfigureAwait(false);
-                notifier.Progress.Report(rowsAffected);
+                storeNotifier.Report(rowsAffected);
             }
 
-            using (var notifier = new StoreNotifier(Log, "replays"))
+            using (var storeNotifier = new StoreNotifier(Log, "replays"))
             {
                 var replayIds = new HashSet<long>(from e in entries
                                                   where e.ReplayId != null
@@ -428,13 +436,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 var replays = from e in replayIds
                               select new Replay { ReplayId = e };
                 var rowsAffected = await storeClient.SaveChangesAsync(replays, false, cancellationToken).ConfigureAwait(false);
-                notifier.Progress.Report(rowsAffected);
+                storeNotifier.Report(rowsAffected);
             }
 
-            using (var notifier = new StoreNotifier(Log, "daily entries"))
+            using (var storeNotifier = new StoreNotifier(Log, "daily entries"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(entries, cancellationToken).ConfigureAwait(false);
-                notifier.Progress.Report(rowsAffected);
+                storeNotifier.Report(rowsAffected);
             }
         }
 
