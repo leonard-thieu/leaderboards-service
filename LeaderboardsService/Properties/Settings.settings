@@ -32,5 +32,8 @@
     <Setting Name="DailyLeaderboardsPerUpdate" Description="The maxinum number of daily leaderboards to update per cycle." Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
+    <Setting Name="SteamClientTimeout" Type="System.TimeSpan" Scope="User">
+      <Value Profile="(Default)">00:01:40</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

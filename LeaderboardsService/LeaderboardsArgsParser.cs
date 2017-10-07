@@ -23,6 +23,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             optionSet.Add("password:", GetDescription(settingsType, nameof(Settings.SteamPassword)), password => options.SteamPassword = password);
             optionSet.Add("connection:", GetDescription(settingsType, nameof(Settings.LeaderboardsConnectionString)), connection => options.LeaderboardsConnectionString = connection);
             optionSet.Add("dailies=", GetDescription(settingsType, nameof(Settings.DailyLeaderboardsPerUpdate)), (int? dailies) => options.DailyLeaderboardsPerUpdate = dailies);
+            optionSet.Add("timeout=", GetDescription(settingsType, nameof(Settings.SteamClientTimeout)), (TimeSpan? timeout) => options.SteamClientTimeout = timeout);
         }
 
         protected override void OnParsed(LeaderboardsOptions options, ILeaderboardsSettings settings)
@@ -83,6 +84,16 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             if (dailyLeaderboardsPerUpdate != null)
             {
                 settings.DailyLeaderboardsPerUpdate = dailyLeaderboardsPerUpdate.Value;
+            }
+
+            #endregion
+
+            #region SteamClientTimeout
+
+            var steamClientTimeout = options.SteamClientTimeout;
+            if (steamClientTimeout != null)
+            {
+                settings.SteamClientTimeout = steamClientTimeout.Value;
             }
 
             #endregion

@@ -172,5 +172,17 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
                 this["DailyLeaderboardsPerUpdate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:01:40")]
+        public global::System.TimeSpan SteamClientTimeout {
+            get {
+                return ((global::System.TimeSpan)(this["SteamClientTimeout"]));
+            }
+            set {
+                this["SteamClientTimeout"] = value;
+            }
+        }
     }
 }

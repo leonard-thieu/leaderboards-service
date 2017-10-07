@@ -48,6 +48,7 @@ options:
   --password[=VALUE]    The password used to log on to Steam.
   --connection[=VALUE]  The connection string used to connect to the leaderboards database.
   --dailies=VALUE       The maxinum number of daily leaderboards to update per cycle.
+  --timeout=VALUE       
 ", outWriter.ToString());
             }
 

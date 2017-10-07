@@ -1,4 +1,5 @@
-﻿using toofz.Services;
+﻿using System;
+using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties
 {
@@ -24,5 +25,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties
         /// The maxinum number of daily leaderboards to update per cycle.
         /// </summary>
         int DailyLeaderboardsPerUpdate { get; set; }
+        TimeSpan SteamClientTimeout { get; set; }
     }
 }

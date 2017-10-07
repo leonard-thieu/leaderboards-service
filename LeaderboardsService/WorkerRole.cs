@@ -25,18 +25,20 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
             var userName = Settings.SteamUserName;
             var password = Settings.SteamPassword.Decrypt();
+            var appId = Settings.AppId;
             var leaderboardsConnectionString = Settings.LeaderboardsConnectionString.Decrypt();
             var dailyLeaderboardsPerUpdate = Settings.DailyLeaderboardsPerUpdate;
+            var steamClientTimeout = Settings.SteamClientTimeout;
 
             using (var steamClient = new SteamClientApiClient(userName, password))
             {
                 await steamClient.ConnectAndLogOnAsync().ConfigureAwait(false);
-                steamClient.Timeout = TimeSpan.FromSeconds(30);
+                steamClient.Timeout = steamClientTimeout;
 
-                var leaderboardsWorker = new LeaderboardsWorker(Settings.AppId, leaderboardsConnectionString);
+                var leaderboardsWorker = new LeaderboardsWorker(appId, leaderboardsConnectionString);
                 await leaderboardsWorker.UpdateAsync(steamClient, cancellationToken).ConfigureAwait(false);
 
-                var dailyLeaderboardsWorker = new DailyLeaderboardsWorker(Settings.AppId, leaderboardsConnectionString);
+                var dailyLeaderboardsWorker = new DailyLeaderboardsWorker(appId, leaderboardsConnectionString);
                 await dailyLeaderboardsWorker.UpdateAsync(steamClient, dailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
             }
         }

@@ -15,6 +15,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         public string InstrumentationKey { get; set; }
         public int KeyDerivationIterations { get; set; }
         public int DailyLeaderboardsPerUpdate { get; set; }
+        public TimeSpan SteamClientTimeout { get; set; }
 
         public void Reload() { }
 
