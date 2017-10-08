@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<response>
+  <appID>247080</appID>
+  <appFriendlyName>247080</appFriendlyName>
+  <leaderboardCount>2</leaderboardCount>
+  <leaderboard>
+    <url>http://steamcommunity.com/stats/247080/leaderboards/2047387/?xml=1</url>
+    <lbid>2047387</lbid>
+    <name>DLC HARDCORE All Chars DLC_PROD</name>
+    <display_name>All Characters (DLC) Score (Amplified)</display_name>
+    <entries>319</entries>
+    <sortmethod>2</sortmethod>
+    <displaytype>1</displaytype>
+  </leaderboard>
+  <leaderboard>
+    <url>http://steamcommunity.com/stats/247080/leaderboards/2047540/?xml=1</url>
+    <lbid>2047540</lbid>
+    <name>DLC HARDCORE Nocturna_PROD</name>
+    <display_name>Nocturna Score (Amplified)</display_name>
+    <entries>8462</entries>
+    <sortmethod>2</sortmethod>
+    <displaytype>1</displaytype>
+  </leaderboard>
+</response>

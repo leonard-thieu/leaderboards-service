@@ -1,118 +1,39 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using toofz.TestsShared;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
     class LeaderboardsWorkerTests
     {
         [TestClass]
-        public class GetLeaderboardsAsyncMethod
+        public class Constructor
         {
             [TestMethod]
-            public async Task ReturnsLeaderboards()
+            public void LeaderboardsConnectionStringIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
                 var appId = 247080U;
-                var leaderboardsConnnectionString = "myConnectionString";
-                var worker = new LeaderboardsWorker(appId, leaderboardsConnnectionString);
-                var db = Mock.Of<ILeaderboardsContext>();
-                var mockDb = Mock.Get(db);
-                var mockDbLeaderboards = new MockDbSet<Leaderboard>();
-                var dbLeaderboards = mockDbLeaderboards.Object;
-                mockDb.Setup(d => d.Leaderboards).Returns(dbLeaderboards);
+                string leaderboardsConnectionString = null;
 
-                // Act
-                var leaderboards = await worker.GetLeaderboardsAsync(db, default);
-
-                // Assert
-                Assert.IsInstanceOfType(leaderboards, typeof(IEnumerable<Leaderboard>));
-            }
-        }
-
-        [TestClass]
-        public class StoreLeaderboardsAsyncMethod
-        {
-            [TestMethod]
-            public async Task StoresLeaderboards()
-            {
-                // Arrange
-                var appId = 247080U;
-                var leaderboardsConnnectionString = "myConnectionString";
-                var worker = new LeaderboardsWorker(appId, leaderboardsConnnectionString);
-                var mockStoreClient = new Mock<ILeaderboardsStoreClient>();
-                var storeClient = mockStoreClient.Object;
-                var leaderboard = new Leaderboard();
-                var leaderboards = new List<Leaderboard> { leaderboard };
-
-                // Act
-                await worker.StoreLeaderboardsAsync(storeClient, leaderboards, CancellationToken.None);
-
-                // Assert
-                mockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Leaderboard>>(), It.IsAny<CancellationToken>()), Times.Once);
+                // Act -> Assert
+                Assert.ThrowsException<ArgumentNullException>(() =>
+                {
+                    new LeaderboardsWorker(appId, leaderboardsConnectionString);
+                });
             }
 
             [TestMethod]
-            public async Task StoresPlayers()
+            public void ReturnsInstance()
             {
                 // Arrange
                 var appId = 247080U;
-                var leaderboardsConnnectionString = "myConnectionString";
-                var worker = new LeaderboardsWorker(appId, leaderboardsConnnectionString);
-                var mockStoreClient = new Mock<ILeaderboardsStoreClient>();
-                var storeClient = mockStoreClient.Object;
-                var leaderboard = new Leaderboard();
-                leaderboard.Entries.Add(new Entry { SteamId = 453857 });
-                var leaderboards = new List<Leaderboard> { leaderboard };
+                var leaderboardsConnectionString = "myConnectionString";
 
                 // Act
-                await worker.StoreLeaderboardsAsync(storeClient, leaderboards, CancellationToken.None);
+                var worker = new LeaderboardsWorker(appId, leaderboardsConnectionString);
 
                 // Assert
-                mockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Player>>(), false, It.IsAny<CancellationToken>()), Times.Once);
-            }
-
-            [TestMethod]
-            public async Task StoresReplays()
-            {
-                // Arrange
-                var appId = 247080U;
-                var leaderboardsConnnectionString = "myConnectionString";
-                var worker = new LeaderboardsWorker(appId, leaderboardsConnnectionString);
-                var mockStoreClient = new Mock<ILeaderboardsStoreClient>();
-                var storeClient = mockStoreClient.Object;
-                var leaderboard = new Leaderboard();
-                leaderboard.Entries.Add(new Entry { ReplayId = 3849753489753975 });
-                var leaderboards = new List<Leaderboard> { leaderboard };
-
-                // Act
-                await worker.StoreLeaderboardsAsync(storeClient, leaderboards, CancellationToken.None);
-
-                // Assert
-                mockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Replay>>(), false, It.IsAny<CancellationToken>()), Times.Once);
-            }
-
-            [TestMethod]
-            public async Task StoresEntries()
-            {
-                // Arrange
-                var appId = 247080U;
-                var leaderboardsConnnectionString = "myConnectionString";
-                var worker = new LeaderboardsWorker(appId, leaderboardsConnnectionString);
-                var mockStoreClient = new Mock<ILeaderboardsStoreClient>();
-                var storeClient = mockStoreClient.Object;
-                var leaderboard = new Leaderboard();
-                leaderboard.Entries.Add(new Entry());
-                var leaderboards = new List<Leaderboard> { leaderboard };
-
-                // Act
-                await worker.StoreLeaderboardsAsync(storeClient, leaderboards, CancellationToken.None);
-
-                // Assert
-                mockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Entry>>(), It.IsAny<CancellationToken>()), Times.Once);
+                Assert.IsInstanceOfType(worker, typeof(LeaderboardsWorker));
             }
         }
     }

@@ -6,13 +6,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         public static long? ToReplayId(this UGCHandle ugcHandle)
         {
-            var ugcId = (long)(ulong)ugcHandle;
-            switch (ugcId)
-            {
-                case -1:
-                case 0: return null;
-                default: return ugcId;
-            }
+            return ((ulong)ugcHandle).ToReplayId();
         }
     }
 }

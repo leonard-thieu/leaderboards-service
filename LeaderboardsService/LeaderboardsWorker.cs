@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
@@ -10,14 +8,14 @@ using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    sealed class LeaderboardsWorker
+    sealed class LeaderboardsWorker : LeaderboardsWorkerBase
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(LeaderboardsWorker));
 
         public LeaderboardsWorker(uint appId, string leaderboardsConnectionString)
         {
             this.appId = appId;
-            this.leaderboardsConnectionString = leaderboardsConnectionString;
+            this.leaderboardsConnectionString = leaderboardsConnectionString ?? throw new ArgumentNullException(nameof(leaderboardsConnectionString));
         }
 
         readonly uint appId;
@@ -42,13 +40,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     await StoreLeaderboardsAsync(storeClient, leaderboards, cancellationToken).ConfigureAwait(false);
                 }
             }
-        }
-
-        internal async Task<IEnumerable<Leaderboard>> GetLeaderboardsAsync(
-            ILeaderboardsContext db,
-            CancellationToken cancellationToken)
-        {
-            return await db.Leaderboards.ToListAsync(cancellationToken).ConfigureAwait(false);
         }
 
         internal async Task UpdateLeaderboardsAsync(
@@ -96,47 +87,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     Level = entry.Details[1],
                     ReplayId = entry.UGCId.ToReplayId(),
                 });
-            }
-        }
-
-        internal async Task StoreLeaderboardsAsync(
-            ILeaderboardsStoreClient storeClient,
-            IEnumerable<Leaderboard> leaderboards,
-            CancellationToken cancellationToken)
-        {
-            using (var storeNotifier = new StoreNotifier(Log, "leaderboards"))
-            {
-                var rowsAffected = await storeClient.SaveChangesAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
-            }
-
-            var entries = leaderboards.SelectMany(e => e.Entries).ToList();
-
-            using (var storeNotifier = new StoreNotifier(Log, "players"))
-            {
-                var players = entries
-                    .Select(e => e.SteamId)
-                    .Distinct()
-                    .Select(s => new Player { SteamId = s });
-                var rowsAffected = await storeClient.SaveChangesAsync(players, false, cancellationToken).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
-            }
-
-            using (var storeNotifier = new StoreNotifier(Log, "replays"))
-            {
-                var replays = entries
-                    .Where(e => e.ReplayId != null)
-                    .Select(e => e.ReplayId.Value)
-                    .Distinct()
-                    .Select(r => new Replay { ReplayId = r });
-                var rowsAffected = await storeClient.SaveChangesAsync(replays, false, cancellationToken).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
-            }
-
-            using (var storeNotifier = new StoreNotifier(Log, "entries"))
-            {
-                var rowsAffected = await storeClient.SaveChangesAsync(entries).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
             }
         }
     }
