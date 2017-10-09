@@ -40,7 +40,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 {
                     new LoggingHandler(),
                     new DecompressionHandler(),
-                    new SteamWebApiTransientFaultHandler(),
+                    new SteamCommunityDataApiTransientFaultHandler(),
                 });
                 using (var steamClient = new SteamCommunityDataClient(handler))
                 {
