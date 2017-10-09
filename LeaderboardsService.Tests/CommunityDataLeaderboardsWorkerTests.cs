@@ -111,12 +111,25 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                     .Returns(Task.FromResult(leaderboardEntries_2047540_2));
             }
 
-            readonly CommunityDataLeaderboardsWorker worker;
-            readonly ISteamCommunityDataClient steamClient;
-            readonly Leaderboard leaderboard;
-            readonly int entryCount;
-            readonly IProgress<long> progress;
-            readonly CancellationToken cancellationToken;
+            CommunityDataLeaderboardsWorker worker;
+            ISteamCommunityDataClient steamClient;
+            Leaderboard leaderboard;
+            int entryCount;
+            IProgress<long> progress;
+            CancellationToken cancellationToken;
+
+            [TestMethod]
+            public async Task NoEntries_DoesNotThrowArgumentException()
+            {
+                // Arrange
+                entryCount = 0;
+
+                // Act
+                await worker.UpdateLeaderboardAsync(steamClient, leaderboard, entryCount, progress, cancellationToken);
+
+                // Assert
+                Assert.IsNotNull(leaderboard.LastUpdate);
+            }
 
             [TestMethod]
             public async Task AddsUpdatedEntries()
@@ -131,15 +144,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             [TestMethod]
             public async Task SetsLastUpdate()
             {
-                // Arrange
-                var lastUpdate = DateTime.MinValue;
-                leaderboard.LastUpdate = lastUpdate;
-
-                // Act
+                // Arrange -> Act
                 await worker.UpdateLeaderboardAsync(steamClient, leaderboard, entryCount, progress, cancellationToken);
 
                 // Assert
-                Assert.AreNotEqual(lastUpdate, leaderboard.LastUpdate);
+                Assert.IsNotNull(leaderboard.LastUpdate);
             }
         }
 

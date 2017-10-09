@@ -99,7 +99,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 entriesTasks.Add(entriesTask);
             }
 
-            await Task.WhenAny(entriesTasks).ConfigureAwait(false);
+            if (entriesTasks.Any())
+            {
+                await Task.WhenAny(entriesTasks).ConfigureAwait(false);
+            }
             leaderboard.LastUpdate = DateTime.UtcNow;
 
             var entries = await Task.WhenAll(entriesTasks).ConfigureAwait(false);
