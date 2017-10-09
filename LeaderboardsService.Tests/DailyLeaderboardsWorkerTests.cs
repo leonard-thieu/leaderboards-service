@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 using toofz.TestsShared;
+using static SteamKit2.SteamUserStats;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
