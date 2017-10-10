@@ -54,7 +54,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
             var today = DateTime.UtcNow.Date;
             var productsCount = await db.Products.CountAsync(cancellationToken).ConfigureAwait(false);
-            var staleDailies = await GetStaleDailyLeaderboardsAsync(db, today, limit - productsCount, cancellationToken).ConfigureAwait(false);
+            var staleDailies = await GetStaleDailyLeaderboardsAsync(db, today, Math.Max(0, limit - productsCount), cancellationToken).ConfigureAwait(false);
             leaderboards.AddRange(staleDailies);
 
             // TODO: Should this do something if it doesn't return the expected number of leaderboards for today?
