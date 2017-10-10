@@ -23,7 +23,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         public async Task UpdateAsync(ISteamClientApiClient steamClient, CancellationToken cancellationToken)
         {
-            using (new UpdateNotifier(Log, "leaderboards"))
+            using (new UpdateActivity(Log, "leaderboards"))
             {
                 IEnumerable<Leaderboard> leaderboards;
                 using (var db = new LeaderboardsContext(connectionString))
@@ -47,9 +47,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IEnumerable<Leaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
-            using (var download = new DownloadNotifier(Log, "leaderboards"))
+            using (var activity = new DownloadActivity(Log, "leaderboards"))
             {
-                steamClient.Progress = download;
+                steamClient.Progress = activity;
 
                 var leaderboardTasks = new List<Task>();
                 foreach (var leaderboard in leaderboards)

@@ -38,28 +38,28 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 .Select(r => new Replay { ReplayId = r })
                 .ToList();
 
-            using (var storeNotifier = new StoreNotifier(Log, "leaderboards"))
+            using (var activity = new StoreActivity(Log, "leaderboards"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
+                activity.Report(rowsAffected);
             }
 
-            using (var storeNotifier = new StoreNotifier(Log, "players"))
+            using (var activity = new StoreActivity(Log, "players"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(players, false, cancellationToken).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
+                activity.Report(rowsAffected);
             }
 
-            using (var storeNotifier = new StoreNotifier(Log, "replays"))
+            using (var activity = new StoreActivity(Log, "replays"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(replays, false, cancellationToken).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
+                activity.Report(rowsAffected);
             }
 
-            using (var storeNotifier = new StoreNotifier(Log, "entries"))
+            using (var activity = new StoreActivity(Log, "entries"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(entries).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
+                activity.Report(rowsAffected);
             }
         }
     }

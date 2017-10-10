@@ -25,7 +25,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         public async Task UpdateAsync(ISteamClientApiClient steamClient, int limit, CancellationToken cancellationToken)
         {
-            using (new UpdateNotifier(Log, "daily leaderboards"))
+            using (new UpdateActivity(Log, "daily leaderboards"))
             {
                 IEnumerable<DailyLeaderboard> leaderboards;
                 using (var db = new LeaderboardsContext(connectionString))
@@ -178,9 +178,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IEnumerable<DailyLeaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
-            using (var downloadNotifier = new DownloadNotifier(Log, "daily leaderboards"))
+            using (var activity = new DownloadActivity(Log, "daily leaderboards"))
             {
-                steamClient.Progress = downloadNotifier;
+                steamClient.Progress = activity;
 
                 var leaderboardTasks = new List<Task>();
 
@@ -242,28 +242,28 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 .Select(r => new Replay { ReplayId = r })
                 .ToList();
 
-            using (var storeNotifier = new StoreNotifier(Log, "daily leaderboards"))
+            using (var activity = new StoreActivity(Log, "daily leaderboards"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
+                activity.Report(rowsAffected);
             }
 
-            using (var storeNotifier = new StoreNotifier(Log, "players"))
+            using (var activity = new StoreActivity(Log, "players"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(players, false, cancellationToken).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
+                activity.Report(rowsAffected);
             }
 
-            using (var storeNotifier = new StoreNotifier(Log, "replays"))
+            using (var activity = new StoreActivity(Log, "replays"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(replays, false, cancellationToken).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
+                activity.Report(rowsAffected);
             }
 
-            using (var storeNotifier = new StoreNotifier(Log, "daily entries"))
+            using (var activity = new StoreActivity(Log, "daily entries"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(entries, cancellationToken).ConfigureAwait(false);
-                storeNotifier.Report(rowsAffected);
+                activity.Report(rowsAffected);
             }
         }
     }

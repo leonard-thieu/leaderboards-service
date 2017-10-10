@@ -26,7 +26,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         public async Task UpdateAsync(CancellationToken cancellationToken)
         {
-            using (new UpdateNotifier(Log, "leaderboards"))
+            using (new UpdateActivity(Log, "leaderboards"))
             {
                 IEnumerable<Leaderboard> leaderboards;
                 using (var db = new LeaderboardsContext(connectionString))
@@ -60,16 +60,16 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IEnumerable<Leaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
-            using (var downloadNotifier = new DownloadNotifier(Log, "leaderboards"))
+            using (var activity = new DownloadActivity(Log, "leaderboards"))
             {
-                var leaderboardsEnvelope = await steamClient.GetLeaderboardsAsync(appId, downloadNotifier, cancellationToken).ConfigureAwait(false);
+                var leaderboardsEnvelope = await steamClient.GetLeaderboardsAsync(appId, activity, cancellationToken).ConfigureAwait(false);
                 var headers = leaderboardsEnvelope.Leaderboards;
 
                 var leaderboardTasks = new List<Task>();
                 foreach (var leaderboard in leaderboards)
                 {
                     var header = headers.FirstOrDefault(h => h.LeaderboardId == leaderboard.LeaderboardId);
-                    var leaderboardTask = UpdateLeaderboardAsync(steamClient, leaderboard, header.EntryCount, downloadNotifier, cancellationToken);
+                    var leaderboardTask = UpdateLeaderboardAsync(steamClient, leaderboard, header.EntryCount, activity, cancellationToken);
                     leaderboardTasks.Add(leaderboardTask);
                 }
 
