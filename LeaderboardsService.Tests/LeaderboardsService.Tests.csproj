@@ -165,6 +165,7 @@
     <Compile Include="LeaderboardsWorkerBaseTests.cs" />
     <Compile Include="LeaderboardsWorkerTests.cs" />
     <Compile Include="SteamIDExtensionsTests.cs" />
+    <Compile Include="SteamKit.cs" />
     <Compile Include="StubLeaderboardsSettings.cs" />
     <Compile Include="UGCHandleExtensionsTests.cs" />
     <Compile Include="UInt64ExtensionsTests.cs" />

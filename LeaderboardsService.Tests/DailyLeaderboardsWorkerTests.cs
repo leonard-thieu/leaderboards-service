@@ -384,39 +384,5 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<DailyEntry>>(), CancellationToken), Times.Once);
             }
         }
-
-        class LeaderboardEntriesCallback : ILeaderboardEntriesCallback
-        {
-            public EResult Result { get; set; }
-            public int EntryCount { get; set; }
-            ReadOnlyCollection<ILeaderboardEntry> ILeaderboardEntriesCallback.Entries => Entries.AsReadOnly();
-            public JobID JobID { get; set; }
-
-            public List<ILeaderboardEntry> Entries { get; } = new List<ILeaderboardEntry>();
-        }
-
-        class LeaderboardEntry : ILeaderboardEntry
-        {
-            public SteamID SteamID { get; set; } = new SteamID();
-            public int GlobalRank { get; set; }
-            public int Score { get; set; }
-            public UGCHandle UGCId { get; set; } = new UGCHandle();
-            public ReadOnlyCollection<int> Details
-            {
-                get => details.AsReadOnly();
-            }
-            readonly List<int> details = new List<int> { 0, 0 };
-
-            public int Zone
-            {
-                get { return details[0]; }
-                set { details[0] = value; }
-            }
-            public int Level
-            {
-                get { return details[1]; }
-                set { details[1] = value; }
-            }
-        }
     }
 }
