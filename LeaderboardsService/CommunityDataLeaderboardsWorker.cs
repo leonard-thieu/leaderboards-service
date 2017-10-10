@@ -4,12 +4,10 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
-using toofz.NecroDancer.Leaderboards.Steam.WebApi;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
@@ -17,21 +15,21 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(CommunityDataLeaderboardsWorker));
 
-        public CommunityDataLeaderboardsWorker(uint appId, string leaderboardsConnectionString)
+        public CommunityDataLeaderboardsWorker(uint appId, string connectionString)
         {
             this.appId = appId;
-            this.leaderboardsConnectionString = leaderboardsConnectionString ?? throw new ArgumentNullException(nameof(leaderboardsConnectionString));
+            this.connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
         readonly uint appId;
-        readonly string leaderboardsConnectionString;
+        readonly string connectionString;
 
         public async Task UpdateAsync(CancellationToken cancellationToken)
         {
             using (new UpdateNotifier(Log, "leaderboards"))
             {
                 IEnumerable<Leaderboard> leaderboards;
-                using (var db = new LeaderboardsContext(leaderboardsConnectionString))
+                using (var db = new LeaderboardsContext(connectionString))
                 {
                     leaderboards = await GetLeaderboardsAsync(db, cancellationToken).ConfigureAwait(false);
                 }
@@ -39,17 +37,15 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 var handler = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
                 {
                     new LoggingHandler(),
-                    new DecompressionHandler(),
+                    new GZipHandler(),
                     new SteamCommunityDataApiTransientFaultHandler(),
                 });
                 using (var steamClient = new SteamCommunityDataClient(handler))
                 {
-                    steamClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-
                     await UpdateLeaderboardsAsync(steamClient, leaderboards, cancellationToken).ConfigureAwait(false);
                 }
 
-                using (var connection = new SqlConnection(leaderboardsConnectionString))
+                using (var connection = new SqlConnection(connectionString))
                 {
                     await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 
