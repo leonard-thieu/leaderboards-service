@@ -14,27 +14,27 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(DailyLeaderboardsWorker));
 
-        public DailyLeaderboardsWorker(uint appId, string leaderboardsConnectionString)
+        public DailyLeaderboardsWorker(uint appId, string connectionString)
         {
             this.appId = appId;
-            this.leaderboardsConnectionString = leaderboardsConnectionString ?? throw new ArgumentNullException(nameof(leaderboardsConnectionString));
+            this.connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
         readonly uint appId;
-        readonly string leaderboardsConnectionString;
+        readonly string connectionString;
 
         public async Task UpdateAsync(ISteamClientApiClient steamClient, int limit, CancellationToken cancellationToken)
         {
             using (new UpdateNotifier(Log, "daily leaderboards"))
             {
                 IEnumerable<DailyLeaderboard> leaderboards;
-                using (var db = new LeaderboardsContext(leaderboardsConnectionString))
+                using (var db = new LeaderboardsContext(connectionString))
                 {
                     leaderboards = await GetDailyLeaderboardsAsync(db, steamClient, limit, cancellationToken).ConfigureAwait(false);
                 }
                 await UpdateDailyLeaderboardsAsync(steamClient, leaderboards, cancellationToken).ConfigureAwait(false);
 
-                using (var connection = new SqlConnection(leaderboardsConnectionString))
+                using (var connection = new SqlConnection(connectionString))
                 {
                     await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
 

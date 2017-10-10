@@ -9,22 +9,29 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
     class LeaderboardsWorkerBaseTests
     {
+        public LeaderboardsWorkerBaseTests()
+        {
+            Db = MockDb.Object;
+            var mockDbLeaderboards = new MockDbSet<Leaderboard>();
+            MockDb.Setup(d => d.Leaderboards).Returns(mockDbLeaderboards.Object);
+            StoreClient = MockStoreClient.Object;
+        }
+
+        public LeaderboardsWorkerBase Worker { get; set; } = new LeaderboardsWorkerBaseAdapter();
+        public Mock<ILeaderboardsContext> MockDb { get; set; } = new Mock<ILeaderboardsContext>();
+        public ILeaderboardsContext Db { get; set; }
+        public Mock<ILeaderboardsStoreClient> MockStoreClient { get; set; } = new Mock<ILeaderboardsStoreClient>();
+        public ILeaderboardsStoreClient StoreClient { get; set; }
+        public CancellationToken CancellationToken { get; set; } = default;
+
         [TestClass]
-        public class GetLeaderboardsAsyncMethod
+        public class GetLeaderboardsAsyncMethod : LeaderboardsWorkerBaseTests
         {
             [TestMethod]
             public async Task ReturnsLeaderboards()
             {
-                // Arrange
-                var worker = new LeaderboardsWorkerBaseAdapter();
-                var db = Mock.Of<ILeaderboardsContext>();
-                var mockDb = Mock.Get(db);
-                var mockDbLeaderboards = new MockDbSet<Leaderboard>();
-                var dbLeaderboards = mockDbLeaderboards.Object;
-                mockDb.Setup(d => d.Leaderboards).Returns(dbLeaderboards);
-
-                // Act
-                var leaderboards = await worker.GetLeaderboardsAsync(db, default);
+                // Arrange -> Act
+                var leaderboards = await Worker.GetLeaderboardsAsync(Db, CancellationToken);
 
                 // Assert
                 Assert.IsInstanceOfType(leaderboards, typeof(IEnumerable<Leaderboard>));
@@ -32,77 +39,65 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         }
 
         [TestClass]
-        public class StoreLeaderboardsAsyncMethod
+        public class StoreLeaderboardsAsyncMethod : LeaderboardsWorkerBaseTests
         {
             [TestMethod]
             public async Task StoresLeaderboards()
             {
                 // Arrange
-                var worker = new LeaderboardsWorkerBaseAdapter();
-                var mockStoreClient = new Mock<ILeaderboardsStoreClient>();
-                var storeClient = mockStoreClient.Object;
                 var leaderboard = new Leaderboard();
                 var leaderboards = new List<Leaderboard> { leaderboard };
 
                 // Act
-                await worker.StoreLeaderboardsAsync(storeClient, leaderboards, CancellationToken.None);
+                await Worker.StoreLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                mockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Leaderboard>>(), It.IsAny<CancellationToken>()), Times.Once);
+                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Leaderboard>>(), CancellationToken), Times.Once);
             }
 
             [TestMethod]
             public async Task StoresPlayers()
             {
                 // Arrange
-                var worker = new LeaderboardsWorkerBaseAdapter();
-                var mockStoreClient = new Mock<ILeaderboardsStoreClient>();
-                var storeClient = mockStoreClient.Object;
                 var leaderboard = new Leaderboard();
                 leaderboard.Entries.Add(new Entry { SteamId = 453857 });
                 var leaderboards = new List<Leaderboard> { leaderboard };
 
                 // Act
-                await worker.StoreLeaderboardsAsync(storeClient, leaderboards, CancellationToken.None);
+                await Worker.StoreLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                mockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Player>>(), false, It.IsAny<CancellationToken>()), Times.Once);
+                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Player>>(), false, CancellationToken), Times.Once);
             }
 
             [TestMethod]
             public async Task StoresReplays()
             {
                 // Arrange
-                var worker = new LeaderboardsWorkerBaseAdapter();
-                var mockStoreClient = new Mock<ILeaderboardsStoreClient>();
-                var storeClient = mockStoreClient.Object;
                 var leaderboard = new Leaderboard();
                 leaderboard.Entries.Add(new Entry { ReplayId = 3849753489753975 });
                 var leaderboards = new List<Leaderboard> { leaderboard };
 
                 // Act
-                await worker.StoreLeaderboardsAsync(storeClient, leaderboards, CancellationToken.None);
+                await Worker.StoreLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                mockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Replay>>(), false, It.IsAny<CancellationToken>()), Times.Once);
+                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Replay>>(), false, CancellationToken), Times.Once);
             }
 
             [TestMethod]
             public async Task StoresEntries()
             {
                 // Arrange
-                var worker = new LeaderboardsWorkerBaseAdapter();
-                var mockStoreClient = new Mock<ILeaderboardsStoreClient>();
-                var storeClient = mockStoreClient.Object;
                 var leaderboard = new Leaderboard();
                 leaderboard.Entries.Add(new Entry());
                 var leaderboards = new List<Leaderboard> { leaderboard };
 
                 // Act
-                await worker.StoreLeaderboardsAsync(storeClient, leaderboards, CancellationToken.None);
+                await Worker.StoreLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                mockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Entry>>(), It.IsAny<CancellationToken>()), Times.Once);
+                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Entry>>(), CancellationToken), Times.Once);
             }
         }
 

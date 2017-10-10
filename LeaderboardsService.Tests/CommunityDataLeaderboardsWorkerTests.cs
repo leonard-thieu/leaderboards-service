@@ -11,20 +11,34 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
     class CommunityDataLeaderboardsWorkerTests
     {
+        public CommunityDataLeaderboardsWorkerTests()
+        {
+            Worker = new CommunityDataLeaderboardsWorker(AppId, ConnectionString);
+            SteamClient = MockSteamClient.Object;
+        }
+
+        public uint AppId { get; set; } = 247080;
+        public string ConnectionString { get; set; } = "myConnectionString";
+        public CommunityDataLeaderboardsWorker Worker { get; set; }
+        public Mock<ISteamCommunityDataClient> MockSteamClient { get; set; } = new Mock<ISteamCommunityDataClient>();
+        public ISteamCommunityDataClient SteamClient { get; set; }
+        public IProgress<long> Progress { get; set; } = Mock.Of<IProgress<long>>();
+        public CancellationToken CancellationToken { get; set; } = CancellationToken.None;
+
         [TestClass]
         public class Constructor
         {
             [TestMethod]
-            public void LeaderboardsConnectionStringIsNull_ThrowsArgumentNullException()
+            public void ConnectionStringIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
                 var appId = 247080U;
-                string leaderboardsConnectionString = null;
+                string connectionString = null;
 
                 // Act -> Assert
                 Assert.ThrowsException<ArgumentNullException>(() =>
                 {
-                    new CommunityDataLeaderboardsWorker(appId, leaderboardsConnectionString);
+                    new CommunityDataLeaderboardsWorker(appId, connectionString);
                 });
             }
 
@@ -33,10 +47,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             {
                 // Arrange
                 var appId = 247080U;
-                var leaderboardsConnectionString = "myConnectionString";
+                var connectionString = "myConnectionString";
 
                 // Act
-                var worker = new CommunityDataLeaderboardsWorker(appId, leaderboardsConnectionString);
+                var worker = new CommunityDataLeaderboardsWorker(appId, connectionString);
 
                 // Assert
                 Assert.IsInstanceOfType(worker, typeof(CommunityDataLeaderboardsWorker));
@@ -44,79 +58,62 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         }
 
         [TestClass]
-        public class UpdateLeaderboardsAsyncMethod
+        public class UpdateLeaderboardsAsyncMethod : CommunityDataLeaderboardsWorkerTests
         {
             [TestMethod]
             public async Task UpdatesLeaderboards()
             {
                 // Arrange
-                var appId = 247080U;
-                var leaderboardsConnectionString = "myConnectionString";
-                var worker = new CommunityDataLeaderboardsWorker(appId, leaderboardsConnectionString);
-                var mockSteamClient = new Mock<ISteamCommunityDataClient>();
-                var steamClient = mockSteamClient.Object;
                 var leaderboard2047387 = new Leaderboard { LeaderboardId = 2047387 };
                 var leaderboard2047540 = new Leaderboard { LeaderboardId = 2047540 };
                 var leaderboards = new[] { leaderboard2047387, leaderboard2047540 };
-                var cancellationToken = CancellationToken.None;
                 var leaderboards_247080 = DataHelper.DeserializeLeaderboardsEnvelope(Resources.Leaderboards_247080);
-                mockSteamClient
-                    .Setup(c => c.GetLeaderboardsAsync(appId, It.IsAny<IProgress<long>>(), cancellationToken))
-                    .Returns(Task.FromResult(leaderboards_247080));
+                MockSteamClient
+                    .Setup(c => c.GetLeaderboardsAsync(AppId, It.IsAny<IProgress<long>>(), CancellationToken))
+                    .ReturnsAsync(leaderboards_247080);
                 var leaderboardEntries_2047387_1 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047387_1);
-                mockSteamClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, 2047387, new GetLeaderboardEntriesParams { StartRange = 1 }, It.IsAny<IProgress<long>>(), cancellationToken))
-                    .Returns(Task.FromResult(leaderboardEntries_2047387_1));
+                MockSteamClient
+                    .Setup(c => c.GetLeaderboardEntriesAsync(AppId, 2047387, new GetLeaderboardEntriesParams { StartRange = 1 }, It.IsAny<IProgress<long>>(), CancellationToken))
+                    .ReturnsAsync(leaderboardEntries_2047387_1);
                 var leaderboardEntries_2047540_1 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047540_1);
-                mockSteamClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, 2047540, new GetLeaderboardEntriesParams { StartRange = 1 }, It.IsAny<IProgress<long>>(), cancellationToken))
-                    .Returns(Task.FromResult(leaderboardEntries_2047540_1));
+                MockSteamClient
+                    .Setup(c => c.GetLeaderboardEntriesAsync(AppId, 2047540, new GetLeaderboardEntriesParams { StartRange = 1 }, It.IsAny<IProgress<long>>(), CancellationToken))
+                    .ReturnsAsync(leaderboardEntries_2047540_1);
                 var leaderboardEntries_2047540_2 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047540_2);
-                mockSteamClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, 2047540, new GetLeaderboardEntriesParams { StartRange = 5002 }, It.IsAny<IProgress<long>>(), cancellationToken))
-                    .Returns(Task.FromResult(leaderboardEntries_2047540_2));
+                MockSteamClient
+                    .Setup(c => c.GetLeaderboardEntriesAsync(AppId, 2047540, new GetLeaderboardEntriesParams { StartRange = 5002 }, It.IsAny<IProgress<long>>(), CancellationToken))
+                    .ReturnsAsync(leaderboardEntries_2047540_2);
 
                 // Act
-                await worker.UpdateLeaderboardsAsync(steamClient, leaderboards, cancellationToken);
+                await Worker.UpdateLeaderboardsAsync(SteamClient, leaderboards, CancellationToken);
 
                 // Assert
-                mockSteamClient.Verify(c => c.GetLeaderboardEntriesAsync(appId, 2047540, It.IsAny<GetLeaderboardEntriesParams>(), It.IsAny<IProgress<long>>(), cancellationToken), Times.Exactly(2));
+                MockSteamClient.Verify(c => c.GetLeaderboardEntriesAsync(AppId, 2047540, It.IsAny<GetLeaderboardEntriesParams>(), It.IsAny<IProgress<long>>(), CancellationToken), Times.Exactly(2));
                 Assert.AreEqual(319, leaderboard2047387.Entries.Count);
                 Assert.AreEqual(8462, leaderboard2047540.Entries.Count);
             }
         }
 
         [TestClass]
-        public class UpdateLeaderboardAsyncMethod
+        public class UpdateLeaderboardAsyncMethod : CommunityDataLeaderboardsWorkerTests
         {
             public UpdateLeaderboardAsyncMethod()
             {
-                var appId = 247080U;
-                var leaderboardsConnectionString = "myConnectionString";
-                worker = new CommunityDataLeaderboardsWorker(appId, leaderboardsConnectionString);
-                var mockSteamClient = new Mock<ISteamCommunityDataClient>();
-                steamClient = mockSteamClient.Object;
                 var leaderboardId = 2047540;
                 leaderboard = new Leaderboard { LeaderboardId = leaderboardId };
                 entryCount = 8462;
-                progress = Mock.Of<IProgress<long>>();
-                cancellationToken = CancellationToken.None;
                 var leaderboardEntries_2047540_1 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047540_1);
-                mockSteamClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, leaderboardId, new GetLeaderboardEntriesParams { StartRange = 1 }, progress, cancellationToken))
-                    .Returns(Task.FromResult(leaderboardEntries_2047540_1));
+                MockSteamClient
+                    .Setup(c => c.GetLeaderboardEntriesAsync(AppId, leaderboardId, new GetLeaderboardEntriesParams { StartRange = 1 }, Progress, CancellationToken))
+                    .ReturnsAsync(leaderboardEntries_2047540_1);
                 var leaderboardEntries_2047540_2 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047540_2);
-                mockSteamClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, leaderboardId, new GetLeaderboardEntriesParams { StartRange = 5002 }, progress, cancellationToken))
-                    .Returns(Task.FromResult(leaderboardEntries_2047540_2));
+                MockSteamClient
+                    .Setup(c => c.GetLeaderboardEntriesAsync(AppId, leaderboardId, new GetLeaderboardEntriesParams { StartRange = 5002 }, Progress, CancellationToken))
+                    .ReturnsAsync(leaderboardEntries_2047540_2);
             }
 
-            CommunityDataLeaderboardsWorker worker;
-            ISteamCommunityDataClient steamClient;
             Leaderboard leaderboard;
             int entryCount;
-            IProgress<long> progress;
-            CancellationToken cancellationToken;
 
             [TestMethod]
             public async Task NoEntries_DoesNotThrowArgumentException()
@@ -125,7 +122,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 entryCount = 0;
 
                 // Act
-                await worker.UpdateLeaderboardAsync(steamClient, leaderboard, entryCount, progress, cancellationToken);
+                await Worker.UpdateLeaderboardAsync(SteamClient, leaderboard, entryCount, Progress, CancellationToken);
 
                 // Assert
                 Assert.IsNotNull(leaderboard.LastUpdate);
@@ -135,7 +132,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             public async Task AddsUpdatedEntries()
             {
                 // Arrange -> Act
-                await worker.UpdateLeaderboardAsync(steamClient, leaderboard, entryCount, progress, cancellationToken);
+                await Worker.UpdateLeaderboardAsync(SteamClient, leaderboard, entryCount, Progress, CancellationToken);
 
                 // Assert
                 Assert.AreEqual(entryCount, leaderboard.Entries.Count());
@@ -145,7 +142,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             public async Task SetsLastUpdate()
             {
                 // Arrange -> Act
-                await worker.UpdateLeaderboardAsync(steamClient, leaderboard, entryCount, progress, cancellationToken);
+                await Worker.UpdateLeaderboardAsync(SteamClient, leaderboard, entryCount, Progress, CancellationToken);
 
                 // Assert
                 Assert.IsNotNull(leaderboard.LastUpdate);
@@ -153,28 +150,21 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         }
 
         [TestClass]
-        public class GetLeaderboardEntriesAsyncMethod
+        public class GetLeaderboardEntriesAsyncMethod : CommunityDataLeaderboardsWorkerTests
         {
             [TestMethod]
             public async Task ReturnsEntries()
             {
                 // Arrange
-                var appId = 247080U;
-                var leaderboardsConnectionString = "myConnectionString";
-                var worker = new CommunityDataLeaderboardsWorker(appId, leaderboardsConnectionString);
-                var mockSteamClient = new Mock<ISteamCommunityDataClient>();
-                var steamClient = mockSteamClient.Object;
                 var leaderboardId = 2047540;
                 var startRange = 1;
-                var progress = Mock.Of<IProgress<long>>();
-                var cancellationToken = CancellationToken.None;
                 var leaderboardEntries_2047540_1 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047540_1);
-                mockSteamClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, leaderboardId, new GetLeaderboardEntriesParams { StartRange = startRange }, progress, cancellationToken))
-                    .Returns(Task.FromResult(leaderboardEntries_2047540_1));
+                MockSteamClient
+                    .Setup(c => c.GetLeaderboardEntriesAsync(AppId, leaderboardId, new GetLeaderboardEntriesParams { StartRange = startRange }, Progress, CancellationToken))
+                    .ReturnsAsync(leaderboardEntries_2047540_1);
 
                 // Act
-                var entries = await worker.GetLeaderboardEntriesAsync(steamClient, leaderboardId, startRange, progress, cancellationToken);
+                var entries = await Worker.GetLeaderboardEntriesAsync(SteamClient, leaderboardId, startRange, Progress, CancellationToken);
 
                 // Assert
                 Assert.AreEqual(5001, entries.Count());

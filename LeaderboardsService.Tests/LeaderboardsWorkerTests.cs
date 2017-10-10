@@ -26,16 +26,16 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         public class Constructor
         {
             [TestMethod]
-            public void LeaderboardsConnectionStringIsNull_ThrowsArgumentNullException()
+            public void ConnectionStringIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
                 var appId = 247080U;
-                string leaderboardsConnectionString = null;
+                string connectionString = null;
 
                 // Act -> Assert
                 Assert.ThrowsException<ArgumentNullException>(() =>
                 {
-                    new LeaderboardsWorker(appId, leaderboardsConnectionString);
+                    new LeaderboardsWorker(appId, connectionString);
                 });
             }
 
@@ -44,10 +44,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             {
                 // Arrange
                 var appId = 247080U;
-                var leaderboardsConnectionString = "myConnectionString";
+                var connectionString = "myConnectionString";
 
                 // Act
-                var worker = new LeaderboardsWorker(appId, leaderboardsConnectionString);
+                var worker = new LeaderboardsWorker(appId, connectionString);
 
                 // Assert
                 Assert.IsInstanceOfType(worker, typeof(LeaderboardsWorker));
