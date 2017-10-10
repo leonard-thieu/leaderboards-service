@@ -11,11 +11,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         static readonly ILog Log = LogManager.GetLogger(typeof(LeaderboardsWorkerBase));
 
-        internal Task<Leaderboard[]> GetLeaderboardsAsync(
+        internal async Task<IEnumerable<Leaderboard>> GetLeaderboardsAsync(
             ILeaderboardsContext db,
             CancellationToken cancellationToken)
         {
-            return db.Leaderboards.ToArrayAsync(cancellationToken);
+            return await db.Leaderboards.ToListAsync(cancellationToken).ConfigureAwait(false);
         }
 
         internal async Task StoreLeaderboardsAsync(

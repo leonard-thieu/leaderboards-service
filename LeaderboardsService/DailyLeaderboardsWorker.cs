@@ -17,7 +17,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         public DailyLeaderboardsWorker(uint appId, string leaderboardsConnectionString)
         {
             this.appId = appId;
-            this.leaderboardsConnectionString = leaderboardsConnectionString;
+            this.leaderboardsConnectionString = leaderboardsConnectionString ?? throw new ArgumentNullException(nameof(leaderboardsConnectionString));
         }
 
         readonly uint appId;
@@ -57,6 +57,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             var staleDailies = await GetStaleDailyLeaderboardsAsync(db, today, limit - productsCount, cancellationToken).ConfigureAwait(false);
             leaderboards.AddRange(staleDailies);
 
+            // TODO: Should this do something if it doesn't return the expected number of leaderboards for today?
             var currentDailies = await GetCurrentDailyLeaderboardsAsync(db, steamClient, today, cancellationToken).ConfigureAwait(false);
             leaderboards.AddRange(currentDailies);
 
@@ -177,9 +178,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IEnumerable<DailyLeaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
-            using (var download = new DownloadNotifier(Log, "daily leaderboards"))
+            using (var downloadNotifier = new DownloadNotifier(Log, "daily leaderboards"))
             {
-                steamClient.Progress = download;
+                steamClient.Progress = downloadNotifier;
 
                 var leaderboardTasks = new List<Task>();
 
@@ -226,31 +227,35 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IEnumerable<DailyLeaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
+            var entries = leaderboards
+                .SelectMany(e => e.Entries)
+                .ToList();
+            var players = entries
+                .Select(e => e.SteamId)
+                .Distinct()
+                .Select(s => new Player { SteamId = s })
+                .ToList();
+            var replays = entries
+                .Where(e => e.ReplayId != null)
+                .Select(e => e.ReplayId.Value)
+                .Distinct()
+                .Select(r => new Replay { ReplayId = r })
+                .ToList();
+
             using (var storeNotifier = new StoreNotifier(Log, "daily leaderboards"))
             {
                 var rowsAffected = await storeClient.SaveChangesAsync(leaderboards, cancellationToken).ConfigureAwait(false);
                 storeNotifier.Report(rowsAffected);
             }
 
-            var entries = leaderboards.SelectMany(e => e.Entries).ToList();
-
             using (var storeNotifier = new StoreNotifier(Log, "players"))
             {
-                var players = entries
-                    .Select(e => e.SteamId)
-                    .Distinct()
-                    .Select(s => new Player { SteamId = s });
                 var rowsAffected = await storeClient.SaveChangesAsync(players, false, cancellationToken).ConfigureAwait(false);
                 storeNotifier.Report(rowsAffected);
             }
 
             using (var storeNotifier = new StoreNotifier(Log, "replays"))
             {
-                var replays = entries
-                    .Where(e => e.ReplayId != null)
-                    .Select(e => e.ReplayId.Value)
-                    .Distinct()
-                    .Select(r => new Replay { ReplayId = r });
                 var rowsAffected = await storeClient.SaveChangesAsync(replays, false, cancellationToken).ConfigureAwait(false);
                 storeNotifier.Report(rowsAffected);
             }

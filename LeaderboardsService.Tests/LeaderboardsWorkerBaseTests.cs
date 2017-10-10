@@ -27,7 +27,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var leaderboards = await worker.GetLeaderboardsAsync(db, default);
 
                 // Assert
-                Assert.IsInstanceOfType(leaderboards, typeof(Leaderboard[]));
+                Assert.IsInstanceOfType(leaderboards, typeof(IEnumerable<Leaderboard>));
             }
         }
 
