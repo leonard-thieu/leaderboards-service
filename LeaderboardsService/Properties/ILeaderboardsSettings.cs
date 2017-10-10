@@ -25,6 +25,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties
         /// The maxinum number of daily leaderboards to update per cycle.
         /// </summary>
         int DailyLeaderboardsPerUpdate { get; set; }
+        /// <summary>
+        /// The amount of time to wait before a request to the Steam Client API times out.
+        /// </summary>
         TimeSpan SteamClientTimeout { get; set; }
     }
 }

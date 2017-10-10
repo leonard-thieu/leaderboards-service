@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
@@ -48,7 +49,7 @@ options:
   --password[=VALUE]    The password used to log on to Steam.
   --connection[=VALUE]  The connection string used to connect to the leaderboards database.
   --dailies=VALUE       The maxinum number of daily leaderboards to update per cycle.
-  --timeout=VALUE       
+  --timeout=VALUE       The amount of time to wait before a request to the Steam Client API times out.
 ", outWriter.ToString());
             }
 
@@ -332,6 +333,45 @@ options:
             }
 
             #endregion
+
+            [TestMethod]
+            public void TimeoutIsSpecified_SetsSteamClientTimeout()
+            {
+                // Arrange
+                var args = new[] { "--timeout=00:01:00" };
+                var settings = new StubLeaderboardsSettings
+                {
+                    SteamUserName = "a",
+                    SteamPassword = new EncryptedSecret("a", 1),
+                    KeyDerivationIterations = 1,
+                };
+
+                // Act
+                parser.Parse(args, settings);
+
+                // Assert
+                Assert.AreEqual(TimeSpan.FromMinutes(1), settings.SteamClientTimeout);
+            }
+
+            [TestMethod]
+            public void TimeoutIsNotSpecified_DoesNotSetSteamClientTimeout()
+            {
+                // Arrange
+                var args = new string[0];
+                var mockSettings = new Mock<ILeaderboardsSettings>();
+                mockSettings
+                    .SetupProperty(s => s.SteamUserName, "myUserName")
+                    .SetupProperty(s => s.SteamPassword, new EncryptedSecret("a", 1))
+                    .SetupProperty(s => s.KeyDerivationIterations, 1);
+                var settings = mockSettings.Object;
+
+                // Act
+                parser.Parse(args, settings);
+
+
+                // Assert
+                mockSettings.VerifySet(s => s.SteamClientTimeout = It.IsAny<TimeSpan>(), Times.Never);
+            }
         }
     }
 }

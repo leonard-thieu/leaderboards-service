@@ -173,7 +173,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
             }
         }
         
+        /// <summary>
+        /// The amount of time to wait before a request to the Steam Client API times out.
+        /// </summary>
         [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("The amount of time to wait before a request to the Steam Client API times out.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("00:01:40")]
         public global::System.TimeSpan SteamClientTimeout {
