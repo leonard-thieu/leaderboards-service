@@ -117,9 +117,6 @@
     <Reference Include="toofz.Services, Version=9.0.5.225, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.Services.9.0.5\lib\net45\toofz.Services.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.Telemetry, Version=1.0.3.15, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.Telemetry.1.0.3\lib\net45\toofz.Telemetry.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
