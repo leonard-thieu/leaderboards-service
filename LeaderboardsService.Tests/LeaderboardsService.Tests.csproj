@@ -112,11 +112,11 @@
     <Reference Include="toofz, Version=9.0.0.187, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.9.0.0\lib\net45\toofz.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.NecroDancer.Leaderboards, Version=14.0.2.254, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.14.0.2\lib\net45\toofz.NecroDancer.Leaderboards.dll</HintPath>
+    <Reference Include="toofz.NecroDancer.Leaderboards, Version=15.0.1.258, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.15.0.1\lib\net45\toofz.NecroDancer.Leaderboards.dll</HintPath>
     </Reference>
-    <Reference Include="toofz.NecroDancer.Leaderboards.Data, Version=5.0.1.51, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.Data.5.0.1\lib\net45\toofz.NecroDancer.Leaderboards.Data.dll</HintPath>
+    <Reference Include="toofz.NecroDancer.Leaderboards.Data, Version=6.1.0.58, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\toofz.NecroDancer.Leaderboards.Data.6.1.0\lib\net45\toofz.NecroDancer.Leaderboards.Data.dll</HintPath>
     </Reference>
     <Reference Include="toofz.Services, Version=9.0.5.225, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\toofz.Services.9.0.5\lib\net45\toofz.Services.dll</HintPath>
