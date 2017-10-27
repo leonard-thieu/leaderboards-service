@@ -56,21 +56,28 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         }
 
         internal async Task UpdateLeaderboardsAsync(
-            ISteamCommunityDataClient steamClient,
+            ISteamCommunityDataClient steamCommunityDataClient,
             IEnumerable<Leaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
             using (var activity = new DownloadActivity(Log, "leaderboards"))
             {
-                var leaderboardsEnvelope = await steamClient.GetLeaderboardsAsync(appId, activity, cancellationToken).ConfigureAwait(false);
+                var leaderboardsEnvelope = await steamCommunityDataClient.GetLeaderboardsAsync(appId, activity, cancellationToken).ConfigureAwait(false);
                 var headers = leaderboardsEnvelope.Leaderboards;
 
                 var leaderboardTasks = new List<Task>();
-                foreach (var leaderboard in leaderboards)
+                foreach (var header in headers)
                 {
-                    var header = headers.FirstOrDefault(h => h.LeaderboardId == leaderboard.LeaderboardId);
-                    var leaderboardTask = UpdateLeaderboardAsync(steamClient, leaderboard, header.EntryCount, activity, cancellationToken);
-                    leaderboardTasks.Add(leaderboardTask);
+                    var leaderboard = leaderboards.FirstOrDefault(l => l.LeaderboardId == header.LeaderboardId);
+                    if (leaderboard != null)
+                    {
+                        var leaderboardTask = UpdateLeaderboardAsync(steamCommunityDataClient, leaderboard, header.EntryCount, activity, cancellationToken);
+                        leaderboardTasks.Add(leaderboardTask);
+                    }
+                    else
+                    {
+                        // TODO: Leaderboard isn't visible from Steam Community Data, update the leaderboard from Steam Client API instead.
+                    }
                 }
 
                 await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
@@ -87,11 +94,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             var batchSize = SteamCommunityDataClient.MaxLeaderboardEntriesPerRequest;
 
             var entriesTasks = new List<Task<IEnumerable<Entry>>>();
-            int count = (int)Math.Ceiling((double)entryCount / batchSize);
-            for (int i = 0; i < count; i++)
+            for (int i = 1; i < entryCount; i += batchSize)
             {
-                var startRange = 1 + (i * batchSize);
-                var entriesTask = GetLeaderboardEntriesAsync(steamClient, leaderboard.LeaderboardId, startRange, progress, cancellationToken);
+                var entriesTask = GetLeaderboardEntriesAsync(steamClient, leaderboard.LeaderboardId, i, progress, cancellationToken);
                 entriesTasks.Add(entriesTask);
             }
 

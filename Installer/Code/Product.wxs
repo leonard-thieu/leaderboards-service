@@ -12,8 +12,8 @@
     <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
     <!-- Common Launch Condition -->
     <!-- Examples at http://wixtoolset.org/documentation/manual/v3/customactions/wixnetfxextension.html -->
-    <PropertyRef Id="NETFRAMEWORK45" />
-    <Condition Message="This application requires .NET Framework 4.5. Please install the .NET Framework then run this installer again.">Installed OR NETFRAMEWORK45</Condition>
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED" />
+    <Condition Message="This application requires .NET Framework 4.6.1. Please install the .NET Framework then run this installer again.">Installed OR WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED</Condition>
     <!-- Include User Interface Experience -->
     <Icon Id="Icon.ico" SourceFile="Resources\Icon.ico" />
     <Property Id="ARPPRODUCTICON" Value="Icon.ico"></Property>

@@ -61,7 +61,22 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;&lt;response&gt;&lt;appID&gt;247080&lt;/appID&gt;&lt;appFriendlyName&gt;247080&lt;/appFriendlyName&gt;&lt;leaderboardID&gt;2047387&lt;/leaderboardID&gt;&lt;totalLeaderboardEntries&gt;319&lt;/totalLeaderboardEntries&gt;&lt;entryStart&gt;1&lt;/entryStart&gt;&lt;entryEnd&gt;319&lt;/entryEnd&gt;&lt;resultCount&gt;319&lt;/resultCount&gt;&lt;entries&gt;&lt;entry&gt;&lt;steamid&gt;76561197998799529&lt;/steamid&gt;&lt;score&gt;134377&lt;/score&gt;&lt;rank&gt;1&lt;/rank&gt;&lt;ugcid&gt;849347241492683863&lt;/ugcid&gt;&lt;details&gt;&lt;![CDATA[0b00000001000000]]&gt;&lt;/details&gt;&lt;/entry&gt;&lt;entry&gt;&lt;steamid&gt;76561198093336562&lt;/ste [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;response&gt;
+        ///  &lt;appID&gt;247080&lt;/appID&gt;
+        ///  &lt;appFriendlyName&gt;247080&lt;/appFriendlyName&gt;
+        ///  &lt;leaderboardID&gt;2047387&lt;/leaderboardID&gt;
+        ///  &lt;totalLeaderboardEntries&gt;319&lt;/totalLeaderboardEntries&gt;
+        ///  &lt;entryStart&gt;1&lt;/entryStart&gt;
+        ///  &lt;entryEnd&gt;319&lt;/entryEnd&gt;
+        ///  &lt;resultCount&gt;319&lt;/resultCount&gt;
+        ///  &lt;entries&gt;
+        ///    &lt;entry&gt;
+        ///      &lt;steamid&gt;76561197998799529&lt;/steamid&gt;
+        ///      &lt;score&gt;134377&lt;/score&gt;
+        ///      &lt;rank&gt;1&lt;/rank&gt;
+        ///      &lt;ugcid&gt;849347241492683863&lt;/ugcid&gt;
+        ///      &lt;details&gt;&lt;![C [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string LeaderboardEntries_2047387_1 {
             get {

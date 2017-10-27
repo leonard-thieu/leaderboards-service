@@ -82,10 +82,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     LeaderboardId = leaderboard.LeaderboardId,
                     Rank = entry.GlobalRank,
                     SteamId = entry.SteamID.ToInt64(),
+                    ReplayId = entry.UGCId.ToReplayId(),
                     Score = entry.Score,
                     Zone = entry.Details[0],
                     Level = entry.Details[1],
-                    ReplayId = entry.UGCId.ToReplayId(),
                 });
             }
         }
