@@ -27,9 +27,7 @@
           <File Id="owf52846A01E14D3FA5EFB278275A6315ED" Source="$(var.SourceDir)\LeaderboardsService.exe" KeyPath="yes" />
           <ServiceInstall Id="si5C1EC7CFA893E7588320DBA5232DFD10" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves Crypt of the NecroDancer leaderboard data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes" />
           <ServiceControl Id="sc5C1EC7CFA893E7588320DBA5232DFD10" Name="$(var.ProductName)" Start="install" Stop="both" Remove="both" Wait="yes" />
-        </Component>
-        <Component Id="owc2EB64394D594F56BBA072A470D0F1EDC" Guid="10f0453b-1a44-708d-c043-0112e85fbe1a">
-          <File Id="owf2EB64394D594F56BBA072A470D0F1EDC" Source="$(var.SourceDir)\LeaderboardsService.exe.config" KeyPath="yes" />
+          <File Id="owf2EB64394D594F56BBA072A470D0F1EDC" Source="$(var.SourceDir)\LeaderboardsService.exe.config" CompanionFile="owf52846A01E14D3FA5EFB278275A6315ED" />
         </Component>
         <Component Id="owc950044A998A8F98BC77BE1E291270381" Guid="70fec58d-9680-3f0f-fdc5-60569c380afe">
           <File Id="owf950044A998A8F98BC77BE1E291270381" Source="$(var.SourceDir)\log.config" KeyPath="yes" />

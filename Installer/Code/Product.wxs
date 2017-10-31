@@ -8,7 +8,20 @@
   <Product Id="*" Name="$(var.ProductName)" Language="1033" Version="$(var.MSIProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="1412e6e2-9ab0-440a-b927-50d802639d17">
     <Package InstallerVersion="301" Compressed="yes" InstallScope="perMachine" Manufacturer="$(var.Manufacturer)" />
     <MediaTemplate EmbedCab="yes" />
-    <MajorUpgrade AllowDowngrades="yes" />
+    <!--
+      Enables major upgrades.
+        - Allows downgrading.
+          It's sometimes necessary to revert back to an older version because the currently deployed version is not behaving correctly. This 
+          enables deploying an older version without having to manually uninstall the current version first.
+        - Preserves modified configuration files.
+          MSI will preserve an existing file if it is marked as a key component and has been modified since installation. The default install sequence for 
+          major upgrades removes files before installing new ones. This makes it impossible to check if a file has been modified since it'll be removed before 
+          the check.
+          Scheduling RemoveExistingProducts after InstallExecute ensures that configuration files are not removed during the installation process.
+          RemoveExistingProducts removes files when their reference count reaches 0. Since InstallExecute is scheduled earlier than RemoveExistingProducts, 
+          a configuration file's reference count will increase to 2 before being reduced to 1 and so, won't be removed.
+    -->
+    <MajorUpgrade AllowDowngrades="yes" Schedule="afterInstallExecute" />
     <!-- Common Launch Condition -->
     <!-- Examples at http://wixtoolset.org/documentation/manual/v3/customactions/wixnetfxextension.html -->
     <PropertyRef Id="WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED" />
