@@ -29,14 +29,6 @@
     <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Code" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Code\Product.wxs" />
-    <Compile Include="Code\Features.wxs" />
-    <Compile Include="Code\UI.wxs" />
-  </ItemGroup>
-  <ItemGroup>
     <WixExtension Include="WixIIsExtension">
       <HintPath>$(WixExtDir)\WixIIsExtension.dll</HintPath>
       <Name>WixIIsExtension</Name>
@@ -51,15 +43,6 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Code\Configuration.wxi" />
-    <Content Include="Resources\Banner.jpg" />
-    <Content Include="Resources\Dialog.jpg" />
-    <Content Include="Resources\Icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\InstallerMM\InstallerMM.wixproj">
       <Name>InstallerMM</Name>
       <Project>{077bd9ce-bcb1-4362-b7e4-6735bf2cd18f}</Project>
@@ -69,13 +52,16 @@
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Code\Configuration.wxi" />
+    <Compile Include="Code\Product.wxs" />
+    <Compile Include="Code\Features.wxs" />
+    <Compile Include="Code\UI.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Banner.jpg" />
+    <Content Include="Resources\Dialog.jpg" />
+    <Content Include="Resources\Icon.ico" />
+  </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
-  <!--
-	To modify your build process, add your task inside one of the targets below and uncomment it.
-	Other similar extension points exist, see Wix.targets.
-	<Target Name="BeforeBuild">
-	</Target>
-	<Target Name="AfterBuild">
-	</Target>
-	-->
 </Project>
