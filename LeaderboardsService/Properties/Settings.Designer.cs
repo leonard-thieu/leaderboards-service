@@ -133,9 +133,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsDescriptionAttribute("The password used to log on to Steam.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::toofz.EncryptedSecret SteamPassword {
+        public global::toofz.Services.EncryptedSecret SteamPassword {
             get {
-                return ((global::toofz.EncryptedSecret)(this["SteamPassword"]));
+                return ((global::toofz.Services.EncryptedSecret)(this["SteamPassword"]));
             }
             set {
                 this["SteamPassword"] = value;
@@ -148,9 +148,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsDescriptionAttribute("The connection string used to connect to the leaderboards database.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::toofz.EncryptedSecret LeaderboardsConnectionString {
+        public global::toofz.Services.EncryptedSecret LeaderboardsConnectionString {
             get {
-                return ((global::toofz.EncryptedSecret)(this["LeaderboardsConnectionString"]));
+                return ((global::toofz.Services.EncryptedSecret)(this["LeaderboardsConnectionString"]));
             }
             set {
                 this["LeaderboardsConnectionString"] = value;

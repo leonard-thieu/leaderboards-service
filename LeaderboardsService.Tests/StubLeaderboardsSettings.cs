@@ -1,5 +1,6 @@
 ﻿using System;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
+using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {

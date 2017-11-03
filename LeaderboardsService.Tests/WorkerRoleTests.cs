@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
+using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {

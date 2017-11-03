@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
-using toofz.TestsShared;
+using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
@@ -36,7 +36,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 parser.Parse(args, settings);
 
                 // Assert
-                Assert.That.NormalizedAreEqual(@"
+                Assert.AreEqual(@"
 Usage: LeaderboardsService.exe [options]
 
 options:

@@ -23,10 +23,10 @@
     <Setting Name="SteamUserName" Description="The user name used to log on to Steam." GenerateDefaultValueInCode="false" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SteamPassword" Description="The password used to log on to Steam." GenerateDefaultValueInCode="false" Type="toofz.EncryptedSecret" Scope="User">
+    <Setting Name="SteamPassword" Description="The password used to log on to Steam." GenerateDefaultValueInCode="false" Type="toofz.Services.EncryptedSecret" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LeaderboardsConnectionString" Description="The connection string used to connect to the leaderboards database." GenerateDefaultValueInCode="false" Type="toofz.EncryptedSecret" Scope="User">
+    <Setting Name="LeaderboardsConnectionString" Description="The connection string used to connect to the leaderboards database." GenerateDefaultValueInCode="false" Type="toofz.Services.EncryptedSecret" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DailyLeaderboardsPerUpdate" Description="The maxinum number of daily leaderboards to update per cycle." Type="System.Int32" Scope="User">
