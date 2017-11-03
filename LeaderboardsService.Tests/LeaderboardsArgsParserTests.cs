@@ -49,7 +49,7 @@ options:
   --connection[=VALUE]  The connection string used to connect to the leaderboards database.
   --dailies=VALUE       The maxinum number of daily leaderboards to update per cycle.
   --timeout=VALUE       The amount of time to wait before a request to the Steam Client API times out.
-", outWriter.ToString(), ignoreWhiteSpaceDifferences: true);
+", outWriter.ToString(), ignoreLineEndingDifferences: true);
             }
 
             #region SteamUserName
