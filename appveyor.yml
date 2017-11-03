@@ -7,11 +7,8 @@ branches:
 configuration:
   - Release
 environment:
-  APPVEYOR_CACHE_ENTRY_ZIP_ARGS: -t7z -m0=lzma -mx=9
   PROJECT: LeaderboardsService
   PROJECT_PACKAGE: toofz-leaderboards-service-v%APPVEYOR_BUILD_VERSION%.msi
-cache:
-  - packages -> **\packages.config
 notifications:
   - provider: Slack
     incoming_webhook:
@@ -25,6 +22,7 @@ artifacts:
     name: $(PROJECT)
 
 install:
+  - nuget update -Self
   - git clone https://github.com/leonard-thieu/toofz-build.git Scripts
 
 before_build:
