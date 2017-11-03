@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using toofz.TestsShared;
+using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    class LeaderboardsWorkerBaseTests
+    public class LeaderboardsWorkerBaseTests
     {
         public LeaderboardsWorkerBaseTests()
         {
@@ -17,31 +17,29 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             StoreClient = MockStoreClient.Object;
         }
 
-        public LeaderboardsWorkerBase Worker { get; set; } = new LeaderboardsWorkerBaseAdapter();
+        internal LeaderboardsWorkerBase Worker { get; set; } = new LeaderboardsWorkerBaseAdapter();
         public Mock<ILeaderboardsContext> MockDb { get; set; } = new Mock<ILeaderboardsContext>();
         public ILeaderboardsContext Db { get; set; }
         public Mock<ILeaderboardsStoreClient> MockStoreClient { get; set; } = new Mock<ILeaderboardsStoreClient>();
         public ILeaderboardsStoreClient StoreClient { get; set; }
         public CancellationToken CancellationToken { get; set; } = default;
 
-        [TestClass]
         public class GetLeaderboardsAsyncMethod : LeaderboardsWorkerBaseTests
         {
-            [TestMethod]
+            [Fact]
             public async Task ReturnsLeaderboards()
             {
                 // Arrange -> Act
                 var leaderboards = await Worker.GetLeaderboardsAsync(Db, CancellationToken);
 
                 // Assert
-                Assert.IsInstanceOfType(leaderboards, typeof(IEnumerable<Leaderboard>));
+                Assert.IsAssignableFrom<IEnumerable<Leaderboard>>(leaderboards);
             }
         }
 
-        [TestClass]
         public class StoreLeaderboardsAsyncMethod : LeaderboardsWorkerBaseTests
         {
-            [TestMethod]
+            [Fact]
             public async Task StoresLeaderboards()
             {
                 // Arrange
@@ -55,7 +53,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Leaderboard>>(), CancellationToken), Times.Once);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task StoresPlayers()
             {
                 // Arrange
@@ -70,7 +68,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Player>>(), false, CancellationToken), Times.Once);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task StoresReplays()
             {
                 // Arrange
@@ -85,7 +83,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Replay>>(), false, CancellationToken), Times.Once);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task StoresEntries()
             {
                 // Arrange
@@ -101,6 +99,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             }
         }
 
-        class LeaderboardsWorkerBaseAdapter : LeaderboardsWorkerBase { }
+        private class LeaderboardsWorkerBaseAdapter : LeaderboardsWorkerBase { }
     }
 }

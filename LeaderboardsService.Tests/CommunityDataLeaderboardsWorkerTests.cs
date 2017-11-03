@@ -2,14 +2,14 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests.Properties;
 using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
+using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    class CommunityDataLeaderboardsWorkerTests
+    public class CommunityDataLeaderboardsWorkerTests
     {
         public CommunityDataLeaderboardsWorkerTests()
         {
@@ -19,16 +19,15 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
         public uint AppId { get; set; } = 247080;
         public string ConnectionString { get; set; } = "myConnectionString";
-        public CommunityDataLeaderboardsWorker Worker { get; set; }
+        internal CommunityDataLeaderboardsWorker Worker { get; set; }
         public Mock<ISteamCommunityDataClient> MockSteamClient { get; set; } = new Mock<ISteamCommunityDataClient>();
         public ISteamCommunityDataClient SteamClient { get; set; }
         public IProgress<long> Progress { get; set; } = Mock.Of<IProgress<long>>();
         public CancellationToken CancellationToken { get; set; } = CancellationToken.None;
 
-        [TestClass]
         public class Constructor
         {
-            [TestMethod]
+            [Fact]
             public void ConnectionStringIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
@@ -36,13 +35,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 string connectionString = null;
 
                 // Act -> Assert
-                Assert.ThrowsException<ArgumentNullException>(() =>
+                Assert.Throws<ArgumentNullException>(() =>
                 {
                     new CommunityDataLeaderboardsWorker(appId, connectionString);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public void ReturnsInstance()
             {
                 // Arrange
@@ -53,14 +52,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var worker = new CommunityDataLeaderboardsWorker(appId, connectionString);
 
                 // Assert
-                Assert.IsInstanceOfType(worker, typeof(CommunityDataLeaderboardsWorker));
+                Assert.IsAssignableFrom<CommunityDataLeaderboardsWorker>(worker);
             }
         }
 
-        [TestClass]
         public class UpdateLeaderboardsAsyncMethod : CommunityDataLeaderboardsWorkerTests
         {
-            [TestMethod]
+            [Fact]
             public async Task UpdatesLeaderboards()
             {
                 // Arrange
@@ -89,12 +87,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
                 // Assert
                 MockSteamClient.Verify(c => c.GetLeaderboardEntriesAsync(AppId, 2047540, It.IsAny<GetLeaderboardEntriesParams>(), It.IsAny<IProgress<long>>(), CancellationToken), Times.Exactly(2));
-                Assert.AreEqual(319, leaderboard2047387.Entries.Count);
-                Assert.AreEqual(8462, leaderboard2047540.Entries.Count);
+                Assert.Equal(319, leaderboard2047387.Entries.Count);
+                Assert.Equal(8462, leaderboard2047540.Entries.Count);
             }
         }
 
-        [TestClass]
         public class UpdateLeaderboardAsyncMethod : CommunityDataLeaderboardsWorkerTests
         {
             public UpdateLeaderboardAsyncMethod()
@@ -112,10 +109,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                     .ReturnsAsync(leaderboardEntries_2047540_2);
             }
 
-            Leaderboard leaderboard;
-            int entryCount;
+            private Leaderboard leaderboard;
+            private int entryCount;
 
-            [TestMethod]
+            [Fact]
             public async Task NoEntries_DoesNotThrowArgumentException()
             {
                 // Arrange
@@ -125,34 +122,33 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.UpdateLeaderboardAsync(SteamClient, leaderboard, entryCount, Progress, CancellationToken);
 
                 // Assert
-                Assert.IsNotNull(leaderboard.LastUpdate);
+                Assert.NotNull(leaderboard.LastUpdate);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task AddsUpdatedEntries()
             {
                 // Arrange -> Act
                 await Worker.UpdateLeaderboardAsync(SteamClient, leaderboard, entryCount, Progress, CancellationToken);
 
                 // Assert
-                Assert.AreEqual(entryCount, leaderboard.Entries.Count());
+                Assert.Equal(entryCount, leaderboard.Entries.Count());
             }
 
-            [TestMethod]
+            [Fact]
             public async Task SetsLastUpdate()
             {
                 // Arrange -> Act
                 await Worker.UpdateLeaderboardAsync(SteamClient, leaderboard, entryCount, Progress, CancellationToken);
 
                 // Assert
-                Assert.IsNotNull(leaderboard.LastUpdate);
+                Assert.NotNull(leaderboard.LastUpdate);
             }
         }
 
-        [TestClass]
         public class GetLeaderboardEntriesAsyncMethod : CommunityDataLeaderboardsWorkerTests
         {
-            [TestMethod]
+            [Fact]
             public async Task ReturnsEntries()
             {
                 // Arrange
@@ -167,7 +163,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var entries = await Worker.GetLeaderboardEntriesAsync(SteamClient, leaderboardId, startRange, Progress, CancellationToken);
 
                 // Assert
-                Assert.AreEqual(5001, entries.Count());
+                Assert.Equal(5001, entries.Count());
             }
         }
     }

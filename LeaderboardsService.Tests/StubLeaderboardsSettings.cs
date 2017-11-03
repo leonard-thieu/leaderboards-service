@@ -4,7 +4,7 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    sealed class StubLeaderboardsSettings : ILeaderboardsSettings
+    internal sealed class StubLeaderboardsSettings : ILeaderboardsSettings
     {
         public uint AppId => 247080;
 

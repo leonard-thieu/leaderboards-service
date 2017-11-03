@@ -1,14 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SteamKit2;
+﻿using SteamKit2;
+using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    class UGCHandleExtensionsTests
+    public class UGCHandleExtensionsTests
     {
-        [TestClass]
         public class ToReplayIdMethod
         {
-            [TestMethod]
+            [Fact]
             public void UgcIdIsUInt64MaxValue_ReturnsNull()
             {
                 // Arrange
@@ -18,10 +17,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var replayId = UGCHandleExtensions.ToReplayId(ugcId);
 
                 // Assert
-                Assert.IsNull(replayId);
+                Assert.Null(replayId);
             }
 
-            [TestMethod]
+            [Fact]
             public void UgcIdIsZero_ReturnsNull()
             {
                 // Arrange
@@ -31,10 +30,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var replayId = UGCHandleExtensions.ToReplayId(ugcId);
 
                 // Assert
-                Assert.IsNull(replayId);
+                Assert.Null(replayId);
             }
 
-            [TestMethod]
+            [Fact]
             public void ReturnsReplayId()
             {
                 // Arrange
@@ -44,7 +43,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var replayId = UGCHandleExtensions.ToReplayId(ugcId);
 
                 // Assert
-                Assert.AreEqual(3489753984753, replayId);
+                Assert.Equal(3489753984753, replayId);
             }
         }
     }

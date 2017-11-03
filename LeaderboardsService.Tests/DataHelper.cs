@@ -4,9 +4,9 @@ using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    static class DataHelper
+    internal static class DataHelper
     {
-        static readonly XmlSerializer LeaderboardsEnvelopeSerializer = new XmlSerializer(typeof(LeaderboardsEnvelope));
+        private static readonly XmlSerializer LeaderboardsEnvelopeSerializer = new XmlSerializer(typeof(LeaderboardsEnvelope));
 
         public static LeaderboardsEnvelope DeserializeLeaderboardsEnvelope(string xml)
         {
@@ -16,7 +16,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             }
         }
 
-        static readonly XmlSerializer LeaderboardEntriesEnvelopeSerializer = new XmlSerializer(typeof(LeaderboardEntriesEnvelope));
+        private static readonly XmlSerializer LeaderboardEntriesEnvelopeSerializer = new XmlSerializer(typeof(LeaderboardEntriesEnvelope));
 
         public static LeaderboardEntriesEnvelope DeserializeLeaderboardEntriesEnvelope(string xml)
         {

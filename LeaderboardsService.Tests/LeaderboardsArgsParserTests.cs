@@ -1,15 +1,14 @@
 ﻿using System;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.Services;
+using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    class LeaderboardsArgsParserTests
+    public class LeaderboardsArgsParserTests
     {
-        [TestClass]
         public class Parse
         {
             public Parse()
@@ -18,13 +17,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 parser = new LeaderboardsArgsParser(inReader, outWriter, errorWriter);
             }
 
-            Mock<TextReader> mockInReader = new Mock<TextReader>(MockBehavior.Strict);
-            TextReader inReader;
-            TextWriter outWriter = new StringWriter();
-            TextWriter errorWriter = new StringWriter();
-            LeaderboardsArgsParser parser;
+            private Mock<TextReader> mockInReader = new Mock<TextReader>(MockBehavior.Strict);
+            private TextReader inReader;
+            private TextWriter outWriter = new StringWriter();
+            private TextWriter errorWriter = new StringWriter();
+            private LeaderboardsArgsParser parser;
 
-            [TestMethod]
+            [Fact]
             public void HelpFlagIsSpecified_ShowUsageInformation()
             {
                 // Arrange
@@ -36,7 +35,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 parser.Parse(args, settings);
 
                 // Assert
-                Assert.AreEqual(@"
+                Assert.Equal(@"
 Usage: LeaderboardsService.exe [options]
 
 options:
@@ -50,12 +49,12 @@ options:
   --connection[=VALUE]  The connection string used to connect to the leaderboards database.
   --dailies=VALUE       The maxinum number of daily leaderboards to update per cycle.
   --timeout=VALUE       The amount of time to wait before a request to the Steam Client API times out.
-", outWriter.ToString());
+", outWriter.ToString(), ignoreWhiteSpaceDifferences: true);
             }
 
             #region SteamUserName
 
-            [TestMethod]
+            [Fact]
             public void UserNameIsSpecified_SetSteamUserName()
             {
                 // Arrange
@@ -71,10 +70,10 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                Assert.AreEqual("myUserName", settings.SteamUserName);
+                Assert.Equal("myUserName", settings.SteamUserName);
             }
 
-            [TestMethod]
+            [Fact]
             public void UserNameIsNotSpecifiedAndSteamUserNameIsNotSet_PromptsUserForUserNameAndSetsSteamUserName()
             {
                 // Arrange
@@ -93,10 +92,10 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                Assert.AreEqual("myUserName", settings.SteamUserName);
+                Assert.Equal("myUserName", settings.SteamUserName);
             }
 
-            [TestMethod]
+            [Fact]
             public void UserNameIsNotSpecifiedAndSteamUserNameIsSet_DoesNotSetSteamUserName()
             {
                 // Arrange
@@ -119,7 +118,7 @@ options:
 
             #region SteamPassword
 
-            [TestMethod]
+            [Fact]
             public void PasswordIsSpecified_SetsSteamPassword()
             {
                 // Arrange
@@ -136,10 +135,10 @@ options:
 
                 // Assert
                 var encrypted = new EncryptedSecret("myPassword", 1);
-                Assert.AreEqual(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
+                Assert.Equal(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
             }
 
-            [TestMethod]
+            [Fact]
             public void PasswordFlagIsSpecified_PromptsUserForPasswordAndSetsSteamPassword()
             {
                 // Arrange
@@ -159,10 +158,10 @@ options:
 
                 // Assert
                 var encrypted = new EncryptedSecret("myPassword", 1);
-                Assert.AreEqual(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
+                Assert.Equal(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
             }
 
-            [TestMethod]
+            [Fact]
             public void PasswordFlagIsNotSpecifiedAndSteamPasswordIsNotSet_PromptsUserForPasswordAndSetsSteamPassword()
             {
                 // Arrange
@@ -182,10 +181,10 @@ options:
 
                 // Assert
                 var encrypted = new EncryptedSecret("myPassword", 1);
-                Assert.AreEqual(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
+                Assert.Equal(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
             }
 
-            [TestMethod]
+            [Fact]
             public void PasswordFlagIsNotSpecifiedAndSteamPasswordIsSet_DoesNotSetSteamPassword()
             {
                 // Arrange
@@ -208,7 +207,7 @@ options:
 
             #region LeaderboardsConnectionString
 
-            [TestMethod]
+            [Fact]
             public void ConnectionIsSpecified_SetsLeaderboardsConnectionString()
             {
                 // Arrange
@@ -225,10 +224,10 @@ options:
 
                 // Assert
                 var encrypted = new EncryptedSecret("myConnectionString", 1);
-                Assert.AreEqual(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
+                Assert.Equal(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
             }
 
-            [TestMethod]
+            [Fact]
             public void ConnectionFlagIsSpecified_PromptsUserForConnectionAndSetsLeaderboardsConnectionString()
             {
                 // Arrange
@@ -248,10 +247,10 @@ options:
 
                 // Assert
                 var encrypted = new EncryptedSecret("myConnectionString", 1);
-                Assert.AreEqual(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
+                Assert.Equal(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
             }
 
-            [TestMethod]
+            [Fact]
             public void ConnectionFlagIsNotSpecifiedAndLeaderboardsConnectionStringIsNotSet_SetsLeaderboardsConnectionStringToDefault()
             {
                 // Arrange
@@ -268,10 +267,10 @@ options:
 
                 // Assert
                 var encrypted = new EncryptedSecret(LeaderboardsArgsParser.DefaultLeaderboardsConnectionString, 1);
-                Assert.AreEqual(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
+                Assert.Equal(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
             }
 
-            [TestMethod]
+            [Fact]
             public void ConnectionFlagIsNotSpecifiedAndLeaderboardsConnectionStringIsSet_DoesNotSetLeaderboardsConnectionString()
             {
                 // Arrange
@@ -294,7 +293,7 @@ options:
 
             #region DailyLeaderboardsPerUpdate
 
-            [TestMethod]
+            [Fact]
             public void DailiesIsSpecified_SetsDailyLeaderboardsPerUpdate()
             {
                 // Arrange
@@ -310,10 +309,10 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                Assert.AreEqual(10, settings.DailyLeaderboardsPerUpdate);
+                Assert.Equal(10, settings.DailyLeaderboardsPerUpdate);
             }
 
-            [TestMethod]
+            [Fact]
             public void DailiesIsNotSpecified_DoesNotSetDailyLeaderboardsPerUpdate()
             {
                 // Arrange
@@ -334,7 +333,7 @@ options:
 
             #endregion
 
-            [TestMethod]
+            [Fact]
             public void TimeoutIsSpecified_SetsSteamClientTimeout()
             {
                 // Arrange
@@ -350,10 +349,10 @@ options:
                 parser.Parse(args, settings);
 
                 // Assert
-                Assert.AreEqual(TimeSpan.FromMinutes(1), settings.SteamClientTimeout);
+                Assert.Equal(TimeSpan.FromMinutes(1), settings.SteamClientTimeout);
             }
 
-            [TestMethod]
+            [Fact]
             public void TimeoutIsNotSpecified_DoesNotSetSteamClientTimeout()
             {
                 // Arrange

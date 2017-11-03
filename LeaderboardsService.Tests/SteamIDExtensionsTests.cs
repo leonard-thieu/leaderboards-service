@@ -1,14 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SteamKit2;
+﻿using SteamKit2;
+using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    class SteamIDExtensionsTests
+    public class SteamIDExtensionsTests
     {
-        [TestClass]
         public class ToInt64Method
         {
-            [TestMethod]
+            [Fact]
             public void ReturnsSteamIdAsInt64()
             {
                 // Arrange
@@ -18,7 +17,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var int64 = SteamIDExtensions.ToInt64(steamId);
 
                 // Assert
-                Assert.AreEqual(3489758347583, int64);
+                Assert.Equal(3489758347583, int64);
             }
         }
     }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
+using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    class LeaderboardsWorkerTests
+    public class LeaderboardsWorkerTests
     {
         public LeaderboardsWorkerTests()
         {
@@ -17,15 +17,14 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
         public uint AppId { get; set; } = 247080;
         public string ConnectionString { get; set; } = "myConnectionString";
-        public LeaderboardsWorker Worker { get; set; }
+        internal LeaderboardsWorker Worker { get; set; }
         public CancellationToken CancellationToken { get; set; } = CancellationToken.None;
         public Mock<ISteamClientApiClient> MockSteamClient { get; set; } = new Mock<ISteamClientApiClient>();
         public ISteamClientApiClient SteamClient { get; set; }
 
-        [TestClass]
         public class Constructor
         {
-            [TestMethod]
+            [Fact]
             public void ConnectionStringIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
@@ -33,13 +32,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 string connectionString = null;
 
                 // Act -> Assert
-                Assert.ThrowsException<ArgumentNullException>(() =>
+                Assert.Throws<ArgumentNullException>(() =>
                 {
                     new LeaderboardsWorker(appId, connectionString);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public void ReturnsInstance()
             {
                 // Arrange
@@ -50,14 +49,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var worker = new LeaderboardsWorker(appId, connectionString);
 
                 // Assert
-                Assert.IsInstanceOfType(worker, typeof(LeaderboardsWorker));
+                Assert.IsAssignableFrom<LeaderboardsWorker>(worker);
             }
         }
 
-        [TestClass]
         public class UpdateLeaderboardsAsyncMethod : LeaderboardsWorkerTests
         {
-            [TestMethod]
+            [Fact]
             public async Task UpdatesLeaderboards()
             {
                 // Arrange
@@ -88,15 +86,14 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.UpdateLeaderboardsAsync(SteamClient, leaderboards, CancellationToken);
 
                 // Assert
-                Assert.AreEqual(3, leaderboard1.Entries.Count);
-                Assert.AreEqual(2, leaderboard2.Entries.Count);
+                Assert.Equal(3, leaderboard1.Entries.Count);
+                Assert.Equal(2, leaderboard2.Entries.Count);
             }
         }
 
-        [TestClass]
         public class UpdateLeaderboardAsyncMethod : LeaderboardsWorkerTests
         {
-            [TestMethod]
+            [Fact]
             public async Task SetsLastUpdate()
             {
                 // Arrange
@@ -110,10 +107,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.UpdateLeaderboardAsync(SteamClient, leaderboard, CancellationToken);
 
                 // Assert
-                Assert.IsNotNull(leaderboard.LastUpdate);
+                Assert.NotNull(leaderboard.LastUpdate);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task UpdatesLeaderboard()
             {
                 // Arrange
@@ -132,7 +129,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.UpdateLeaderboardAsync(SteamClient, leaderboard, CancellationToken);
 
                 // Assert
-                Assert.AreEqual(2, leaderboard.Entries.Count);
+                Assert.Equal(2, leaderboard.Entries.Count);
             }
         }
     }

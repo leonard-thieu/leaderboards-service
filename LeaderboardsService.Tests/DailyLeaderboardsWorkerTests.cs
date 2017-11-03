@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using SteamKit2;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 using toofz.TestsShared;
+using Xunit;
 using static SteamKit2.SteamUserStats;
-using static SteamKit2.SteamUserStats.LeaderboardEntriesCallback;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    class DailyLeaderboardsWorkerTests
+    public class DailyLeaderboardsWorkerTests
     {
         public DailyLeaderboardsWorkerTests()
         {
@@ -30,7 +27,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
         public uint AppId { get; set; } = 247080;
         public string ConnectionString { get; set; } = "myConnectionString";
-        public DailyLeaderboardsWorker Worker { get; set; }
+        internal DailyLeaderboardsWorker Worker { get; set; }
         public CancellationToken CancellationToken { get; set; } = CancellationToken.None;
         public int Limit { get; set; } = 100;
         public Mock<ILeaderboardsContext> MockDb { get; set; } = new Mock<ILeaderboardsContext>();
@@ -42,10 +39,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         public Mock<ILeaderboardsStoreClient> MockStoreClient { get; set; } = new Mock<ILeaderboardsStoreClient>();
         public ILeaderboardsStoreClient StoreClient { get; set; }
 
-        [TestClass]
         public class Constructor
         {
-            [TestMethod]
+            [Fact]
             public void ConnectionStringIsNull_ThrowsArgumentNullException()
             {
                 // Arrange
@@ -53,13 +49,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 string connectionString = null;
 
                 // Act -> Assert
-                Assert.ThrowsException<ArgumentNullException>(() =>
+                Assert.Throws<ArgumentNullException>(() =>
                 {
                     new DailyLeaderboardsWorker(appId, connectionString);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public void ReturnsInstance()
             {
                 // Arrange
@@ -70,14 +66,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var worker = new DailyLeaderboardsWorker(appId, connectionString);
 
                 // Assert
-                Assert.IsInstanceOfType(worker, typeof(DailyLeaderboardsWorker));
+                Assert.IsAssignableFrom<DailyLeaderboardsWorker>(worker);
             }
         }
 
-        [TestClass]
         public class GetDailyLeaderboardsAsyncMethod : DailyLeaderboardsWorkerTests
         {
-            [TestMethod]
+            [Fact]
             public async Task ReturnsDailyLeaderboards()
             {
                 // Arrange
@@ -98,14 +93,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var dailyLeaderboards2 = await Worker.GetDailyLeaderboardsAsync(Db, SteamClient, Limit, CancellationToken);
 
                 // Assert
-                Assert.AreEqual(2, dailyLeaderboards2.Count());
+                Assert.Equal(2, dailyLeaderboards2.Count());
             }
         }
 
-        [TestClass]
         public class GetStaleDailyLeaderboardsAsyncMethod : DailyLeaderboardsWorkerTests
         {
-            [TestMethod]
+            [Fact]
             public async Task ReturnsStaleDailyLeaderboards()
             {
                 // Arrange
@@ -120,18 +114,17 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var staleDailyLeaderboards = await Worker.GetStaleDailyLeaderboardsAsync(Db, today, Limit, CancellationToken);
 
                 // Assert
-                Assert.IsInstanceOfType(staleDailyLeaderboards, typeof(IEnumerable<DailyLeaderboard>));
+                Assert.IsAssignableFrom<IEnumerable<DailyLeaderboard>>(staleDailyLeaderboards);
                 foreach (var staleDailyLeaderboard in staleDailyLeaderboards)
                 {
-                    Assert.AreNotEqual(today, staleDailyLeaderboard.Date);
+                    Assert.NotEqual(today, staleDailyLeaderboard.Date);
                 }
             }
         }
 
-        [TestClass]
         public class GetCurrentDailyLeaderboardsAsyncMethod : DailyLeaderboardsWorkerTests
         {
-            [TestMethod]
+            [Fact]
             public async Task CurrentDailyLeaderboardsExist_ReturnsExistingCurrentDailyLeaderboards()
             {
                 // Arrange
@@ -149,12 +142,12 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
                 // Assert
                 var leaderboard = leaderboards.First();
-                Assert.AreEqual(today, leaderboard.Date);
-                Assert.AreEqual("classic", leaderboard.Product.Name);
+                Assert.Equal(today, leaderboard.Date);
+                Assert.Equal("classic", leaderboard.Product.Name);
                 MockSteamClient.Verify(s => s.FindLeaderboardAsync(AppId, It.IsAny<string>(), CancellationToken), Times.Never);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task CurrentDailyLeaderboardsDoNotExist_GetsAndReturnsCurrentDailyLeaderboards()
             {
                 // Arrange
@@ -173,16 +166,15 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
                 // Assert
                 var leaderboard = leaderboards.First();
-                Assert.AreEqual(today, leaderboard.Date);
-                Assert.AreEqual(0, leaderboard.ProductId);
+                Assert.Equal(today, leaderboard.Date);
+                Assert.Equal(0, leaderboard.ProductId);
                 MockSteamClient.Verify(s => s.FindLeaderboardAsync(AppId, It.IsAny<string>(), CancellationToken), Times.Exactly(2));
             }
         }
 
-        [TestClass]
         public class GetDailyLeaderboardNameMethod
         {
-            [TestMethod]
+            [Fact]
             public void ProductIsAmplified_ReturnsNameStartingWithDLC()
             {
                 // Arrange
@@ -193,10 +185,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var name = DailyLeaderboardsWorker.GetDailyLeaderboardName(product, date);
 
                 // Assert
-                Assert.AreEqual("DLC 13/9/2017_PROD", name);
+                Assert.Equal("DLC 13/9/2017_PROD", name);
             }
 
-            [TestMethod]
+            [Fact]
             public void ProductIsClassic_ReturnsName()
             {
                 // Arrange
@@ -207,10 +199,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var name = DailyLeaderboardsWorker.GetDailyLeaderboardName(product, date);
 
                 // Assert
-                Assert.AreEqual("13/9/2017_PROD", name);
+                Assert.Equal("13/9/2017_PROD", name);
             }
 
-            [TestMethod]
+            [Fact]
             public void ProductIsInvalid_ThrowsArgumentException()
             {
                 // Arrange
@@ -218,13 +210,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var date = new DateTime(2017, 9, 13);
 
                 // Act -> Assert
-                Assert.ThrowsException<ArgumentException>(() =>
+                Assert.Throws<ArgumentException>(() =>
                 {
                     DailyLeaderboardsWorker.GetDailyLeaderboardName(product, date);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public void ReturnsName()
             {
                 // Arrange
@@ -235,14 +227,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var name = DailyLeaderboardsWorker.GetDailyLeaderboardName(product, date);
 
                 // Assert
-                Assert.AreEqual("13/9/2017_PROD", name);
+                Assert.Equal("13/9/2017_PROD", name);
             }
         }
 
-        [TestClass]
         public class UpdateDailyLeaderboardsAsyncMethod : DailyLeaderboardsWorkerTests
         {
-            [TestMethod]
+            [Fact]
             public async Task UpdatesLeaderboards()
             {
                 // Arrange
@@ -273,12 +264,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.UpdateDailyLeaderboardsAsync(SteamClient, leaderboards, CancellationToken);
 
                 // Assert
-                Assert.AreEqual(3, leaderboard1.Entries.Count);
-                Assert.AreEqual(2, leaderboard2.Entries.Count);
+                Assert.Equal(3, leaderboard1.Entries.Count);
+                Assert.Equal(2, leaderboard2.Entries.Count);
             }
         }
 
-        [TestClass]
         public class UpdateDailyLeaderboardAsyncMethod : DailyLeaderboardsWorkerTests
         {
             public UpdateDailyLeaderboardAsyncMethod()
@@ -290,20 +280,20 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                     .ReturnsAsync(leaderboardEntriesCallback);
             }
 
-            LeaderboardEntriesCallback leaderboardEntriesCallback;
-            DailyLeaderboard leaderboard;
+            private LeaderboardEntriesCallback leaderboardEntriesCallback;
+            private DailyLeaderboard leaderboard;
 
-            [TestMethod]
+            [Fact]
             public async Task SetsLastUpdate()
             {
                 // Arrange -> Act
                 await Worker.UpdateDailyLeaderboardAsync(SteamClient, leaderboard, CancellationToken);
 
                 // Assert
-                Assert.IsNotNull(leaderboard.LastUpdate);
+                Assert.NotNull(leaderboard.LastUpdate);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task UpdatesLeaderboard()
             {
                 // Arrange
@@ -318,14 +308,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.UpdateDailyLeaderboardAsync(SteamClient, leaderboard, CancellationToken);
 
                 // Assert
-                Assert.AreEqual(3, leaderboard.Entries.Count);
+                Assert.Equal(3, leaderboard.Entries.Count);
             }
         }
 
-        [TestClass]
         public class StoreDailyLeaderboardsAsyncMethod : DailyLeaderboardsWorkerTests
         {
-            [TestMethod]
+            [Fact]
             public async Task StoresLeaderboards()
             {
                 // Arrange
@@ -339,7 +328,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<DailyLeaderboard>>(), CancellationToken), Times.Once);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task StoresPlayers()
             {
                 // Arrange
@@ -354,7 +343,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Player>>(), false, CancellationToken), Times.Once);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task StoresReplays()
             {
                 // Arrange
@@ -369,7 +358,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Replay>>(), false, CancellationToken), Times.Once);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task StoresEntries()
             {
                 // Arrange

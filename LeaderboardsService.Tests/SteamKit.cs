@@ -6,7 +6,7 @@ using static SteamKit2.SteamUserStats.LeaderboardEntriesCallback;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    class LeaderboardEntriesCallback : ILeaderboardEntriesCallback
+    internal class LeaderboardEntriesCallback : ILeaderboardEntriesCallback
     {
         public EResult Result { get; set; }
         public int EntryCount { get; set; }
@@ -16,7 +16,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         public List<ILeaderboardEntry> Entries { get; } = new List<ILeaderboardEntry>();
     }
 
-    class LeaderboardEntry : ILeaderboardEntry
+    internal class LeaderboardEntry : ILeaderboardEntry
     {
         public SteamID SteamID { get; set; } = new SteamID();
         public int GlobalRank { get; set; }
@@ -26,7 +26,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         {
             get => details.AsReadOnly();
         }
-        readonly List<int> details = new List<int> { 0, 0 };
+        private readonly List<int> details = new List<int> { 0, 0 };
 
         public int Zone
         {

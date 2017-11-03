@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.Services;
+using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
-    class WorkerRoleTests
+    public class WorkerRoleTests
     {
-        [TestClass]
         public class RunAsyncOverrideMethod
         {
-            [TestMethod]
+            [Fact]
             public async Task SteamUserNameIsNull_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -27,13 +26,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 {
                     return workerRole.PublicRunAsyncOverride(cancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task SteamUserNameIsEmpty_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -48,13 +47,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 {
                     return workerRole.PublicRunAsyncOverride(cancellationToken);
                 });
             }
 
-            [TestMethod]
+            [Fact]
             public async Task SteamPasswordIsNull_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -69,20 +68,20 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 {
                     return workerRole.PublicRunAsyncOverride(cancellationToken);
                 });
             }
 
-            class WorkerRoleAdapter : WorkerRole
+            private class WorkerRoleAdapter : WorkerRole
             {
                 public WorkerRoleAdapter(ILeaderboardsSettings settings) : base(settings) { }
 
                 public Task PublicRunAsyncOverride(CancellationToken cancellationToken) => RunAsyncOverride(cancellationToken);
             }
 
-            [TestMethod]
+            [Fact]
             public async Task LeaderboardsConnectionStringIsNull_ThrowsInvalidOperationException()
             {
                 // Arrange
@@ -97,7 +96,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var cancellationToken = CancellationToken.None;
 
                 // Act -> Assert
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+                await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 {
                     return workerRole.PublicRunAsyncOverride(cancellationToken);
                 });
