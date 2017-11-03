@@ -3,7 +3,7 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties
 {
-    interface ILeaderboardsSettings : ISettings
+    internal interface ILeaderboardsSettings : ISettings
     {
         /// <summary>
         /// The product's application ID.

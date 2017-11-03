@@ -11,9 +11,9 @@ using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    sealed class CommunityDataLeaderboardsWorker : LeaderboardsWorkerBase
+    internal sealed class CommunityDataLeaderboardsWorker : LeaderboardsWorkerBase
     {
-        static readonly ILog Log = LogManager.GetLogger(typeof(CommunityDataLeaderboardsWorker));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CommunityDataLeaderboardsWorker));
 
         public CommunityDataLeaderboardsWorker(uint appId, string connectionString)
         {
@@ -21,8 +21,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             this.connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-        readonly uint appId;
-        readonly string connectionString;
+        private readonly uint appId;
+        private readonly string connectionString;
 
         public async Task UpdateAsync(CancellationToken cancellationToken)
         {

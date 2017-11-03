@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using log4net;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    [ExcludeFromCodeCoverage]
-    static class Program
+    internal static class Program
     {
-        static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
         /// <summary>
         /// The main entry point of the application.
@@ -19,7 +17,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         /// 0 - The application ran successfully.
         /// 1 - There was an error parsing <paramref name="args"/>.
         /// </returns>
-        static int Main(string[] args)
+        private static int Main(string[] args)
         {
             var settings = Settings.Default;
 

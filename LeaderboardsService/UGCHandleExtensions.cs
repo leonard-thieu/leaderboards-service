@@ -2,7 +2,7 @@
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    static class UGCHandleExtensions
+    internal static class UGCHandleExtensions
     {
         public static long? ToReplayId(this UGCHandle ugcHandle)
         {

@@ -1,6 +1,6 @@
 ﻿namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    static class UInt64Extensions
+    internal static class UInt64Extensions
     {
         public static long? ToReplayId(this ulong ugcHandle)
         {

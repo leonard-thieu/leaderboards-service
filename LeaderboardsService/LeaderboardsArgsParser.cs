@@ -7,7 +7,7 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    sealed class LeaderboardsArgsParser : ArgsParser<LeaderboardsOptions, ILeaderboardsSettings>
+    internal sealed class LeaderboardsArgsParser : ArgsParser<LeaderboardsOptions, ILeaderboardsSettings>
     {
         internal const string DefaultLeaderboardsConnectionString = "Data Source=localhost;Initial Catalog=NecroDancer;Integrated Security=SSPI;";
 

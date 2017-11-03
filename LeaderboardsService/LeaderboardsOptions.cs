@@ -3,7 +3,7 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    sealed class LeaderboardsOptions : Options
+    internal sealed class LeaderboardsOptions : Options
     {
         /// <summary>
         /// The user name used to log on to Steam.

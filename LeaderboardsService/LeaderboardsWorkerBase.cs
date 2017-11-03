@@ -7,9 +7,9 @@ using log4net;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    abstract class LeaderboardsWorkerBase
+    internal abstract class LeaderboardsWorkerBase
     {
-        static readonly ILog Log = LogManager.GetLogger(typeof(LeaderboardsWorkerBase));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LeaderboardsWorkerBase));
 
         internal async Task<IEnumerable<Leaderboard>> GetLeaderboardsAsync(
             ILeaderboardsContext db,

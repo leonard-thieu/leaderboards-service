@@ -8,9 +8,9 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    class WorkerRole : WorkerRoleBase<ILeaderboardsSettings>
+    internal class WorkerRole : WorkerRoleBase<ILeaderboardsSettings>
     {
-        static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
         public WorkerRole(ILeaderboardsSettings settings) : base("leaderboards", settings) { }
 

@@ -8,9 +8,9 @@ using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    sealed class LeaderboardsWorker : LeaderboardsWorkerBase
+    internal sealed class LeaderboardsWorker : LeaderboardsWorkerBase
     {
-        static readonly ILog Log = LogManager.GetLogger(typeof(LeaderboardsWorker));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(LeaderboardsWorker));
 
         public LeaderboardsWorker(uint appId, string connectionString)
         {
@@ -18,8 +18,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             this.connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-        readonly uint appId;
-        readonly string connectionString;
+        private readonly uint appId;
+        private readonly string connectionString;
 
         public async Task UpdateAsync(ISteamClientApiClient steamClient, CancellationToken cancellationToken)
         {
