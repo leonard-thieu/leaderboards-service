@@ -59,8 +59,14 @@
         <Component Id="owcFA00D7145B7D14B89754AE971AE39D75" Guid="daf90fc7-52a9-d05d-b34d-a7438c3d42d5">
           <File Id="owfFA00D7145B7D14B89754AE971AE39D75" Source="$(var.SourceDir)\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll" KeyPath="yes" />
         </Component>
+        <Component Id="owcADE9A457248959D397C6B092C7CCF78B" Guid="4aac0c53-b1ed-bef0-2706-7a1a9ee332ae">
+          <File Id="owfADE9A457248959D397C6B092C7CCF78B" Source="$(var.SourceDir)\Microsoft.Win32.Primitives.dll" KeyPath="yes" />
+        </Component>
         <Component Id="owc0E11B256F43D4622C66561493A2F1851" Guid="484af5e1-3201-e1b1-d797-c335f9ae2603">
           <File Id="owf0E11B256F43D4622C66561493A2F1851" Source="$(var.SourceDir)\Mono.Options.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc79156F385239CEA4DEA3C87C1DA3E1D8" Guid="68380c80-6708-5eb6-415d-10e278417679">
+          <File Id="owf79156F385239CEA4DEA3C87C1DA3E1D8" Source="$(var.SourceDir)\netstandard.dll" KeyPath="yes" />
         </Component>
         <Component Id="owc3FC8434C1A84605AEEBC6A100CA2F3E1" Guid="47d7e276-db6d-424e-d797-1a69e1e24b3b">
           <File Id="owf3FC8434C1A84605AEEBC6A100CA2F3E1" Source="$(var.SourceDir)\Newtonsoft.Json.dll" KeyPath="yes" />
@@ -74,17 +80,299 @@
         <Component Id="owc473279DC6169D7140DB32234B99BB2BB" Guid="f6143307-7474-3a97-42aa-250ef28429a3">
           <File Id="owf473279DC6169D7140DB32234B99BB2BB" Source="$(var.SourceDir)\SteamKit2.dll" KeyPath="yes" />
         </Component>
+        <Component Id="owc25FBE4153F32A5634B0ADA8A6954CC89" Guid="6c98bea6-1304-2fb8-4ce3-709ad7fb9601">
+          <File Id="owf25FBE4153F32A5634B0ADA8A6954CC89" Source="$(var.SourceDir)\System.AppContext.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcB0938B04162738D88A9505D891432182" Guid="d7cbe080-11e4-4dc2-1193-c6f503619626">
+          <File Id="owfB0938B04162738D88A9505D891432182" Source="$(var.SourceDir)\System.Collections.Concurrent.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcC2F9734A56DFCFEB68C9F8C7AC021C68" Guid="82632b16-161d-4a6e-e391-607b20e12b4a">
+          <File Id="owfC2F9734A56DFCFEB68C9F8C7AC021C68" Source="$(var.SourceDir)\System.Collections.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc3C7F9AF847AED9488EC18EEE32E4304B" Guid="809763ea-b3f3-18ce-3e41-26bbda842703">
+          <File Id="owf3C7F9AF847AED9488EC18EEE32E4304B" Source="$(var.SourceDir)\System.Collections.NonGeneric.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc4AB84BBF58909FD5D097268ED05BD3B8" Guid="89c3ecb5-0659-212f-cb59-05d31675daa7">
+          <File Id="owf4AB84BBF58909FD5D097268ED05BD3B8" Source="$(var.SourceDir)\System.Collections.Specialized.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc0792F81748B398DB4EE3E1DDF209590D" Guid="412b0f26-4503-9999-14e9-e2202c8021e8">
+          <File Id="owf0792F81748B398DB4EE3E1DDF209590D" Source="$(var.SourceDir)\System.ComponentModel.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc3D2E0FD83A8DB7B30128FE2CC76A6D37" Guid="5dda7ef9-ae81-1fe4-8988-f67e2ce81309">
+          <File Id="owf3D2E0FD83A8DB7B30128FE2CC76A6D37" Source="$(var.SourceDir)\System.ComponentModel.EventBasedAsync.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcB98A1045EF964B67FA038C39D0455A74" Guid="d0e70631-1f29-359a-7ccb-265ced4e5d8e">
+          <File Id="owfB98A1045EF964B67FA038C39D0455A74" Source="$(var.SourceDir)\System.ComponentModel.Primitives.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc8CC124ECA60830593E855269F2C68614" Guid="0cbd8724-812b-82e5-1498-9c99299e2890">
+          <File Id="owf8CC124ECA60830593E855269F2C68614" Source="$(var.SourceDir)\System.ComponentModel.TypeConverter.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcA90D9D10E6DAB6E67011458672887086" Guid="054993ce-0abb-9441-3124-21f972454715">
+          <File Id="owfA90D9D10E6DAB6E67011458672887086" Source="$(var.SourceDir)\System.Console.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc197F2534968D57C97974CF0FED71433C" Guid="3647ba1e-f9a9-2b45-b700-10df69827a5c">
+          <File Id="owf197F2534968D57C97974CF0FED71433C" Source="$(var.SourceDir)\System.Data.Common.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc3C29D500369F47A07E343EDD2651DB32" Guid="29dea56c-eaa9-483f-a716-b67d01b8b990">
+          <File Id="owf3C29D500369F47A07E343EDD2651DB32" Source="$(var.SourceDir)\System.Diagnostics.Contracts.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc6CACFB486BAFCC91094BBE11FA1D6D77" Guid="793133b4-fb80-7975-7a8e-07766464274c">
+          <File Id="owf6CACFB486BAFCC91094BBE11FA1D6D77" Source="$(var.SourceDir)\System.Diagnostics.Debug.dll" KeyPath="yes" />
+        </Component>
         <Component Id="owcBC11F886BA2AB9469783C04435BCA0B9" Guid="2c483d72-1aea-aa8b-f71a-6566569838c7">
           <File Id="owfBC11F886BA2AB9469783C04435BCA0B9" Source="$(var.SourceDir)\System.Diagnostics.DiagnosticSource.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc95502C822C8ECC756B2E2C4F9C64FF16" Guid="dd7706d9-f8b2-2713-b7f0-834cb639d431">
+          <File Id="owf95502C822C8ECC756B2E2C4F9C64FF16" Source="$(var.SourceDir)\System.Diagnostics.FileVersionInfo.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc07926E71F17C43267B44ABF5C937ED8C" Guid="c2f4dc50-e48b-8b70-da9d-05d3d0b96d8c">
+          <File Id="owf07926E71F17C43267B44ABF5C937ED8C" Source="$(var.SourceDir)\System.Diagnostics.Process.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcFD55AECF118116371C5449C61249EBA9" Guid="3e573539-03f1-e10d-bdf2-156834c932bb">
+          <File Id="owfFD55AECF118116371C5449C61249EBA9" Source="$(var.SourceDir)\System.Diagnostics.StackTrace.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc8C141B7761F05071AEBFD95ADA41AAC2" Guid="f47f0838-abc0-f976-4844-86785cf80c59">
+          <File Id="owf8C141B7761F05071AEBFD95ADA41AAC2" Source="$(var.SourceDir)\System.Diagnostics.TextWriterTraceListener.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc574EE3E1A7A24522AA9A38228494DECE" Guid="5a009284-cc72-3c8c-153f-7efd850794bd">
+          <File Id="owf574EE3E1A7A24522AA9A38228494DECE" Source="$(var.SourceDir)\System.Diagnostics.Tools.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcA29B00369195EF6CDC8068D7A2A4DA83" Guid="743ce7b4-53e5-922c-e986-bf8473a7cf98">
+          <File Id="owfA29B00369195EF6CDC8068D7A2A4DA83" Source="$(var.SourceDir)\System.Diagnostics.TraceSource.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc38B2B9FCCE93A2C7D2E931C05D695098" Guid="9459de6c-25a4-7990-155f-a45d2c7be1c9">
+          <File Id="owf38B2B9FCCE93A2C7D2E931C05D695098" Source="$(var.SourceDir)\System.Diagnostics.Tracing.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcAE197E3701A3A42602A5A8DFCD4C1352" Guid="aaecbf8b-bd8b-869d-39d1-a4ad8096c8fc">
+          <File Id="owfAE197E3701A3A42602A5A8DFCD4C1352" Source="$(var.SourceDir)\System.Drawing.Primitives.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc9A4DD4F6185D06C5A78E8AEDADB2494F" Guid="3249aa9c-9bf9-808a-ad80-94b09eb9ee37">
+          <File Id="owf9A4DD4F6185D06C5A78E8AEDADB2494F" Source="$(var.SourceDir)\System.Dynamic.Runtime.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcB1B1D5CD5E0525947D05C2530DDA9E96" Guid="43664615-fe63-0e97-cbd8-b599204e0079">
+          <File Id="owfB1B1D5CD5E0525947D05C2530DDA9E96" Source="$(var.SourceDir)\System.Globalization.Calendars.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc25E08EF59014137F40FBDB350A040254" Guid="72175d94-4661-bd4d-8f7c-806a2c4e10df">
+          <File Id="owf25E08EF59014137F40FBDB350A040254" Source="$(var.SourceDir)\System.Globalization.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcC5DFECD777F28F599EFA8F4187DD40EF" Guid="99f2e8a7-8767-ed7e-3b5d-db91e3aac12e">
+          <File Id="owfC5DFECD777F28F599EFA8F4187DD40EF" Source="$(var.SourceDir)\System.Globalization.Extensions.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc5AC6699E38D4EE124CC260C1E19F025A" Guid="c61fccad-8828-7db7-7b4c-a6e5c488d921">
+          <File Id="owf5AC6699E38D4EE124CC260C1E19F025A" Source="$(var.SourceDir)\System.IO.Compression.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc87D8454A10E8D4063130BA0D60AAE450" Guid="a585b63b-3239-b7eb-2469-3c56a3d09878">
+          <File Id="owf87D8454A10E8D4063130BA0D60AAE450" Source="$(var.SourceDir)\System.IO.Compression.ZipFile.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc7600C49A56A3819C607969AD7D76A1D1" Guid="9542af82-033f-50c7-0b25-101b9d94aee5">
+          <File Id="owf7600C49A56A3819C607969AD7D76A1D1" Source="$(var.SourceDir)\System.IO.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc6A348A5B38822B45BE742FD5B11ACF09" Guid="adbadd4a-8778-9648-1adb-3049bb09a6fe">
+          <File Id="owf6A348A5B38822B45BE742FD5B11ACF09" Source="$(var.SourceDir)\System.IO.FileSystem.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc200ACB21A48F8F1D56C9616D95EC5CA6" Guid="86572d0d-c334-066c-8492-f5a95c55ae7e">
+          <File Id="owf200ACB21A48F8F1D56C9616D95EC5CA6" Source="$(var.SourceDir)\System.IO.FileSystem.DriveInfo.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc6AF351692769A11F3108B81F1F6AC695" Guid="2ac1ada3-a20f-6c5e-5cdf-7bf5714f1c04">
+          <File Id="owf6AF351692769A11F3108B81F1F6AC695" Source="$(var.SourceDir)\System.IO.FileSystem.Primitives.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc7B9EE702BD2FAC26E42EFF8600C64938" Guid="84c93447-8f38-23ab-af54-34e69eb7ced5">
+          <File Id="owf7B9EE702BD2FAC26E42EFF8600C64938" Source="$(var.SourceDir)\System.IO.FileSystem.Watcher.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc0E49FFF68A74A08E1D96D167E231151C" Guid="e75a5738-a216-d575-b966-18057daede4a">
+          <File Id="owf0E49FFF68A74A08E1D96D167E231151C" Source="$(var.SourceDir)\System.IO.IsolatedStorage.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcE365A318301D62F1E6FA10DAB8EDC93F" Guid="2326c008-47f6-4283-e890-762ab2f98d30">
+          <File Id="owfE365A318301D62F1E6FA10DAB8EDC93F" Source="$(var.SourceDir)\System.IO.MemoryMappedFiles.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcDCCA68A85DF38860CCC28523FB623211" Guid="add6cc29-8bf1-6e97-79ee-b261352607e4">
+          <File Id="owfDCCA68A85DF38860CCC28523FB623211" Source="$(var.SourceDir)\System.IO.Pipes.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc78BC0855489045221F1F6CEA03DF8766" Guid="d2b4c167-5a87-ed23-1ce5-794611185bd9">
+          <File Id="owf78BC0855489045221F1F6CEA03DF8766" Source="$(var.SourceDir)\System.IO.UnmanagedMemoryStream.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc14A5BB088914D21BDD2FBEE1395FD78B" Guid="11154b61-2f87-760b-ca0a-36b886648d7f">
+          <File Id="owf14A5BB088914D21BDD2FBEE1395FD78B" Source="$(var.SourceDir)\System.Linq.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc06E33481927840239152432A87297CC9" Guid="2f479661-9a83-d333-258a-3151e9ece602">
+          <File Id="owf06E33481927840239152432A87297CC9" Source="$(var.SourceDir)\System.Linq.Expressions.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc33213504D30FB74AAAB9D42C2A139443" Guid="dd6f9275-f413-79ca-4c16-3b49f3eed555">
+          <File Id="owf33213504D30FB74AAAB9D42C2A139443" Source="$(var.SourceDir)\System.Linq.Parallel.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcB31C9F44CA4C0DEA88E930491533E593" Guid="87247598-1247-8568-6682-990663cb8642">
+          <File Id="owfB31C9F44CA4C0DEA88E930491533E593" Source="$(var.SourceDir)\System.Linq.Queryable.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcB279CD308898A9D5EFCE20D942FB230A" Guid="d983e56b-4031-2045-c1d1-5c2c9be7f564">
+          <File Id="owfB279CD308898A9D5EFCE20D942FB230A" Source="$(var.SourceDir)\System.Net.Http.dll" KeyPath="yes" />
         </Component>
         <Component Id="owcE7C4094F57B0A8D61E66E0978388F384" Guid="027d5f35-a2dc-f7c0-ff9c-d88765e456f3">
           <File Id="owfE7C4094F57B0A8D61E66E0978388F384" Source="$(var.SourceDir)\System.Net.Http.Formatting.dll" KeyPath="yes" />
         </Component>
-        <Component Id="owcD0A940C4737AEDDE1A3178260CF6D5E9" Guid="288adc1d-48d5-8344-5b22-8745adf79316">
-          <File Id="owfD0A940C4737AEDDE1A3178260CF6D5E9" Source="$(var.SourceDir)\System.Web.Http.dll" KeyPath="yes" />
+        <Component Id="owc81FA8D77EACF48506EFC7693E951C70F" Guid="e7ed96ee-ac84-1462-3bc5-0acf623d1e15">
+          <File Id="owf81FA8D77EACF48506EFC7693E951C70F" Source="$(var.SourceDir)\System.Net.NameResolution.dll" KeyPath="yes" />
         </Component>
-        <Component Id="owcF719C5F01913951F80887C901C3807F4" Guid="d32204d3-a32f-e912-0016-a93dbfa23399">
-          <File Id="owfF719C5F01913951F80887C901C3807F4" Source="$(var.SourceDir)\toofz.dll" KeyPath="yes" />
+        <Component Id="owc934C98C53C7E0808A3EE15A4AC868052" Guid="9117b5fe-bb92-90f0-6841-8fd5f4866905">
+          <File Id="owf934C98C53C7E0808A3EE15A4AC868052" Source="$(var.SourceDir)\System.Net.NetworkInformation.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc1537EF89B96DC1C1E331FD2FE9BC31B8" Guid="561d623d-0e08-7280-427b-d69affcec093">
+          <File Id="owf1537EF89B96DC1C1E331FD2FE9BC31B8" Source="$(var.SourceDir)\System.Net.Ping.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcA5E0D3BB9BB264A42DB0EF961B40BAC9" Guid="9ef2c73b-6f1f-0357-6cf8-bc070f12760c">
+          <File Id="owfA5E0D3BB9BB264A42DB0EF961B40BAC9" Source="$(var.SourceDir)\System.Net.Primitives.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc427724892EF22A8FDF13221FADDF47CC" Guid="c1af59c0-6298-681e-d89d-ea0b63bd940a">
+          <File Id="owf427724892EF22A8FDF13221FADDF47CC" Source="$(var.SourceDir)\System.Net.Requests.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc5A51A1889EEF7C8C80A51530FF7D999C" Guid="3dcfe4c5-b7ac-e109-3c50-0e5ea818dded">
+          <File Id="owf5A51A1889EEF7C8C80A51530FF7D999C" Source="$(var.SourceDir)\System.Net.Security.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcC356900D1A9E2893A31E87C428F0E41B" Guid="61cebe7a-3808-0785-6015-240947c99e73">
+          <File Id="owfC356900D1A9E2893A31E87C428F0E41B" Source="$(var.SourceDir)\System.Net.Sockets.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc15ED2C21746479C61C5A49665D7267AB" Guid="aa1db7fa-0a1d-1a1e-6719-05f44a9ed8d5">
+          <File Id="owf15ED2C21746479C61C5A49665D7267AB" Source="$(var.SourceDir)\System.Net.WebHeaderCollection.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc4B4A4DF753894976B75856AABBD83E94" Guid="218b92df-fbee-5e9e-effc-d4ba986254c9">
+          <File Id="owf4B4A4DF753894976B75856AABBD83E94" Source="$(var.SourceDir)\System.Net.WebSockets.Client.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc307840A4F26A9DC062C0BF59A99A6C7F" Guid="a1d35c2f-09e0-879e-7ed4-332bc5171e54">
+          <File Id="owf307840A4F26A9DC062C0BF59A99A6C7F" Source="$(var.SourceDir)\System.Net.WebSockets.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc47F52E1092EC255FB03FA729B1FB25DD" Guid="510ba151-2fd1-9a2b-c8b3-8ac725dc97ff">
+          <File Id="owf47F52E1092EC255FB03FA729B1FB25DD" Source="$(var.SourceDir)\System.ObjectModel.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc7A6EE41CC1504CC124313BD05EDA4F44" Guid="c7dccf48-7641-5657-0f4a-790939e60107">
+          <File Id="owf7A6EE41CC1504CC124313BD05EDA4F44" Source="$(var.SourceDir)\System.Reflection.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcD9272FCEF8BD1CC7FEAD7AD1A6E49EF3" Guid="4ba74d67-6502-0abd-79a8-26cce9bc86d4">
+          <File Id="owfD9272FCEF8BD1CC7FEAD7AD1A6E49EF3" Source="$(var.SourceDir)\System.Reflection.Extensions.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc083C1FE687BC99A09242C06653A8673C" Guid="f268003d-bd54-6061-568d-b909f33eaf33">
+          <File Id="owf083C1FE687BC99A09242C06653A8673C" Source="$(var.SourceDir)\System.Reflection.Primitives.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcEFF9EFA899E048C6DD53C124C8DAE919" Guid="a497a5bc-c0f3-1762-69bf-4dc4b0a88f6e">
+          <File Id="owfEFF9EFA899E048C6DD53C124C8DAE919" Source="$(var.SourceDir)\System.Resources.Reader.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc750D708E37736D206D716B57DF575AB0" Guid="0bde5d63-8ea7-f22c-1ebb-030e8d39dfad">
+          <File Id="owf750D708E37736D206D716B57DF575AB0" Source="$(var.SourceDir)\System.Resources.ResourceManager.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc849861456AA2178B87DEAD1CF0DA8761" Guid="8b407362-c4b6-528d-6f4c-5486f3281fbf">
+          <File Id="owf849861456AA2178B87DEAD1CF0DA8761" Source="$(var.SourceDir)\System.Resources.Writer.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc184E3D12DDC835719CBE7B32D018A9B9" Guid="5b7727d9-d809-6709-fa1d-cb6731f22dcf">
+          <File Id="owf184E3D12DDC835719CBE7B32D018A9B9" Source="$(var.SourceDir)\System.Runtime.CompilerServices.VisualC.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcCD2580ECA1FA1A3513916545D2F2BFA5" Guid="6340e508-d6f8-8810-a6a8-ac0e78dde158">
+          <File Id="owfCD2580ECA1FA1A3513916545D2F2BFA5" Source="$(var.SourceDir)\System.Runtime.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcB0183318DD63CCAB717750C767DC21D7" Guid="483f57ba-9660-18d1-2e88-4a867168e9e0">
+          <File Id="owfB0183318DD63CCAB717750C767DC21D7" Source="$(var.SourceDir)\System.Runtime.Extensions.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc136B2242A532BBBC64642250BAE3BC3F" Guid="3ab37d46-5fd1-fbc4-6157-d3551784c9a2">
+          <File Id="owf136B2242A532BBBC64642250BAE3BC3F" Source="$(var.SourceDir)\System.Runtime.Handles.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc456C772F6BA4F8274FFF4540362C5A62" Guid="72ae39cf-24e7-236b-11f9-67b7675f0c4a">
+          <File Id="owf456C772F6BA4F8274FFF4540362C5A62" Source="$(var.SourceDir)\System.Runtime.InteropServices.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc142B759C8549F55E22EAD18CF214B77E" Guid="4e3b53dc-2b0a-9a0f-3956-f346f8b8ebd1">
+          <File Id="owf142B759C8549F55E22EAD18CF214B77E" Source="$(var.SourceDir)\System.Runtime.InteropServices.RuntimeInformation.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc4D6AAABFFAA874E29883633840AD5B1F" Guid="9cf171cf-1bd8-7320-ccb2-cb1adcf87ec0">
+          <File Id="owf4D6AAABFFAA874E29883633840AD5B1F" Source="$(var.SourceDir)\System.Runtime.Numerics.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcE993E9C3A7C67ECA577A3A9E42989BFE" Guid="42f40541-4eac-dd0c-419f-07752bb5366a">
+          <File Id="owfE993E9C3A7C67ECA577A3A9E42989BFE" Source="$(var.SourceDir)\System.Runtime.Serialization.Formatters.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc878F2DAAF11EC15BCCF25D4B2664C036" Guid="fc052749-2574-2d83-91cd-317890816d6e">
+          <File Id="owf878F2DAAF11EC15BCCF25D4B2664C036" Source="$(var.SourceDir)\System.Runtime.Serialization.Json.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc8CCA0B6EDAAD44516BEED2BD0448127B" Guid="3a279abe-73c3-37ef-d282-05432cc4de99">
+          <File Id="owf8CCA0B6EDAAD44516BEED2BD0448127B" Source="$(var.SourceDir)\System.Runtime.Serialization.Primitives.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcAFF0D75B678B8C04204C4F4BE10DC63D" Guid="962d7785-2bdd-31be-55cc-1ef55fb340f1">
+          <File Id="owfAFF0D75B678B8C04204C4F4BE10DC63D" Source="$(var.SourceDir)\System.Runtime.Serialization.Xml.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc75D606E732168EB3AF6DA3C08CCDE454" Guid="26c8e108-08a8-4f5f-4bbd-f4a1239aa723">
+          <File Id="owf75D606E732168EB3AF6DA3C08CCDE454" Source="$(var.SourceDir)\System.Security.Claims.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcD6CB46E32249D9DFE253203C9E68622F" Guid="0aa2f4b7-b10b-cfe5-23bf-064b16b835a1">
+          <File Id="owfD6CB46E32249D9DFE253203C9E68622F" Source="$(var.SourceDir)\System.Security.Cryptography.Algorithms.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcE1097D781C913E7C0DFC7E360BA5341C" Guid="ed9b5dc0-4679-3d18-d31c-80e19c54a569">
+          <File Id="owfE1097D781C913E7C0DFC7E360BA5341C" Source="$(var.SourceDir)\System.Security.Cryptography.Csp.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcF620F5D5E0DED6F51741DE9E09BAA10C" Guid="2bc2c15c-d955-2493-537a-644fab7006f5">
+          <File Id="owfF620F5D5E0DED6F51741DE9E09BAA10C" Source="$(var.SourceDir)\System.Security.Cryptography.Encoding.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc0F0B6DF93E003C893A5E5E253BAF6C85" Guid="8156cb10-1a47-9979-3566-e6bac4f9dfeb">
+          <File Id="owf0F0B6DF93E003C893A5E5E253BAF6C85" Source="$(var.SourceDir)\System.Security.Cryptography.Primitives.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc328828932DA40CAED6EC4EA121F7534D" Guid="7057b2c9-50fd-de60-a125-3b4584bd89c0">
+          <File Id="owf328828932DA40CAED6EC4EA121F7534D" Source="$(var.SourceDir)\System.Security.Cryptography.X509Certificates.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcBEFCDE5B2833DF316BCC51AFD6BF3AA4" Guid="05208332-4a46-eea8-7608-a22531987d4d">
+          <File Id="owfBEFCDE5B2833DF316BCC51AFD6BF3AA4" Source="$(var.SourceDir)\System.Security.Principal.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcCD07048BAA4A186C4C46EDDAE7408BE9" Guid="fec26fc5-0f79-ae52-46a4-1ed20b673c35">
+          <File Id="owfCD07048BAA4A186C4C46EDDAE7408BE9" Source="$(var.SourceDir)\System.Security.SecureString.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc9DE717553DF308353E4F1AD8553191F3" Guid="113c0221-beb8-56b6-2c47-3cf70203c0a4">
+          <File Id="owf9DE717553DF308353E4F1AD8553191F3" Source="$(var.SourceDir)\System.Text.Encoding.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc34C27BB25C81891A7475EFD8FFAA9931" Guid="6ea9738b-8925-479b-9ca3-111dec6a2131">
+          <File Id="owf34C27BB25C81891A7475EFD8FFAA9931" Source="$(var.SourceDir)\System.Text.Encoding.Extensions.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc50D709F95681A7937E1395ED21E4DE32" Guid="7b081cab-1412-4a3c-0d6d-3a888e5d04fe">
+          <File Id="owf50D709F95681A7937E1395ED21E4DE32" Source="$(var.SourceDir)\System.Text.RegularExpressions.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc93B418EA3A4105CA687B1FD6F9F8E483" Guid="4765e3c2-e8fe-81ea-e8d2-2cbc01e9ab23">
+          <File Id="owf93B418EA3A4105CA687B1FD6F9F8E483" Source="$(var.SourceDir)\System.Threading.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc26DBBA37A502B1E377A9CF34F7C9D924" Guid="7dbebf27-47a9-2d91-9dea-ca8847ff38e9">
+          <File Id="owf26DBBA37A502B1E377A9CF34F7C9D924" Source="$(var.SourceDir)\System.Threading.Overlapped.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc46051FF3577F3044A630547B602D36DC" Guid="5b7067b2-7764-c6d6-1cd8-0c0ec94ac9de">
+          <File Id="owf46051FF3577F3044A630547B602D36DC" Source="$(var.SourceDir)\System.Threading.Tasks.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc4DE82B405CA7ADEA8047D5BC722BBBEF" Guid="bb415d19-c137-2787-38dc-5bb66284bcf3">
+          <File Id="owf4DE82B405CA7ADEA8047D5BC722BBBEF" Source="$(var.SourceDir)\System.Threading.Tasks.Parallel.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc1268977FB6886DC35AB6DD4910EC47A5" Guid="553ce841-c554-609c-10f6-d76e19ccc3d8">
+          <File Id="owf1268977FB6886DC35AB6DD4910EC47A5" Source="$(var.SourceDir)\System.Threading.Thread.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcDC6299D4B1597EE397010E85295D610C" Guid="90599afd-2eda-0dad-706c-ffc98b418414">
+          <File Id="owfDC6299D4B1597EE397010E85295D610C" Source="$(var.SourceDir)\System.Threading.ThreadPool.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcB50ADFFB11B16B7B3CB8B8CF322E6E82" Guid="a2ac071f-7b0b-5b3e-23a1-7d5bc783531c">
+          <File Id="owfB50ADFFB11B16B7B3CB8B8CF322E6E82" Source="$(var.SourceDir)\System.Threading.Timer.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcE4E6B570ADBEC007C10E9A65C0D3809D" Guid="505ee0c9-d5a3-8e70-221f-48e70d9ec096">
+          <File Id="owfE4E6B570ADBEC007C10E9A65C0D3809D" Source="$(var.SourceDir)\System.ValueTuple.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc1EC9EF9564C76F0DA10AA382F306146E" Guid="43678e96-830a-a38c-d698-b43a3a7a50a8">
+          <File Id="owf1EC9EF9564C76F0DA10AA382F306146E" Source="$(var.SourceDir)\System.Xml.ReaderWriter.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcF216D8D0B753CC36356881E2E693CE3F" Guid="04ea6b06-18d4-d739-f496-c64af28a71f9">
+          <File Id="owfF216D8D0B753CC36356881E2E693CE3F" Source="$(var.SourceDir)\System.Xml.XDocument.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcCAE4D437B41AEF31A4F9A1A57B15D3A9" Guid="d41c876d-c6e6-612f-c7ca-b8802416556f">
+          <File Id="owfCAE4D437B41AEF31A4F9A1A57B15D3A9" Source="$(var.SourceDir)\System.Xml.XmlDocument.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc5D35CD8D594CC804EE94DB60FD950A78" Guid="35495e0e-68b9-a7c8-ebe3-f1b54d2efb92">
+          <File Id="owf5D35CD8D594CC804EE94DB60FD950A78" Source="$(var.SourceDir)\System.Xml.XmlSerializer.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc09E711B62DEFC2C1EE748EF308694428" Guid="91c9eb37-ac71-a646-2e0a-071efc351607">
+          <File Id="owf09E711B62DEFC2C1EE748EF308694428" Source="$(var.SourceDir)\System.Xml.XPath.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcE0C17BD02D38DB980B86FDA2BE82379B" Guid="7da0a47b-fe8b-8b11-a230-87f3c827c2f2">
+          <File Id="owfE0C17BD02D38DB980B86FDA2BE82379B" Source="$(var.SourceDir)\System.Xml.XPath.XDocument.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc79432AF5FCC9EDEA377633177A805600" Guid="68e0bdf3-b5d9-1b30-0ebe-98038ed96044">
+          <File Id="owf79432AF5FCC9EDEA377633177A805600" Source="$(var.SourceDir)\toofz.ActivityTracing.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc33F0D99DD7C4188BDD78532D39650910" Guid="23099e66-0afa-bb58-a24c-929a6bcfdc10">
+          <File Id="owf33F0D99DD7C4188BDD78532D39650910" Source="$(var.SourceDir)\toofz.ExceptionRenderer.dll" KeyPath="yes" />
         </Component>
         <Component Id="owc6DBF3F730463E4CD3778833878E38A25" Guid="71ab8460-d5cc-f346-f9d3-ca5d3a3b0d56">
           <File Id="owf6DBF3F730463E4CD3778833878E38A25" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.Data.dll" KeyPath="yes" />
