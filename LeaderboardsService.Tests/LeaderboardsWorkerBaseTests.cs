@@ -50,7 +50,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.StoreLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Leaderboard>>(), CancellationToken), Times.Once);
+                MockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Leaderboard>>(), CancellationToken), Times.Once);
             }
 
             [Fact]
@@ -65,7 +65,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.StoreLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Player>>(), false, CancellationToken), Times.Once);
+                MockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Player>>(), It.IsAny<BulkUpsertOptions>(), CancellationToken), Times.Once);
             }
 
             [Fact]
@@ -80,7 +80,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.StoreLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Replay>>(), false, CancellationToken), Times.Once);
+                MockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Replay>>(), It.IsAny<BulkUpsertOptions>(), CancellationToken), Times.Once);
             }
 
             [Fact]
@@ -95,7 +95,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.StoreLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Entry>>(), CancellationToken), Times.Once);
+                MockStoreClient.Verify(s => s.BulkInsertAsync(It.IsAny<IEnumerable<Entry>>(), CancellationToken), Times.Once);
             }
         }
 

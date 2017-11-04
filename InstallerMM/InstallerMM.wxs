@@ -62,6 +62,9 @@
         <Component Id="owcADE9A457248959D397C6B092C7CCF78B" Guid="4aac0c53-b1ed-bef0-2706-7a1a9ee332ae">
           <File Id="owfADE9A457248959D397C6B092C7CCF78B" Source="$(var.SourceDir)\Microsoft.Win32.Primitives.dll" KeyPath="yes" />
         </Component>
+        <Component Id="owc32505701ADEEE7A81C57A93DDFC583B2" Guid="e0bde769-f4c5-1e7c-49ff-50b79f2fddf1">
+          <File Id="owf32505701ADEEE7A81C57A93DDFC583B2" Source="$(var.SourceDir)\Microsoft.Win32.Registry.dll" KeyPath="yes" />
+        </Component>
         <Component Id="owc0E11B256F43D4622C66561493A2F1851" Guid="484af5e1-3201-e1b1-d797-c335f9ae2603">
           <File Id="owf0E11B256F43D4622C66561493A2F1851" Source="$(var.SourceDir)\Mono.Options.dll" KeyPath="yes" />
         </Component>
@@ -73,9 +76,6 @@
         </Component>
         <Component Id="owcED4CA0C587B1FFB62753FB5DED9C7587" Guid="c81d2020-653a-ed0b-7d1a-b67616f88462">
           <File Id="owfED4CA0C587B1FFB62753FB5DED9C7587" Source="$(var.SourceDir)\protobuf-net.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="owc84FB49F3465E33D8154C1860795BF195" Guid="791141d4-a7af-f4e0-fd2b-74cd57d0bb5b">
-          <File Id="owf84FB49F3465E33D8154C1860795BF195" Source="$(var.SourceDir)\SqlBulkUpsert.dll" KeyPath="yes" />
         </Component>
         <Component Id="owc473279DC6169D7140DB32234B99BB2BB" Guid="f6143307-7474-3a97-42aa-250ef28429a3">
           <File Id="owf473279DC6169D7140DB32234B99BB2BB" Source="$(var.SourceDir)\SteamKit2.dll" KeyPath="yes" />
@@ -293,6 +293,9 @@
         <Component Id="owcAFF0D75B678B8C04204C4F4BE10DC63D" Guid="962d7785-2bdd-31be-55cc-1ef55fb340f1">
           <File Id="owfAFF0D75B678B8C04204C4F4BE10DC63D" Source="$(var.SourceDir)\System.Runtime.Serialization.Xml.dll" KeyPath="yes" />
         </Component>
+        <Component Id="owcE16E2DDD34171BE60D55C8D38E64DFED" Guid="5c9c49b2-ab60-2ada-7c5b-ccaf917fec9e">
+          <File Id="owfE16E2DDD34171BE60D55C8D38E64DFED" Source="$(var.SourceDir)\System.Security.AccessControl.dll" KeyPath="yes" />
+        </Component>
         <Component Id="owc75D606E732168EB3AF6DA3C08CCDE454" Guid="26c8e108-08a8-4f5f-4bbd-f4a1239aa723">
           <File Id="owf75D606E732168EB3AF6DA3C08CCDE454" Source="$(var.SourceDir)\System.Security.Claims.dll" KeyPath="yes" />
         </Component>
@@ -313,6 +316,9 @@
         </Component>
         <Component Id="owcBEFCDE5B2833DF316BCC51AFD6BF3AA4" Guid="05208332-4a46-eea8-7608-a22531987d4d">
           <File Id="owfBEFCDE5B2833DF316BCC51AFD6BF3AA4" Source="$(var.SourceDir)\System.Security.Principal.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc016214434E9B6E25C4C645A5894A9696" Guid="dd4f1d1e-1fd6-9722-938e-2571dc3780b4">
+          <File Id="owf016214434E9B6E25C4C645A5894A9696" Source="$(var.SourceDir)\System.Security.Principal.Windows.dll" KeyPath="yes" />
         </Component>
         <Component Id="owcCD07048BAA4A186C4C46EDDAE7408BE9" Guid="fec26fc5-0f79-ae52-46a4-1ed20b673c35">
           <File Id="owfCD07048BAA4A186C4C46EDDAE7408BE9" Source="$(var.SourceDir)\System.Security.SecureString.dll" KeyPath="yes" />

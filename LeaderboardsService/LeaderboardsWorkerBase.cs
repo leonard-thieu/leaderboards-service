@@ -40,25 +40,27 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
             using (var activity = new StoreActivity(Log, "leaderboards"))
             {
-                var rowsAffected = await storeClient.SaveChangesAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                var rowsAffected = await storeClient.BulkUpsertAsync(leaderboards, cancellationToken).ConfigureAwait(false);
                 activity.Report(rowsAffected);
             }
 
             using (var activity = new StoreActivity(Log, "players"))
             {
-                var rowsAffected = await storeClient.SaveChangesAsync(players, false, cancellationToken).ConfigureAwait(false);
+                var options = new BulkUpsertOptions { UpdateWhenMatched = false };
+                var rowsAffected = await storeClient.BulkUpsertAsync(players, options, cancellationToken).ConfigureAwait(false);
                 activity.Report(rowsAffected);
             }
 
             using (var activity = new StoreActivity(Log, "replays"))
             {
-                var rowsAffected = await storeClient.SaveChangesAsync(replays, false, cancellationToken).ConfigureAwait(false);
+                var options = new BulkUpsertOptions { UpdateWhenMatched = false };
+                var rowsAffected = await storeClient.BulkUpsertAsync(replays, options, cancellationToken).ConfigureAwait(false);
                 activity.Report(rowsAffected);
             }
 
             using (var activity = new StoreActivity(Log, "entries"))
             {
-                var rowsAffected = await storeClient.SaveChangesAsync(entries).ConfigureAwait(false);
+                var rowsAffected = await storeClient.BulkInsertAsync(entries, cancellationToken).ConfigureAwait(false);
                 activity.Report(rowsAffected);
             }
         }

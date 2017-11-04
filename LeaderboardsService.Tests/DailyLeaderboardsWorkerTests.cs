@@ -325,7 +325,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.StoreDailyLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<DailyLeaderboard>>(), CancellationToken), Times.Once);
+                MockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<DailyLeaderboard>>(), CancellationToken), Times.Once);
             }
 
             [Fact]
@@ -340,7 +340,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.StoreDailyLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Player>>(), false, CancellationToken), Times.Once);
+                MockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Player>>(), It.IsAny<BulkUpsertOptions>(), CancellationToken), Times.Once);
             }
 
             [Fact]
@@ -355,7 +355,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.StoreDailyLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<Replay>>(), false, CancellationToken), Times.Once);
+                MockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Replay>>(), It.IsAny<BulkUpsertOptions>(), CancellationToken), Times.Once);
             }
 
             [Fact]
@@ -370,7 +370,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await Worker.StoreDailyLeaderboardsAsync(StoreClient, leaderboards, CancellationToken);
 
                 // Assert
-                MockStoreClient.Verify(s => s.SaveChangesAsync(It.IsAny<IEnumerable<DailyEntry>>(), CancellationToken), Times.Once);
+                MockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<DailyEntry>>(), CancellationToken), Times.Once);
             }
         }
     }
