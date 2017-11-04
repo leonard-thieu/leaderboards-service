@@ -26,7 +26,7 @@
         <Component Id="owc52846A01E14D3FA5EFB278275A6315ED" Guid="cff5c56a-e5fc-7b85-bd4f-41b52c8fcce0">
           <File Id="owf52846A01E14D3FA5EFB278275A6315ED" Source="$(var.SourceDir)\LeaderboardsService.exe" KeyPath="yes" />
           <ServiceInstall Id="si5C1EC7CFA893E7588320DBA5232DFD10" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves Crypt of the NecroDancer leaderboard data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes">
-            <ServiceConfig xmlns="http://wixtoolset.org/schemas/v4/wxs/util"
+            <ServiceConfig xmlns="http://schemas.microsoft.com/wix/UtilExtension"
                            FirstFailureActionType="restart"
                            SecondFailureActionType="restart"
                            ThirdFailureActionType="restart"
