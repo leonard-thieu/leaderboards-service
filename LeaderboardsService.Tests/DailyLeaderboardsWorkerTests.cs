@@ -42,20 +42,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         public class Constructor
         {
             [Fact]
-            public void ConnectionStringIsNull_ThrowsArgumentNullException()
-            {
-                // Arrange
-                var appId = 247080U;
-                string connectionString = null;
-
-                // Act -> Assert
-                Assert.Throws<ArgumentNullException>(() =>
-                {
-                    new DailyLeaderboardsWorker(appId, connectionString);
-                });
-            }
-
-            [Fact]
             public void ReturnsInstance()
             {
                 // Arrange

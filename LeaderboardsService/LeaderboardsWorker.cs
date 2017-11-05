@@ -15,7 +15,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         public LeaderboardsWorker(uint appId, string connectionString)
         {
             this.appId = appId;
-            this.connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            this.connectionString = connectionString;
         }
 
         private readonly uint appId;

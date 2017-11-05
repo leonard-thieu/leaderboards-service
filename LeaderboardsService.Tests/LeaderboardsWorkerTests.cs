@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
@@ -24,20 +23,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
         public class Constructor
         {
-            [Fact]
-            public void ConnectionStringIsNull_ThrowsArgumentNullException()
-            {
-                // Arrange
-                var appId = 247080U;
-                string connectionString = null;
-
-                // Act -> Assert
-                Assert.Throws<ArgumentNullException>(() =>
-                {
-                    new LeaderboardsWorker(appId, connectionString);
-                });
-            }
-
             [Fact]
             public void ReturnsInstance()
             {
