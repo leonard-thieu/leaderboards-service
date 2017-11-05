@@ -92,9 +92,6 @@
     <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer">
       <Version>2.4.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client">
-      <Version>5.2.3</Version>
-    </PackageReference>
     <PackageReference Include="toofz.ActivityTracing">
       <Version>1.0.2</Version>
     </PackageReference>
@@ -105,7 +102,7 @@
       <Version>11.0.5</Version>
     </PackageReference>
     <PackageReference Include="toofz.Services">
-      <Version>10.0.1</Version>
+      <Version>10.1.0</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

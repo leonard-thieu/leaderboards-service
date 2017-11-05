@@ -213,9 +213,6 @@
         <Component Id="owcB279CD308898A9D5EFCE20D942FB230A" Guid="d983e56b-4031-2045-c1d1-5c2c9be7f564">
           <File Id="owfB279CD308898A9D5EFCE20D942FB230A" Source="$(var.SourceDir)\System.Net.Http.dll" KeyPath="yes" />
         </Component>
-        <Component Id="owcE7C4094F57B0A8D61E66E0978388F384" Guid="027d5f35-a2dc-f7c0-ff9c-d88765e456f3">
-          <File Id="owfE7C4094F57B0A8D61E66E0978388F384" Source="$(var.SourceDir)\System.Net.Http.Formatting.dll" KeyPath="yes" />
-        </Component>
         <Component Id="owc81FA8D77EACF48506EFC7693E951C70F" Guid="e7ed96ee-ac84-1462-3bc5-0acf623d1e15">
           <File Id="owf81FA8D77EACF48506EFC7693E951C70F" Source="$(var.SourceDir)\System.Net.NameResolution.dll" KeyPath="yes" />
         </Component>
