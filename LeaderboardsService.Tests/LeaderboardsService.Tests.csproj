@@ -44,6 +44,23 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Moq">
+      <Version>4.7.142</Version>
+    </PackageReference>
+    <PackageReference Include="toofz.TestsShared">
+      <Version>5.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="xunit.assert">
+      <Version>2.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="xunit.core">
+      <Version>2.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="xunit.runner.visualstudio">
+      <Version>2.3.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\LeaderboardsService\LeaderboardsService.csproj">
       <Project>{1678334c-de8c-4dc4-b493-4454bc209e18}</Project>
       <Name>LeaderboardsService</Name>
@@ -70,11 +87,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommunityDataLeaderboardsWorkerTests.cs" />
     <Compile Include="DailyLeaderboardsWorkerTests.cs" />
     <Compile Include="DataHelper.cs" />
     <Compile Include="LeaderboardsArgsParserTests.cs" />
-    <Compile Include="LeaderboardsWorkerBaseTests.cs" />
     <Compile Include="LeaderboardsWorkerTests.cs" />
     <Compile Include="SteamIDExtensionsTests.cs" />
     <Compile Include="SteamKit.cs" />
@@ -82,23 +97,6 @@
     <Compile Include="UGCHandleExtensionsTests.cs" />
     <Compile Include="UInt64ExtensionsTests.cs" />
     <Compile Include="WorkerRoleTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Moq">
-      <Version>4.7.142</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.TestsShared">
-      <Version>5.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.assert">
-      <Version>2.3.1</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.core">
-      <Version>2.3.1</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.runner.visualstudio">
-      <Version>2.3.1</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
