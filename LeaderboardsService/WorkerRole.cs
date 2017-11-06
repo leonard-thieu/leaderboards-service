@@ -32,8 +32,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
             using (var steamClient = new SteamClientApiClient(userName, password))
             {
-                await steamClient.ConnectAndLogOnAsync().ConfigureAwait(false);
                 steamClient.Timeout = steamClientTimeout;
+
+                await steamClient.ConnectAndLogOnAsync().ConfigureAwait(false);
 
                 var leaderboardsWorker = new LeaderboardsWorker(appId, leaderboardsConnectionString);
                 await leaderboardsWorker.UpdateAsync(steamClient, cancellationToken).ConfigureAwait(false);
