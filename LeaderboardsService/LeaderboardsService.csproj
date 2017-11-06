@@ -52,13 +52,13 @@
       <Version>1.0.2</Version>
     </PackageReference>
     <PackageReference Include="toofz.ExceptionRenderer">
-      <Version>1.1.0</Version>
+      <Version>1.1.1</Version>
     </PackageReference>
     <PackageReference Include="toofz.NecroDancer.Leaderboards.Data">
-      <Version>12.0.5</Version>
+      <Version>12.0.6</Version>
     </PackageReference>
     <PackageReference Include="toofz.Services">
-      <Version>10.1.0</Version>
+      <Version>10.1.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
