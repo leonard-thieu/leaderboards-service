@@ -25,7 +25,14 @@
         </Component>
         <Component Id="owc52846A01E14D3FA5EFB278275A6315ED" Guid="cff5c56a-e5fc-7b85-bd4f-41b52c8fcce0">
           <File Id="owf52846A01E14D3FA5EFB278275A6315ED" Source="$(var.SourceDir)\LeaderboardsService.exe" KeyPath="yes" />
-          <ServiceInstall Id="si5C1EC7CFA893E7588320DBA5232DFD10" Name="$(var.ProductName)" DisplayName="$(var.ProductName)" Description="Retrieves Crypt of the NecroDancer leaderboard data from Steam." ErrorControl="normal" Start="auto" Type="ownProcess" Vital="yes">
+          <ServiceInstall Id="si5C1EC7CFA893E7588320DBA5232DFD10"
+                          Name="$(var.ProductName)"
+                          DisplayName="$(var.ProductName)"
+                          Description="Retrieves Crypt of the NecroDancer leaderboard data from Steam."
+                          ErrorControl="normal"
+                          Start="auto"
+                          Type="ownProcess"
+                          Vital="yes">
             <ServiceConfig xmlns="http://schemas.microsoft.com/wix/UtilExtension"
                            FirstFailureActionType="restart"
                            SecondFailureActionType="restart"
@@ -33,7 +40,12 @@
                            RestartServiceDelayInSeconds="30"
                            ResetPeriodInDays="1" />
           </ServiceInstall>
-          <ServiceControl Id="sc5C1EC7CFA893E7588320DBA5232DFD10" Name="$(var.ProductName)" Start="install" Stop="both" Remove="both" Wait="yes" />
+          <ServiceControl Id="sc5C1EC7CFA893E7588320DBA5232DFD10"
+                          Name="$(var.ProductName)"
+                          Remove="both"
+                          Start="install"
+                          Stop="both"
+                          Wait="yes" />
           <File Id="owf2EB64394D594F56BBA072A470D0F1EDC" Source="$(var.SourceDir)\LeaderboardsService.exe.config" CompanionFile="owf52846A01E14D3FA5EFB278275A6315ED" />
         </Component>
         <Component Id="owc950044A998A8F98BC77BE1E291270381" Guid="70fec58d-9680-3f0f-fdc5-60569c380afe">
