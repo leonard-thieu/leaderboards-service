@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaderboardsService", "LeaderboardsService\LeaderboardsService.csproj", "{1678334C-DE8C-4DC4-B493-4454BC209E18}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaderboardsService.Tests", "LeaderboardsService.Tests\LeaderboardsService.Tests.csproj", "{45E158FD-FCBB-409D-A09B-D54EDD758910}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaderboardsService.Tests", "LeaderboardsService.Tests\LeaderboardsService.Tests.csproj", "{19061691-0AAB-4AF6-B7E5-8349E6060CAC}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "InstallerMM", "InstallerMM\InstallerMM.wixproj", "{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}"
 EndProject
@@ -28,10 +28,10 @@ Global
 		{1678334C-DE8C-4DC4-B493-4454BC209E18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1678334C-DE8C-4DC4-B493-4454BC209E18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1678334C-DE8C-4DC4-B493-4454BC209E18}.Release|Any CPU.Build.0 = Release|Any CPU
-		{45E158FD-FCBB-409D-A09B-D54EDD758910}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{45E158FD-FCBB-409D-A09B-D54EDD758910}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{45E158FD-FCBB-409D-A09B-D54EDD758910}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{45E158FD-FCBB-409D-A09B-D54EDD758910}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19061691-0AAB-4AF6-B7E5-8349E6060CAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19061691-0AAB-4AF6-B7E5-8349E6060CAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19061691-0AAB-4AF6-B7E5-8349E6060CAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19061691-0AAB-4AF6-B7E5-8349E6060CAC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Release|Any CPU.ActiveCfg = Release|x86
 		{4E3B6E6F-4E1D-4BCD-AD0F-4829DC92BC10}.Release|Any CPU.Build.0 = Release|x86
@@ -43,7 +43,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {38A58452-6807-4810-BBD9-247427CCC0F2}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
+		SolutionGuid = {38A58452-6807-4810-BBD9-247427CCC0F2}
 	EndGlobalSection
 EndGlobal
