@@ -82,21 +82,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
         }
         
         /// <summary>
-        /// An Application Insights instrumentation key.
-        /// </summary>
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.SettingsDescriptionAttribute("An Application Insights instrumentation key.")]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public string InstrumentationKey {
-            get {
-                return ((string)(this["InstrumentationKey"]));
-            }
-            set {
-                this["InstrumentationKey"] = value;
-            }
-        }
-        
-        /// <summary>
         /// The number of rounds to execute a key derivation function.
         /// </summary>
         [global::System.Configuration.UserScopedSettingAttribute()]

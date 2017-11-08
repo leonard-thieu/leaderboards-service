@@ -13,7 +13,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         public EncryptedSecret LeaderboardsConnectionString { get; set; }
         public TimeSpan UpdateInterval { get; set; }
         public TimeSpan DelayBeforeGC { get; set; }
-        public string InstrumentationKey { get; set; }
         public int KeyDerivationIterations { get; set; }
         public int DailyLeaderboardsPerUpdate { get; set; }
         public TimeSpan SteamClientTimeout { get; set; }
