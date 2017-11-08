@@ -74,7 +74,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 var leaderboardsEnvelope = await steamCommunityDataClient.GetLeaderboardsAsync(appId, activity, cancellationToken).ConfigureAwait(false);
                 var headers = leaderboardsEnvelope.Leaderboards;
 
+#if FEATURE_LEADERBOARDS_VIA_STEAMCLIENT
                 steamClient.Progress = activity;
+                await steamClient.ConnectAndLogOnAsync().ConfigureAwait(false); 
+#endif
 
                 var leaderboardTasks = new List<Task>();
                 foreach (var leaderboard in leaderboards)
@@ -97,7 +100,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                 await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
 
-                steamClient.Progress = null;
+#if FEATURE_LEADERBOARDS_VIA_STEAMCLIENT
+                steamClient.Progress = null; 
+#endif
             }
         }
 

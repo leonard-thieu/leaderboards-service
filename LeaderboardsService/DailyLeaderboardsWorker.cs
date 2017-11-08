@@ -27,6 +27,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         {
             using (new UpdateActivity(Log, "daily leaderboards"))
             {
+                await steamClient.ConnectAndLogOnAsync().ConfigureAwait(false);
+
                 IEnumerable<DailyLeaderboard> leaderboards;
                 using (var db = new LeaderboardsContext(connectionString))
                 {
