@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
+using Microsoft.ApplicationInsights;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 using toofz.Services;
@@ -13,6 +14,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
         public WorkerRole(ILeaderboardsSettings settings) : base("leaderboards", settings) { }
+
+        private readonly TelemetryClient telemetryClient = new TelemetryClient();
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
@@ -30,14 +33,18 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             var dailyLeaderboardsPerUpdate = Settings.DailyLeaderboardsPerUpdate;
             var steamClientTimeout = Settings.SteamClientTimeout;
 
-            using (var steamClient = new SteamClientApiClient(userName, password))
+            using (var steamClient = new SteamClientApiClient(userName, password, telemetryClient))
             {
                 steamClient.Timeout = steamClientTimeout;
 
-                var leaderboardsWorker = new LeaderboardsWorker(appId, leaderboardsConnectionString);
-                await leaderboardsWorker.UpdateAsync(steamClient, cancellationToken).ConfigureAwait(false);
+                var leaderboardsWorker = new LeaderboardsWorker(appId, leaderboardsConnectionString, telemetryClient);
+#if FEATURE_LEADERBOARDS_VIA_STEAMCLIENT
+                await leaderboardsWorker.UpdateAsync(steamClient, cancellationToken).ConfigureAwait(false); 
+#else
+                await leaderboardsWorker.UpdateAsync(null, cancellationToken).ConfigureAwait(false);
+#endif
 
-                var dailyLeaderboardsWorker = new DailyLeaderboardsWorker(appId, leaderboardsConnectionString);
+                var dailyLeaderboardsWorker = new DailyLeaderboardsWorker(appId, leaderboardsConnectionString, telemetryClient);
                 await dailyLeaderboardsWorker.UpdateAsync(steamClient, dailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
             }
         }
