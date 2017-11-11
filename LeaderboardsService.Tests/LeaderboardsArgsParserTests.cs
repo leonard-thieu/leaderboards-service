@@ -42,6 +42,7 @@ options:
   --help                Shows usage information.
   --interval=VALUE      The minimum amount of time that should pass between each cycle.
   --delay=VALUE         The amount of time to wait after a cycle to perform garbage collection.
+  --ikey=VALUE          An Application Insights instrumentation key.
   --iterations=VALUE    The number of rounds to execute a key derivation function.
   --username=VALUE      The user name used to log on to Steam.
   --password[=VALUE]    The password used to log on to Steam.
