@@ -29,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;FEATURE_COMMUNITY_DATA</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\LeaderboardsService.xml</DocumentationFile>
@@ -61,7 +61,7 @@
       <Version>12.1.1</Version>
     </PackageReference>
     <PackageReference Include="toofz.Services">
-      <Version>12.0.1</Version>
+      <Version>12.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
