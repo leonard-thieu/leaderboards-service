@@ -53,7 +53,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     var steamCommunityDataClientSettings = new SteamCommunityDataClientSettings { IsCacheBustingEnabled = false };
                     using (var steamCommunityDataClient = new SteamCommunityDataClient(handler, telemetryClient, steamCommunityDataClientSettings))
                     {
-                        await UpdateLeaderboardsAsync(steamCommunityDataClient, steamClientApiClient, leaderboards, cancellationToken).ConfigureAwait(false);
+                        await UpdateLeaderboardsAsync(steamClientApiClient, leaderboards, cancellationToken).ConfigureAwait(false);
                     }
 
                     using (var connection = new SqlConnection(connectionString))
@@ -86,7 +86,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         #region Update leaderboards
 
         internal async Task UpdateLeaderboardsAsync(
-            ISteamCommunityDataClient steamCommunityDataClient,
             ISteamClientApiClient steamClientApiClient,
             IEnumerable<Leaderboard> leaderboards,
             CancellationToken cancellationToken)
@@ -96,38 +95,20 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 try
                 {
-                    var leaderboardsEnvelope = await steamCommunityDataClient.GetLeaderboardsAsync(appId, activity, cancellationToken).ConfigureAwait(false);
-                    var headers = leaderboardsEnvelope.Leaderboards;
+                    steamClientApiClient.Progress = activity;
 
-                    if (steamClientApiClient != null)
-                    {
-                        steamClientApiClient.Progress = activity;
-                        await steamClientApiClient.ConnectAndLogOnAsync().ConfigureAwait(false);
-                    }
+                    await steamClientApiClient.ConnectAndLogOnAsync().ConfigureAwait(false);
 
                     var leaderboardTasks = new List<Task>();
                     foreach (var leaderboard in leaderboards)
                     {
-                        var header = headers.FirstOrDefault(h => h.LeaderboardId == leaderboard.LeaderboardId);
-                        if (header != null)
-                        {
-                            var leaderboardTask = UpdateLeaderboardAsync(steamCommunityDataClient, leaderboard, header.EntryCount, activity, cancellationToken);
-                            leaderboardTasks.Add(leaderboardTask);
-                        }
-                        // Leaderboard isn't visible from Steam Community Data, update the leaderboard from Steam Client API instead.
-                        else if (steamClientApiClient != null)
-                        {
-                            var leaderboardTask = UpdateLeaderboardAsync(steamClientApiClient, leaderboard, cancellationToken);
-                            leaderboardTasks.Add(leaderboardTask);
-                        }
+                        var leaderboardTask = UpdateLeaderboardAsync(steamClientApiClient, leaderboard, cancellationToken);
+                        leaderboardTasks.Add(leaderboardTask);
                     }
 
                     await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
 
-                    if (steamClientApiClient != null)
-                    {
-                        steamClientApiClient.Progress = null;
-                    }
+                    steamClientApiClient.Progress = null;
 
                     operation.Telemetry.Success = true;
                 }

@@ -69,42 +69,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             }
         }
 
-        public class UpdateLeaderboardsAsyncMethod : LeaderboardsWorkerTests
-        {
-            [Fact]
-            public async Task UpdatesLeaderboards()
-            {
-                // Arrange
-                var leaderboard2047387 = new Leaderboard { LeaderboardId = 2047387 };
-                var leaderboard2047540 = new Leaderboard { LeaderboardId = 2047540 };
-                var leaderboards = new[] { leaderboard2047387, leaderboard2047540 };
-                var leaderboards_247080 = DataHelper.DeserializeLeaderboardsEnvelope(Resources.Leaderboards_247080);
-                mockSteamCommunityDataClient
-                    .Setup(c => c.GetLeaderboardsAsync(appId, It.IsAny<IProgress<long>>(), cancellationToken))
-                    .ReturnsAsync(leaderboards_247080);
-                var leaderboardEntries_2047387_1 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047387_1);
-                mockSteamCommunityDataClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, 2047387, new GetLeaderboardEntriesParams { StartRange = 1 }, It.IsAny<IProgress<long>>(), cancellationToken))
-                    .ReturnsAsync(leaderboardEntries_2047387_1);
-                var leaderboardEntries_2047540_1 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047540_1);
-                mockSteamCommunityDataClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, 2047540, new GetLeaderboardEntriesParams { StartRange = 1 }, It.IsAny<IProgress<long>>(), cancellationToken))
-                    .ReturnsAsync(leaderboardEntries_2047540_1);
-                var leaderboardEntries_2047540_2 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047540_2);
-                mockSteamCommunityDataClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, 2047540, new GetLeaderboardEntriesParams { StartRange = 5002 }, It.IsAny<IProgress<long>>(), cancellationToken))
-                    .ReturnsAsync(leaderboardEntries_2047540_2);
-
-                // Act
-                await worker.UpdateLeaderboardsAsync(steamCommunityDataClient, steamClient, leaderboards, cancellationToken);
-
-                // Assert
-                mockSteamCommunityDataClient.Verify(c => c.GetLeaderboardEntriesAsync(appId, 2047540, It.IsAny<GetLeaderboardEntriesParams>(), It.IsAny<IProgress<long>>(), cancellationToken), Times.Exactly(2));
-                Assert.Equal(319, leaderboard2047387.Entries.Count);
-                Assert.Equal(8462, leaderboard2047540.Entries.Count);
-            }
-        }
-
         public class UpdateLeaderboardAsyncMethod_ISteamCommunityDataClient : LeaderboardsWorkerTests
         {
             public UpdateLeaderboardAsyncMethod_ISteamCommunityDataClient()

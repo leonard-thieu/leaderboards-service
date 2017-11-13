@@ -41,11 +41,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                         steamClient.Timeout = steamClientTimeout;
 
                         var leaderboardsWorker = new LeaderboardsWorker(appId, leaderboardsConnectionString, TelemetryClient);
-#if FEATURE_LEADERBOARDS_VIA_STEAMCLIENT
-                        await leaderboardsWorker.UpdateAsync(steamClient, cancellationToken).ConfigureAwait(false); 
-#else
-                        await leaderboardsWorker.UpdateAsync(null, cancellationToken).ConfigureAwait(false);
-#endif
+                        await leaderboardsWorker.UpdateAsync(steamClient, cancellationToken).ConfigureAwait(false);
 
                         var dailyLeaderboardsWorker = new DailyLeaderboardsWorker(appId, leaderboardsConnectionString, TelemetryClient);
                         await dailyLeaderboardsWorker.UpdateAsync(steamClient, dailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
@@ -56,7 +52,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 catch (Exception)
                 {
                     operation.Telemetry.Success = false;
-
                     throw;
                 }
             }
