@@ -31,33 +31,43 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         private readonly string connectionString;
         private readonly TelemetryClient telemetryClient;
 
-        public async Task UpdateAsync(ISteamClientApiClient steamClient, CancellationToken cancellationToken)
+        public async Task UpdateAsync(ISteamClientApiClient steamClientApiClient, CancellationToken cancellationToken)
         {
             using (new UpdateActivity(Log, "leaderboards"))
-            using (var operation = telemetryClient.StartOperation<DependencyTelemetry>("Update leaderboards"))
+            using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Update leaderboards"))
             {
-                IEnumerable<Leaderboard> leaderboards;
-                using (var db = new LeaderboardsContext(connectionString))
+                try
                 {
-                    leaderboards = await GetLeaderboardsAsync(db, cancellationToken).ConfigureAwait(false);
-                }
+                    IEnumerable<Leaderboard> leaderboards;
+                    using (var db = new LeaderboardsContext(connectionString))
+                    {
+                        leaderboards = await GetLeaderboardsAsync(db, cancellationToken).ConfigureAwait(false);
+                    }
 
-                var handler = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
-                {
-                    new LoggingHandler(),
-                    new GZipHandler(),
-                    new SteamCommunityDataTransientFaultHandler(),
-                });
-                var steamCommunityDataClientSettings = new SteamCommunityDataClientSettings { IsCacheBustingEnabled = false };
-                using (var steamCommunityDataClient = new SteamCommunityDataClient(handler, telemetryClient, steamCommunityDataClientSettings))
-                {
-                    await UpdateLeaderboardsAsync(steamCommunityDataClient, steamClient, leaderboards, cancellationToken).ConfigureAwait(false);
-                }
+                    var handler = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
+                    {
+                        new LoggingHandler(),
+                        new GZipHandler(),
+                        new SteamCommunityDataTransientFaultHandler(),
+                    });
+                    var steamCommunityDataClientSettings = new SteamCommunityDataClientSettings { IsCacheBustingEnabled = false };
+                    using (var steamCommunityDataClient = new SteamCommunityDataClient(handler, telemetryClient, steamCommunityDataClientSettings))
+                    {
+                        await UpdateLeaderboardsAsync(steamCommunityDataClient, steamClientApiClient, leaderboards, cancellationToken).ConfigureAwait(false);
+                    }
 
-                using (var connection = new SqlConnection(connectionString))
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        var storeClient = new LeaderboardsStoreClient(connection);
+                        await StoreLeaderboardsAsync(storeClient, leaderboards, cancellationToken).ConfigureAwait(false);
+                    }
+
+                    operation.Telemetry.Success = true;
+                }
+                catch (Exception)
                 {
-                    var storeClient = new LeaderboardsStoreClient(connection);
-                    await StoreLeaderboardsAsync(storeClient, leaderboards, cancellationToken).ConfigureAwait(false);
+                    operation.Telemetry.Success = false;
+                    throw;
                 }
             }
         }
@@ -77,50 +87,62 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         internal async Task UpdateLeaderboardsAsync(
             ISteamCommunityDataClient steamCommunityDataClient,
-            ISteamClientApiClient steamClient,
+            ISteamClientApiClient steamClientApiClient,
             IEnumerable<Leaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
             using (var activity = new DownloadActivity(Log, "leaderboards"))
-            using (var operation = telemetryClient.StartOperation<DependencyTelemetry>("Download leaderboards"))
+            using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Download leaderboards"))
             {
-                var leaderboardsEnvelope = await steamCommunityDataClient.GetLeaderboardsAsync(appId, activity, cancellationToken).ConfigureAwait(false);
-                var headers = leaderboardsEnvelope.Leaderboards;
-
-                if (steamClient != null)
+                try
                 {
-                    steamClient.Progress = activity;
-                    await steamClient.ConnectAndLogOnAsync().ConfigureAwait(false);
-                }
+                    var leaderboardsEnvelope = await steamCommunityDataClient.GetLeaderboardsAsync(appId, activity, cancellationToken).ConfigureAwait(false);
+                    var headers = leaderboardsEnvelope.Leaderboards;
 
-                var leaderboardTasks = new List<Task>();
-                foreach (var leaderboard in leaderboards)
-                {
-                    var header = headers.FirstOrDefault(h => h.LeaderboardId == leaderboard.LeaderboardId);
-                    if (header != null)
+                    if (steamClientApiClient != null)
                     {
-                        var leaderboardTask = UpdateLeaderboardAsync(steamCommunityDataClient, leaderboard, header.EntryCount, activity, cancellationToken);
-                        leaderboardTasks.Add(leaderboardTask);
+                        steamClientApiClient.Progress = activity;
+                        await steamClientApiClient.ConnectAndLogOnAsync().ConfigureAwait(false);
                     }
-                    // Leaderboard isn't visible from Steam Community Data, update the leaderboard from Steam Client API instead.
-                    else if (steamClient != null)
+
+                    var leaderboardTasks = new List<Task>();
+                    foreach (var leaderboard in leaderboards)
                     {
-                        var leaderboardTask = UpdateLeaderboardAsync(steamClient, leaderboard, cancellationToken);
-                        leaderboardTasks.Add(leaderboardTask);
+                        var header = headers.FirstOrDefault(h => h.LeaderboardId == leaderboard.LeaderboardId);
+                        if (header != null)
+                        {
+                            var leaderboardTask = UpdateLeaderboardAsync(steamCommunityDataClient, leaderboard, header.EntryCount, activity, cancellationToken);
+                            leaderboardTasks.Add(leaderboardTask);
+                        }
+                        // Leaderboard isn't visible from Steam Community Data, update the leaderboard from Steam Client API instead.
+                        else if (steamClientApiClient != null)
+                        {
+                            var leaderboardTask = UpdateLeaderboardAsync(steamClientApiClient, leaderboard, cancellationToken);
+                            leaderboardTasks.Add(leaderboardTask);
+                        }
                     }
+
+                    await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
+
+                    if (steamClientApiClient != null)
+                    {
+                        steamClientApiClient.Progress = null;
+                    }
+
+                    operation.Telemetry.Success = true;
                 }
-
-                await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
-
-                if (steamClient != null)
+                catch (Exception)
                 {
-                    steamClient.Progress = null;
+                    operation.Telemetry.Success = false;
+                    throw;
                 }
             }
         }
 
+        #region Steam Community Data
+
         internal async Task UpdateLeaderboardAsync(
-            ISteamCommunityDataClient steamClient,
+            ISteamCommunityDataClient steamCommunityDataClient,
             Leaderboard leaderboard,
             int entryCount,
             IProgress<long> progress,
@@ -129,39 +151,98 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             var batchSize = SteamCommunityDataClient.MaxLeaderboardEntriesPerRequest;
             var leaderboardId = leaderboard.LeaderboardId;
 
-            using (var operation = telemetryClient.StartOperation<DependencyTelemetry>("Download leaderboard"))
+            using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Download leaderboard"))
             {
-                operation.Telemetry.Type = "Http";
-                operation.Telemetry.Data = leaderboardId.ToString();
-
-                var entriesTasks = new List<Task<IEnumerable<Entry>>>();
-                for (int i = 1; i < entryCount; i += batchSize)
+                try
                 {
-                    var entriesTask = GetLeaderboardEntriesAsync(steamClient, leaderboardId, i, progress, cancellationToken);
-                    entriesTasks.Add(entriesTask);
+                    var entriesTasks = new List<Task<IEnumerable<Entry>>>();
+                    for (int i = 1; i < entryCount; i += batchSize)
+                    {
+                        var entriesTask = GetLeaderboardEntriesAsync(steamCommunityDataClient, leaderboardId, i, progress, cancellationToken);
+                        entriesTasks.Add(entriesTask);
+                    }
+
+                    if (entriesTasks.Any())
+                    {
+                        await Task.WhenAny(entriesTasks).ConfigureAwait(false);
+                    }
+                    leaderboard.LastUpdate = DateTime.UtcNow;
+
+                    var allEntries = await Task.WhenAll(entriesTasks).ConfigureAwait(false);
+                    foreach (var entries in allEntries)
+                    {
+                        leaderboard.Entries.AddRange(entries);
+                    }
+
+                    operation.Telemetry.Success = true;
                 }
-
-                if (entriesTasks.Any())
+                catch (Exception)
                 {
-                    await Task.WhenAny(entriesTasks).ConfigureAwait(false);
-                }
-                leaderboard.LastUpdate = DateTime.UtcNow;
-
-                var allEntries = await Task.WhenAll(entriesTasks).ConfigureAwait(false);
-                for (int i = 0; i < allEntries.Length; i++)
-                {
-                    var entries = allEntries[i];
-                    leaderboard.Entries.AddRange(entries);
+                    operation.Telemetry.Success = false;
+                    throw;
                 }
             }
         }
 
+        internal async Task<IEnumerable<Entry>> GetLeaderboardEntriesAsync(
+            ISteamCommunityDataClient steamCommunityDataClient,
+            int leaderboardId,
+            int startRange,
+            IProgress<long> progress,
+            CancellationToken cancellationToken)
+        {
+            using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Download leaderboard entries"))
+            {
+                try
+                {
+                    var @params = new GetLeaderboardEntriesParams { StartRange = startRange };
+                    var leaderboardEntriesEnvelope = await steamCommunityDataClient
+                        .GetLeaderboardEntriesAsync(appId, leaderboardId, @params, progress, cancellationToken)
+                        .ConfigureAwait(false);
+
+                    var entries = leaderboardEntriesEnvelope.Entries.Select(e =>
+                    {
+                        var entry = new Entry
+                        {
+                            LeaderboardId = leaderboardId,
+                            SteamId = e.SteamId,
+                            Rank = e.Rank,
+                            ReplayId = e.UgcId.ToReplayId(),
+                            Score = e.Score,
+                        };
+
+                        var details = (from d in e.Details
+                                       select int.Parse(d.ToString(), NumberStyles.HexNumber))
+                                       .ToList();
+
+                        entry.Zone = details[1];
+                        entry.Level = details[9];
+
+                        return entry;
+                    }).ToList();
+
+                    operation.Telemetry.Success = true;
+
+                    return entries;
+                }
+                catch (Exception)
+                {
+                    operation.Telemetry.Success = false;
+                    throw;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Steam Client API
+
         internal async Task UpdateLeaderboardAsync(
-            ISteamClientApiClient steamClient,
+            ISteamClientApiClient steamClientApiClient,
             Leaderboard leaderboard,
             CancellationToken cancellationToken)
         {
-            var response = await steamClient
+            var response = await steamClientApiClient
                 .GetLeaderboardEntriesAsync(appId, leaderboard.LeaderboardId, cancellationToken)
                 .ConfigureAwait(false);
 
@@ -182,39 +263,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             }
         }
 
-        internal async Task<IEnumerable<Entry>> GetLeaderboardEntriesAsync(
-            ISteamCommunityDataClient steamClient,
-            int leaderboardId,
-            int startRange,
-            IProgress<long> progress,
-            CancellationToken cancellationToken)
-        {
-            var @params = new GetLeaderboardEntriesParams { StartRange = startRange };
-            var leaderboardEntriesEnvelope = await steamClient
-                .GetLeaderboardEntriesAsync(appId, leaderboardId, @params, progress, cancellationToken)
-                .ConfigureAwait(false);
-
-            return leaderboardEntriesEnvelope.Entries.Select(e =>
-            {
-                var entry = new Entry
-                {
-                    LeaderboardId = leaderboardId,
-                    SteamId = e.SteamId,
-                    Rank = e.Rank,
-                    ReplayId = e.UgcId.ToReplayId(),
-                    Score = e.Score,
-                };
-
-                var details = (from d in e.Details
-                               select int.Parse(d.ToString(), NumberStyles.HexNumber))
-                               .ToList();
-
-                entry.Zone = details[1];
-                entry.Level = details[9];
-
-                return entry;
-            }).ToList();
-        }
+        #endregion
 
         #endregion
 
@@ -240,32 +289,42 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 .Select(r => new Replay { ReplayId = r })
                 .ToList();
 
-            using (var operation = telemetryClient.StartOperation<DependencyTelemetry>("Store leaderboards"))
+            using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Store leaderboards"))
             {
-                using (var activity = new StoreActivity(Log, "leaderboards"))
+                try
                 {
-                    var rowsAffected = await storeClient.BulkUpsertAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                    activity.Report(rowsAffected);
-                }
+                    using (var activity = new StoreActivity(Log, "leaderboards"))
+                    {
+                        var rowsAffected = await storeClient.BulkUpsertAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                        activity.Report(rowsAffected);
+                    }
 
-                using (var activity = new StoreActivity(Log, "players"))
-                {
-                    var options = new BulkUpsertOptions { UpdateWhenMatched = false };
-                    var rowsAffected = await storeClient.BulkUpsertAsync(players, options, cancellationToken).ConfigureAwait(false);
-                    activity.Report(rowsAffected);
-                }
+                    using (var activity = new StoreActivity(Log, "players"))
+                    {
+                        var options = new BulkUpsertOptions { UpdateWhenMatched = false };
+                        var rowsAffected = await storeClient.BulkUpsertAsync(players, options, cancellationToken).ConfigureAwait(false);
+                        activity.Report(rowsAffected);
+                    }
 
-                using (var activity = new StoreActivity(Log, "replays"))
-                {
-                    var options = new BulkUpsertOptions { UpdateWhenMatched = false };
-                    var rowsAffected = await storeClient.BulkUpsertAsync(replays, options, cancellationToken).ConfigureAwait(false);
-                    activity.Report(rowsAffected);
-                }
+                    using (var activity = new StoreActivity(Log, "replays"))
+                    {
+                        var options = new BulkUpsertOptions { UpdateWhenMatched = false };
+                        var rowsAffected = await storeClient.BulkUpsertAsync(replays, options, cancellationToken).ConfigureAwait(false);
+                        activity.Report(rowsAffected);
+                    }
 
-                using (var activity = new StoreActivity(Log, "entries"))
+                    using (var activity = new StoreActivity(Log, "entries"))
+                    {
+                        var rowsAffected = await storeClient.BulkInsertAsync(entries, cancellationToken).ConfigureAwait(false);
+                        activity.Report(rowsAffected);
+                    }
+
+                    operation.Telemetry.Success = true;
+                }
+                catch (Exception)
                 {
-                    var rowsAffected = await storeClient.BulkInsertAsync(entries, cancellationToken).ConfigureAwait(false);
-                    activity.Report(rowsAffected);
+                    operation.Telemetry.Success = false;
+                    throw;
                 }
             }
         }

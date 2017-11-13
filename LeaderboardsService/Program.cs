@@ -1,5 +1,6 @@
 ﻿using System;
 using log4net;
+using Microsoft.ApplicationInsights;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.Services;
 
@@ -8,6 +9,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     internal static class Program
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+        private static readonly TelemetryClient TelemetryClient = new TelemetryClient();
 
         /// <summary>
         /// The main entry point of the application.
@@ -21,7 +23,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         {
             var settings = Settings.Default;
 
-            using (var worker = new WorkerRole(settings))
+            using (var worker = new WorkerRole(settings, TelemetryClient))
             {
                 return Application<ILeaderboardsSettings>.Run(
                     args,

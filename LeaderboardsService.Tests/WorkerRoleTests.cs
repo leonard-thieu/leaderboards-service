@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.Services;
 using Xunit;
@@ -76,7 +77,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
             private class WorkerRoleAdapter : WorkerRole
             {
-                public WorkerRoleAdapter(ILeaderboardsSettings settings) : base(settings) { }
+                public WorkerRoleAdapter(ILeaderboardsSettings settings) : base(settings, new TelemetryClient()) { }
 
                 public Task PublicRunAsyncOverride(CancellationToken cancellationToken) => RunAsyncOverride(cancellationToken);
             }

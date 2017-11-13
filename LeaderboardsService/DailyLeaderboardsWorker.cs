@@ -30,23 +30,33 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         public async Task UpdateAsync(ISteamClientApiClient steamClient, int limit, CancellationToken cancellationToken)
         {
             using (new UpdateActivity(Log, "daily leaderboards"))
-            using (var operation = telemetryClient.StartOperation<DependencyTelemetry>("Update daily leaderboards"))
+            using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Update daily leaderboards"))
             {
-                await steamClient.ConnectAndLogOnAsync().ConfigureAwait(false);
-
-                IEnumerable<DailyLeaderboard> leaderboards;
-                using (var db = new LeaderboardsContext(connectionString))
+                try
                 {
-                    leaderboards = await GetDailyLeaderboardsAsync(db, steamClient, limit, cancellationToken).ConfigureAwait(false);
+                    await steamClient.ConnectAndLogOnAsync().ConfigureAwait(false);
+
+                    IEnumerable<DailyLeaderboard> leaderboards;
+                    using (var db = new LeaderboardsContext(connectionString))
+                    {
+                        leaderboards = await GetDailyLeaderboardsAsync(db, steamClient, limit, cancellationToken).ConfigureAwait(false);
+                    }
+                    await UpdateDailyLeaderboardsAsync(steamClient, leaderboards, cancellationToken).ConfigureAwait(false);
+
+                    using (var connection = new SqlConnection(connectionString))
+                    {
+                        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
+
+                        var storeClient = new LeaderboardsStoreClient(connection);
+                        await StoreDailyLeaderboardsAsync(storeClient, leaderboards, cancellationToken).ConfigureAwait(false);
+                    }
+
+                    operation.Telemetry.Success = true;
                 }
-                await UpdateDailyLeaderboardsAsync(steamClient, leaderboards, cancellationToken).ConfigureAwait(false);
-
-                using (var connection = new SqlConnection(connectionString))
+                catch (Exception)
                 {
-                    await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-
-                    var storeClient = new LeaderboardsStoreClient(connection);
-                    await StoreDailyLeaderboardsAsync(storeClient, leaderboards, cancellationToken).ConfigureAwait(false);
+                    operation.Telemetry.Success = false;
+                    throw;
                 }
             }
         }
@@ -193,21 +203,31 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             CancellationToken cancellationToken)
         {
             using (var activity = new DownloadActivity(Log, "daily leaderboards"))
-            using (var operation = telemetryClient.StartOperation<DependencyTelemetry>("Download daily leaderboards"))
+            using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Download daily leaderboards"))
             {
-                steamClient.Progress = activity;
-
-                var leaderboardTasks = new List<Task>();
-
-                foreach (var leaderboard in leaderboards)
+                try
                 {
-                    var leaderboardTask = UpdateDailyLeaderboardAsync(steamClient, leaderboard, cancellationToken);
-                    leaderboardTasks.Add(leaderboardTask);
+                    steamClient.Progress = activity;
+
+                    var leaderboardTasks = new List<Task>();
+
+                    foreach (var leaderboard in leaderboards)
+                    {
+                        var leaderboardTask = UpdateDailyLeaderboardAsync(steamClient, leaderboard, cancellationToken);
+                        leaderboardTasks.Add(leaderboardTask);
+                    }
+
+                    await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
+
+                    steamClient.Progress = null;
+
+                    operation.Telemetry.Success = true;
                 }
-
-                await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
-
-                steamClient.Progress = null;
+                catch (Exception)
+                {
+                    operation.Telemetry.Success = false;
+                    throw;
+                }
             }
         }
 
@@ -261,32 +281,42 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 .Select(r => new Replay { ReplayId = r })
                 .ToList();
 
-            using (var operation = telemetryClient.StartOperation<DependencyTelemetry>("Store daily leaderboards"))
+            using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Store daily leaderboards"))
             {
-                using (var activity = new StoreActivity(Log, "daily leaderboards"))
+                try
                 {
-                    var rowsAffected = await storeClient.BulkUpsertAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                    activity.Report(rowsAffected);
-                }
+                    using (var activity = new StoreActivity(Log, "daily leaderboards"))
+                    {
+                        var rowsAffected = await storeClient.BulkUpsertAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                        activity.Report(rowsAffected);
+                    }
 
-                using (var activity = new StoreActivity(Log, "players"))
-                {
-                    var options = new BulkUpsertOptions { UpdateWhenMatched = false };
-                    var rowsAffected = await storeClient.BulkUpsertAsync(players, options, cancellationToken).ConfigureAwait(false);
-                    activity.Report(rowsAffected);
-                }
+                    using (var activity = new StoreActivity(Log, "players"))
+                    {
+                        var options = new BulkUpsertOptions { UpdateWhenMatched = false };
+                        var rowsAffected = await storeClient.BulkUpsertAsync(players, options, cancellationToken).ConfigureAwait(false);
+                        activity.Report(rowsAffected);
+                    }
 
-                using (var activity = new StoreActivity(Log, "replays"))
-                {
-                    var options = new BulkUpsertOptions { UpdateWhenMatched = false };
-                    var rowsAffected = await storeClient.BulkUpsertAsync(replays, options, cancellationToken).ConfigureAwait(false);
-                    activity.Report(rowsAffected);
-                }
+                    using (var activity = new StoreActivity(Log, "replays"))
+                    {
+                        var options = new BulkUpsertOptions { UpdateWhenMatched = false };
+                        var rowsAffected = await storeClient.BulkUpsertAsync(replays, options, cancellationToken).ConfigureAwait(false);
+                        activity.Report(rowsAffected);
+                    }
 
-                using (var activity = new StoreActivity(Log, "daily entries"))
+                    using (var activity = new StoreActivity(Log, "daily entries"))
+                    {
+                        var rowsAffected = await storeClient.BulkUpsertAsync(entries, cancellationToken).ConfigureAwait(false);
+                        activity.Report(rowsAffected);
+                    }
+
+                    operation.Telemetry.Success = true;
+                }
+                catch (Exception)
                 {
-                    var rowsAffected = await storeClient.BulkUpsertAsync(entries, cancellationToken).ConfigureAwait(false);
-                    activity.Report(rowsAffected);
+                    operation.Telemetry.Success = false;
+                    throw;
                 }
             }
         }
