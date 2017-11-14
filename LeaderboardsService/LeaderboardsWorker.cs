@@ -48,7 +48,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     {
                         new LoggingHandler(),
                         new GZipHandler(),
-                        new SteamCommunityDataTransientFaultHandler(),
+                        new SteamCommunityDataTransientFaultHandler(telemetryClient),
                     });
                     var steamCommunityDataClientSettings = new SteamCommunityDataClientSettings { IsCacheBustingEnabled = false };
                     using (var steamCommunityDataClient = new SteamCommunityDataClient(handler, telemetryClient, steamCommunityDataClientSettings))

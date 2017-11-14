@@ -55,10 +55,10 @@
       <Version>1.1.2</Version>
     </PackageReference>
     <PackageReference Include="toofz.NecroDancer.Leaderboards">
-      <Version>18.0.4</Version>
+      <Version>19.0.2</Version>
     </PackageReference>
     <PackageReference Include="toofz.NecroDancer.Leaderboards.Data">
-      <Version>12.1.1</Version>
+      <Version>12.2.2</Version>
     </PackageReference>
     <PackageReference Include="toofz.Services">
       <Version>12.0.4</Version>
