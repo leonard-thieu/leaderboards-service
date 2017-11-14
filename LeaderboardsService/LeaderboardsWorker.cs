@@ -31,7 +31,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         private readonly string connectionString;
         private readonly TelemetryClient telemetryClient;
 
-        public async Task UpdateAsync(ISteamClientApiClient steamClientApiClient, CancellationToken cancellationToken)
+        public async Task UpdateAsync(CancellationToken cancellationToken)
         {
             using (new UpdateActivity(Log, "leaderboards"))
             using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Update leaderboards"))
@@ -53,7 +53,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     var steamCommunityDataClientSettings = new SteamCommunityDataClientSettings { IsCacheBustingEnabled = false };
                     using (var steamCommunityDataClient = new SteamCommunityDataClient(handler, telemetryClient, steamCommunityDataClientSettings))
                     {
-                        await UpdateLeaderboardsAsync(steamClientApiClient, leaderboards, cancellationToken).ConfigureAwait(false);
+                        await UpdateLeaderboardsAsync(steamCommunityDataClient, leaderboards, cancellationToken).ConfigureAwait(false);
                     }
 
                     using (var connection = new SqlConnection(connectionString))
@@ -86,7 +86,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         #region Update leaderboards
 
         internal async Task UpdateLeaderboardsAsync(
-            ISteamClientApiClient steamClientApiClient,
+            ISteamCommunityDataClient steamCommunityDataClient,
             IEnumerable<Leaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
@@ -95,20 +95,21 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 try
                 {
-                    steamClientApiClient.Progress = activity;
-
-                    await steamClientApiClient.ConnectAndLogOnAsync().ConfigureAwait(false);
+                    var leaderboardsEnvelope = await steamCommunityDataClient.GetLeaderboardsAsync(appId, activity, cancellationToken).ConfigureAwait(false);
+                    var headers = leaderboardsEnvelope.Leaderboards;
 
                     var leaderboardTasks = new List<Task>();
                     foreach (var leaderboard in leaderboards)
                     {
-                        var leaderboardTask = UpdateLeaderboardAsync(steamClientApiClient, leaderboard, cancellationToken);
-                        leaderboardTasks.Add(leaderboardTask);
+                        var header = headers.FirstOrDefault(h => h.LeaderboardId == leaderboard.LeaderboardId);
+                        if (header != null)
+                        {
+                            var leaderboardTask = UpdateLeaderboardAsync(steamCommunityDataClient, leaderboard, header.EntryCount, activity, cancellationToken);
+                            leaderboardTasks.Add(leaderboardTask);
+                        }
                     }
 
                     await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
-
-                    steamClientApiClient.Progress = null;
 
                     operation.Telemetry.Success = true;
                 }
@@ -129,15 +130,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IProgress<long> progress,
             CancellationToken cancellationToken)
         {
-            var batchSize = SteamCommunityDataClient.MaxLeaderboardEntriesPerRequest;
-            var leaderboardId = leaderboard.LeaderboardId;
-
             using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Download leaderboard"))
             {
                 try
                 {
                     var entriesTasks = new List<Task<IEnumerable<Entry>>>();
-                    for (int i = 1; i < entryCount; i += batchSize)
+                    var leaderboardId = leaderboard.LeaderboardId;
+                    for (int i = 1; i < entryCount; i += SteamCommunityDataClient.MaxLeaderboardEntriesPerRequest)
                     {
                         var entriesTask = GetLeaderboardEntriesAsync(steamCommunityDataClient, leaderboardId, i, progress, cancellationToken);
                         entriesTasks.Add(entriesTask);
