@@ -32,14 +32,7 @@
                           ErrorControl="normal"
                           Start="auto"
                           Type="ownProcess"
-                          Vital="yes">
-            <ServiceConfig xmlns="http://schemas.microsoft.com/wix/UtilExtension"
-                           FirstFailureActionType="restart"
-                           SecondFailureActionType="restart"
-                           ThirdFailureActionType="restart"
-                           RestartServiceDelayInSeconds="30"
-                           ResetPeriodInDays="1" />
-          </ServiceInstall>
+                          Vital="yes" />
           <ServiceControl Id="sc5C1EC7CFA893E7588320DBA5232DFD10"
                           Name="$(var.ProductName)"
                           Remove="both"

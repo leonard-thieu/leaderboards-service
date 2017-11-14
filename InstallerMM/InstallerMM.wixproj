@@ -19,12 +19,6 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <WixExtension Include="WixUtilExtension">
-      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
-      <Name>WixUtilExtension</Name>
-    </WixExtension>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\LeaderboardsService\LeaderboardsService.csproj">
       <Name>LeaderboardsService</Name>
       <Project>{1678334c-de8c-4dc4-b493-4454bc209e18}</Project>
