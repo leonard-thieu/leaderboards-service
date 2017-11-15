@@ -19,6 +19,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
             using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update leaderboards cycle"))
+            using (new UpdateActivity(Log, "leaderboards cycle"))
             {
                 try
                 {

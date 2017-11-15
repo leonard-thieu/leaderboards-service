@@ -29,8 +29,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         public async Task UpdateAsync(ISteamClientApiClient steamClient, int limit, CancellationToken cancellationToken)
         {
-            using (new UpdateActivity(Log, "daily leaderboards"))
             using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Update daily leaderboards"))
+            using (new UpdateActivity(Log, "daily leaderboards"))
             {
                 try
                 {
@@ -202,8 +202,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IEnumerable<DailyLeaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
-            using (var activity = new DownloadActivity(Log, "daily leaderboards"))
             using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Download daily leaderboards"))
+            using (var activity = new DownloadActivity(Log, "daily leaderboards"))
             {
                 try
                 {

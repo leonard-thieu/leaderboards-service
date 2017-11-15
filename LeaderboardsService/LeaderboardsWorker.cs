@@ -33,8 +33,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         public async Task UpdateAsync(CancellationToken cancellationToken)
         {
-            using (new UpdateActivity(Log, "leaderboards"))
             using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Update leaderboards"))
+            using (new UpdateActivity(Log, "leaderboards"))
             {
                 try
                 {
@@ -90,8 +90,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IEnumerable<Leaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
-            using (var activity = new DownloadActivity(Log, "leaderboards"))
             using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Download leaderboards"))
+            using (var activity = new DownloadActivity(Log, "leaderboards"))
             {
                 try
                 {
