@@ -333,6 +333,8 @@ options:
 
             #endregion
 
+            #region SteamClientTimeout
+
             [Fact]
             public void TimeoutIsSpecified_SetsSteamClientTimeout()
             {
@@ -371,6 +373,8 @@ options:
                 // Assert
                 mockSettings.VerifySet(s => s.SteamClientTimeout = It.IsAny<TimeSpan>(), Times.Never);
             }
+
+            #endregion
         }
     }
 }
