@@ -21,7 +21,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
             optionSet.Add("username=", GetDescription(settingsType, nameof(Settings.SteamUserName)), username => options.SteamUserName = username);
             optionSet.Add("password:", GetDescription(settingsType, nameof(Settings.SteamPassword)), password => options.SteamPassword = password);
-            optionSet.Add("connection:", GetDescription(settingsType, nameof(Settings.LeaderboardsConnectionString)), connection => options.LeaderboardsConnectionString = connection);
             optionSet.Add("dailies=", GetDescription(settingsType, nameof(Settings.DailyLeaderboardsPerUpdate)), (int? dailies) => options.DailyLeaderboardsPerUpdate = dailies);
             optionSet.Add("timeout=", GetDescription(settingsType, nameof(Settings.SteamClientTimeout)), (TimeSpan? timeout) => options.SteamClientTimeout = timeout);
         }
@@ -57,23 +56,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             if (steamPassword != "")
             {
                 settings.SteamPassword = new EncryptedSecret(steamPassword, iterations);
-            }
-
-            #endregion
-
-            #region LeaderboardsConnectionString
-
-            var leaderboardsConnectionString = options.LeaderboardsConnectionString;
-            if (!string.IsNullOrEmpty(leaderboardsConnectionString))
-            {
-                settings.LeaderboardsConnectionString = new EncryptedSecret(leaderboardsConnectionString, iterations);
-            }
-            else if (settings.LeaderboardsConnectionString == null)
-            {
-                leaderboardsConnectionString = leaderboardsConnectionString == "" ?
-                    DefaultLeaderboardsConnectionString :
-                    ReadOption("Leaderboards connection string");
-                settings.LeaderboardsConnectionString = new EncryptedSecret(leaderboardsConnectionString, iterations);
             }
 
             #endregion

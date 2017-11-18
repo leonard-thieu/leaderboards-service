@@ -35,6 +35,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 parser.Parse(args, settings);
 
                 // Assert
+                var output = outWriter.ToString();
                 Assert.Equal(@"
 Usage: LeaderboardsService.exe [options]
 
@@ -44,12 +45,12 @@ options:
   --delay=VALUE         The amount of time to wait after a cycle to perform garbage collection.
   --ikey=VALUE          An Application Insights instrumentation key.
   --iterations=VALUE    The number of rounds to execute a key derivation function.
+  --connection[=VALUE]  The connection string used to connect to the leaderboards database.
   --username=VALUE      The user name used to log on to Steam.
   --password[=VALUE]    The password used to log on to Steam.
-  --connection[=VALUE]  The connection string used to connect to the leaderboards database.
   --dailies=VALUE       The maxinum number of daily leaderboards to update per cycle.
   --timeout=VALUE       The amount of time to wait before a request to the Steam Client API times out.
-", outWriter.ToString(), ignoreLineEndingDifferences: true);
+", output, ignoreLineEndingDifferences: true);
             }
 
             #region SteamUserName
@@ -201,92 +202,6 @@ options:
 
                 // Assert
                 mockSettings.VerifySet(s => s.SteamPassword = It.IsAny<EncryptedSecret>(), Times.Never);
-            }
-
-            #endregion
-
-            #region LeaderboardsConnectionString
-
-            [Fact]
-            public void ConnectionIsSpecified_SetsLeaderboardsConnectionString()
-            {
-                // Arrange
-                string[] args = new[] { "--connection=myConnectionString" };
-                ILeaderboardsSettings settings = new StubLeaderboardsSettings
-                {
-                    SteamUserName = "a",
-                    SteamPassword = new EncryptedSecret("a", 1),
-                    KeyDerivationIterations = 1,
-                };
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                var encrypted = new EncryptedSecret("myConnectionString", 1);
-                Assert.Equal(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
-            }
-
-            [Fact]
-            public void ConnectionFlagIsSpecified_PromptsUserForConnectionAndSetsLeaderboardsConnectionString()
-            {
-                // Arrange
-                string[] args = new[] { "--connection" };
-                ILeaderboardsSettings settings = new StubLeaderboardsSettings
-                {
-                    SteamUserName = "a",
-                    SteamPassword = new EncryptedSecret("a", 1),
-                    KeyDerivationIterations = 1,
-                };
-                mockInReader
-                    .SetupSequence(r => r.ReadLine())
-                    .Returns("myConnectionString");
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                var encrypted = new EncryptedSecret("myConnectionString", 1);
-                Assert.Equal(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
-            }
-
-            [Fact]
-            public void ConnectionFlagIsNotSpecifiedAndLeaderboardsConnectionStringIsNotSet_SetsLeaderboardsConnectionStringToDefault()
-            {
-                // Arrange
-                string[] args = new string[0];
-                ILeaderboardsSettings settings = new StubLeaderboardsSettings
-                {
-                    SteamUserName = "a",
-                    SteamPassword = new EncryptedSecret("a", 1),
-                    KeyDerivationIterations = 1,
-                };
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                var encrypted = new EncryptedSecret(LeaderboardsArgsParser.DefaultLeaderboardsConnectionString, 1);
-                Assert.Equal(encrypted.Decrypt(), settings.LeaderboardsConnectionString.Decrypt());
-            }
-
-            [Fact]
-            public void ConnectionFlagIsNotSpecifiedAndLeaderboardsConnectionStringIsSet_DoesNotSetLeaderboardsConnectionString()
-            {
-                // Arrange
-                string[] args = new string[0];
-                var mockSettings = new Mock<ILeaderboardsSettings>();
-                mockSettings
-                    .SetupProperty(s => s.SteamUserName, "myUserName")
-                    .SetupProperty(s => s.SteamPassword, new EncryptedSecret("a", 1))
-                    .SetupProperty(s => s.LeaderboardsConnectionString, new EncryptedSecret("a", 1));
-                var settings = mockSettings.Object;
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                mockSettings.VerifySet(s => s.LeaderboardsConnectionString = It.IsAny<EncryptedSecret>(), Times.Never);
             }
 
             #endregion

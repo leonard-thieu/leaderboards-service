@@ -14,10 +14,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         /// </summary>
         public string SteamPassword { get; internal set; } = "";
         /// <summary>
-        /// The connection string used to connect to the leaderboards database.
-        /// </summary>
-        public string LeaderboardsConnectionString { get; internal set; } = "";
-        /// <summary>
         /// The maxinum number of daily leaderboards to update per cycle.
         /// </summary>
         public int? DailyLeaderboardsPerUpdate { get; internal set; }

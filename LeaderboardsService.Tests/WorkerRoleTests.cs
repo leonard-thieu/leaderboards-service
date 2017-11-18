@@ -75,13 +75,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 });
             }
 
-            private class WorkerRoleAdapter : WorkerRole
-            {
-                public WorkerRoleAdapter(ILeaderboardsSettings settings) : base(settings, new TelemetryClient()) { }
-
-                public Task PublicRunAsyncOverride(CancellationToken cancellationToken) => RunAsyncOverride(cancellationToken);
-            }
-
             [Fact]
             public async Task LeaderboardsConnectionStringIsNull_ThrowsInvalidOperationException()
             {
@@ -101,6 +94,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 {
                     return workerRole.PublicRunAsyncOverride(cancellationToken);
                 });
+            }
+
+            private class WorkerRoleAdapter : WorkerRole
+            {
+                public WorkerRoleAdapter(ILeaderboardsSettings settings) : base(settings, new TelemetryClient()) { }
+
+                public Task PublicRunAsyncOverride(CancellationToken cancellationToken) => RunAsyncOverride(cancellationToken);
             }
         }
     }
