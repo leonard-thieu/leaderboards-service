@@ -29,6 +29,9 @@
           <ServiceControl Id="sc5C1EC7CFA893E7588320DBA5232DFD10" Name="$(var.ProductName)" Remove="both" Start="install" Stop="both" Wait="yes" />
           <File Id="owf2EB64394D594F56BBA072A470D0F1EDC" Source="$(var.SourceDir)\LeaderboardsService.exe.config" CompanionFile="owf52846A01E14D3FA5EFB278275A6315ED" />
         </Component>
+        <Component Id="owcE2B0890F2AF52481A8D13964BD9F02B5" Guid="f84d93c3-ffac-7f76-9b3e-fb83a55729b3">
+          <File Id="owfE2B0890F2AF52481A8D13964BD9F02B5" Source="$(var.SourceDir)\LeaderboardsService.pdb" KeyPath="yes" />
+        </Component>
         <Component Id="owc950044A998A8F98BC77BE1E291270381" Guid="70fec58d-9680-3f0f-fdc5-60569c380afe">
           <File Id="owf950044A998A8F98BC77BE1E291270381" Source="$(var.SourceDir)\log.config" KeyPath="yes" />
         </Component>
@@ -73,6 +76,9 @@
         </Component>
         <Component Id="owc40B857C5CC2CAC09BD1708FC7761B1BE" Guid="67a53e59-b39b-69b9-7a69-e125255e9c54">
           <File Id="owf40B857C5CC2CAC09BD1708FC7761B1BE" Source="$(var.SourceDir)\Polly.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc560D1E37CEDC227B1CCE142E92162DC2" Guid="ae09235b-e7b1-3d76-c17f-26b96dde5a20">
+          <File Id="owf560D1E37CEDC227B1CCE142E92162DC2" Source="$(var.SourceDir)\Polly.pdb" KeyPath="yes" />
         </Component>
         <Component Id="owcED4CA0C587B1FFB62753FB5DED9C7587" Guid="c81d2020-653a-ed0b-7d1a-b67616f88462">
           <File Id="owfED4CA0C587B1FFB62753FB5DED9C7587" Source="$(var.SourceDir)\protobuf-net.dll" KeyPath="yes" />
@@ -374,17 +380,32 @@
         <Component Id="owc79432AF5FCC9EDEA377633177A805600" Guid="68e0bdf3-b5d9-1b30-0ebe-98038ed96044">
           <File Id="owf79432AF5FCC9EDEA377633177A805600" Source="$(var.SourceDir)\toofz.ActivityTracing.dll" KeyPath="yes" />
         </Component>
+        <Component Id="owc3DB53B2906C145586B6B72A09D1A0258" Guid="5c15e329-3e8c-a000-86f1-a8a8f4f89384">
+          <File Id="owf3DB53B2906C145586B6B72A09D1A0258" Source="$(var.SourceDir)\toofz.ActivityTracing.pdb" KeyPath="yes" />
+        </Component>
         <Component Id="owc33F0D99DD7C4188BDD78532D39650910" Guid="23099e66-0afa-bb58-a24c-929a6bcfdc10">
           <File Id="owf33F0D99DD7C4188BDD78532D39650910" Source="$(var.SourceDir)\toofz.ExceptionRenderer.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc823C38AF0EE140773F7661CF707A5A8C" Guid="e13968a8-f94d-877d-cdc0-16e19eade6df">
+          <File Id="owf823C38AF0EE140773F7661CF707A5A8C" Source="$(var.SourceDir)\toofz.ExceptionRenderer.pdb" KeyPath="yes" />
         </Component>
         <Component Id="owc6DBF3F730463E4CD3778833878E38A25" Guid="71ab8460-d5cc-f346-f9d3-ca5d3a3b0d56">
           <File Id="owf6DBF3F730463E4CD3778833878E38A25" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.Data.dll" KeyPath="yes" />
         </Component>
+        <Component Id="owc6D1A546067A0BA37B86853545156313E" Guid="ea336c39-098e-1d70-5ac3-a8e9f4f8e0fa">
+          <File Id="owf6D1A546067A0BA37B86853545156313E" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.Data.pdb" KeyPath="yes" />
+        </Component>
         <Component Id="owcDDA9626CD9162B10D303FBA6E1A1DBC8" Guid="c9f28c3d-e59e-bc52-569c-23de5f900d9d">
           <File Id="owfDDA9626CD9162B10D303FBA6E1A1DBC8" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.dll" KeyPath="yes" />
         </Component>
+        <Component Id="owcA38711247352318801BB7F0FCE638289" Guid="972c7dd6-17c2-71c7-2950-cf0d48facda8">
+          <File Id="owfA38711247352318801BB7F0FCE638289" Source="$(var.SourceDir)\toofz.NecroDancer.Leaderboards.pdb" KeyPath="yes" />
+        </Component>
         <Component Id="owcEF71CA9941E07E83BF048FEA745163EE" Guid="f580d0c7-0840-5b5d-90c7-d0253ca4a1ba">
           <File Id="owfEF71CA9941E07E83BF048FEA745163EE" Source="$(var.SourceDir)\toofz.Services.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcA7F14B92BF14E49E415FC6F1AC7796A2" Guid="f16a8a22-10ca-5f30-9422-812b051b2353">
+          <File Id="owfA7F14B92BF14E49E415FC6F1AC7796A2" Source="$(var.SourceDir)\toofz.Services.pdb" KeyPath="yes" />
         </Component>
       </Directory>
     </Directory>
