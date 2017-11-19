@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Polly;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
 using toofz.Services;
@@ -31,6 +32,29 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         private readonly string connectionString;
         private readonly TelemetryClient telemetryClient;
 
+        internal ISteamCommunityDataClient CreateSteamCommunityDataClient()
+        {
+            var policy = SteamCommunityDataClient
+                .GetRetryStrategy()
+                .WaitAndRetryAsync(
+                    3,
+                    ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
+                    (ex, duration) =>
+                    {
+                        telemetryClient.TrackException(ex);
+                        if (Log.IsDebugEnabled) { Log.Debug($"Retrying in {duration}...", ex); }
+                    });
+            var handler = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
+            {
+                new LoggingHandler(),
+                new GZipHandler(),
+                new TransientFaultHandler(policy),
+            });
+            var steamCommunityDataClientSettings = new SteamCommunityDataClientSettings { IsCacheBustingEnabled = false };
+
+            return new SteamCommunityDataClient(handler, telemetryClient, steamCommunityDataClientSettings);
+        }
+
         public async Task UpdateAsync(CancellationToken cancellationToken)
         {
             using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Update leaderboards"))
@@ -44,14 +68,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                         leaderboards = await GetLeaderboardsAsync(db, cancellationToken).ConfigureAwait(false);
                     }
 
-                    var handler = HttpClientFactory.CreatePipeline(new WebRequestHandler(), new DelegatingHandler[]
-                    {
-                        new LoggingHandler(),
-                        new GZipHandler(),
-                        new SteamCommunityDataTransientFaultHandler(telemetryClient),
-                    });
-                    var steamCommunityDataClientSettings = new SteamCommunityDataClientSettings { IsCacheBustingEnabled = false };
-                    using (var steamCommunityDataClient = new SteamCommunityDataClient(handler, telemetryClient, steamCommunityDataClientSettings))
+                    using (var steamCommunityDataClient = CreateSteamCommunityDataClient())
                     {
                         await UpdateLeaderboardsAsync(steamCommunityDataClient, leaderboards, cancellationToken).ConfigureAwait(false);
                     }

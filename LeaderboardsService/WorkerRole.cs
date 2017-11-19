@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Polly;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 using toofz.Services;
@@ -37,10 +38,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     var dailyLeaderboardsPerUpdate = Settings.DailyLeaderboardsPerUpdate;
                     var steamClientTimeout = Settings.SteamClientTimeout;
 
-                    using (var steamClient = new SteamClientApiClient(userName, password, TelemetryClient))
+                    using (var steamClient = CreateSteamClientApiClient(userName, password, steamClientTimeout))
                     {
-                        steamClient.Timeout = steamClientTimeout;
-
                         var leaderboardsWorker = new LeaderboardsWorker(appId, leaderboardsConnectionString, TelemetryClient);
                         await leaderboardsWorker.UpdateAsync(cancellationToken).ConfigureAwait(false);
 
@@ -56,6 +55,22 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     throw;
                 }
             }
+        }
+
+        private ISteamClientApiClient CreateSteamClientApiClient(string userName, string password, TimeSpan timeout)
+        {
+            var policy = SteamClientApiClient
+                .GetRetryStrategy()
+                .WaitAndRetryAsync(
+                    3,
+                    ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
+                    (ex, duration) =>
+                    {
+                        TelemetryClient.TrackException(ex);
+                        if (Log.IsDebugEnabled) { Log.Debug($"Retrying in {duration}...", ex); }
+                    });
+
+            return new SteamClientApiClient(userName, password, TelemetryClient, policy) { Timeout = timeout };
         }
     }
 }
