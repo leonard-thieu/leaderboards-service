@@ -83,19 +83,18 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             return leaderboards;
         }
 
-        internal async Task<IEnumerable<DailyLeaderboard>> GetStaleDailyLeaderboardsAsync(
+        internal Task<List<DailyLeaderboard>> GetStaleDailyLeaderboardsAsync(
             ILeaderboardsContext db,
             DateTime today,
             int limit,
             CancellationToken cancellationToken)
         {
-            return await (from l in db.DailyLeaderboards
-                          orderby l.LastUpdate
-                          where l.Date != today
-                          select l)
-                          .Take(limit)
-                          .ToListAsync(cancellationToken)
-                          .ConfigureAwait(false);
+            return (from l in db.DailyLeaderboards
+                    orderby l.LastUpdate
+                    where l.Date != today
+                    select l)
+                    .Take(limit)
+                    .ToListAsync(cancellationToken);
         }
 
         internal async Task<IEnumerable<DailyLeaderboard>> GetCurrentDailyLeaderboardsAsync(
@@ -122,16 +121,15 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             return dailyLeaderboards;
         }
 
-        internal async Task<IEnumerable<DailyLeaderboard>> GetExistingCurrentDailyLeaderboardsAsync(
+        internal Task<List<DailyLeaderboard>> GetExistingCurrentDailyLeaderboardsAsync(
             ILeaderboardsContext db,
             DateTime today,
             CancellationToken cancellationToken)
         {
-            return await (from l in db.DailyLeaderboards.Include(l => l.Product)
-                          where l.Date == today
-                          select l)
-                          .ToListAsync(cancellationToken)
-                          .ConfigureAwait(false);
+            return (from l in db.DailyLeaderboards.Include(l => l.Product)
+                    where l.Date == today
+                    select l)
+                    .ToListAsync(cancellationToken);
         }
 
         internal async Task<IEnumerable<DailyLeaderboard>> GetNewCurrentDailyLeaderboardsAsync(
