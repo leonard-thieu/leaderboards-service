@@ -5,11 +5,14 @@
 
 ## Overview
 
-**toofz Leaderboards Service** is a backend service that handles updating **Crypt of the NecroDancer** leaderboards for [toofz API](https://github.com/leonard-thieu/api.toofz.com). 
-It runs as a Windows service that polls [Steam Community Data](https://partner.steamgames.com/documentation/community_data) and Steam Client API at regular intervals to 
-provide up-to-date data for **toofz API**.
+**toofz Leaderboards Service** is a backend service that handles updating [Crypt of the NecroDancer](http://necrodancer.com/) leaderboards for [toofz API](https://api.toofz.com/). 
+It runs as a service that polls [Steam Community Data](https://partner.steamgames.com/documentation/community_data) and Steam Client API at regular intervals to 
+provide up-to-date data.
 
-**toofz Leaderboards Service** is a component of [toofz](https://github.com/leonard-thieu/toofz-necrodancer).
+---
+
+**toofz Leaderboards Service** is a component of **toofz**. 
+Information about other projects that support **toofz** can be found in the [meta-repository](https://github.com/leonard-thieu/toofz-necrodancer).
 
 ### Dependents
 
@@ -20,8 +23,6 @@ provide up-to-date data for **toofz API**.
 * [toofz Leaderboards Core](https://github.com/leonard-thieu/toofz-leaderboards-core)
 * [toofz Leaderboards Core (Data)](https://github.com/leonard-thieu/toofz-leaderboards-core-data)
 * [toofz Services Core](https://github.com/leonard-thieu/toofz-services-core)
-* [toofz Activity Tracing](https://github.com/leonard-thieu/toofz-activity-tracing)
-* [toofz Exception Renderer](https://github.com/leonard-thieu/toofz-exception-renderer)
 
 ## Requirements
 
