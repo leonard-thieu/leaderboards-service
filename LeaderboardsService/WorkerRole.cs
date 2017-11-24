@@ -29,57 +29,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 try
                 {
-                    UpdateScope.Current = new object();
-                    var leaderboardsWorker = kernel.Get<LeaderboardsWorker>();
-                    using (var op = TelemetryClient.StartOperation<RequestTelemetry>("Update leaderboards"))
-                    using (new UpdateActivity(Log, "leaderboards"))
-                    {
-                        try
-                        {
-                            var leaderboards = await leaderboardsWorker.GetLeaderboardsAsync(cancellationToken).ConfigureAwait(false);
-                            await leaderboardsWorker.UpdateLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                            await leaderboardsWorker.StoreLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-
-                            op.Telemetry.Success = true;
-                        }
-                        catch (HttpRequestStatusException ex)
-                        {
-                            TelemetryClient.TrackException(ex);
-                            Log.Error("Failed to complete run due to an error.", ex);
-                            op.Telemetry.Success = false;
-                        }
-                        catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
-                        {
-                            // Unreachable
-                            throw;
-                        }
-                    }
-
-                    UpdateScope.Current = new object();
-                    var dailyLeaderboardsWorker = kernel.Get<DailyLeaderboardsWorker>();
-                    using (var op = TelemetryClient.StartOperation<RequestTelemetry>("Update daily leaderboards"))
-                    using (new UpdateActivity(Log, "daily leaderboards"))
-                    {
-                        try
-                        {
-                            var leaderboards = await dailyLeaderboardsWorker.GetDailyLeaderboardsAsync(Settings.DailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
-                            await dailyLeaderboardsWorker.UpdateDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                            await dailyLeaderboardsWorker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-
-                            op.Telemetry.Success = true;
-                        }
-                        catch (SteamClientApiException ex)
-                        {
-                            TelemetryClient.TrackException(ex);
-                            Log.Error("Failed to complete run due to an error.", ex);
-                            op.Telemetry.Success = false;
-                        }
-                        catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
-                        {
-                            // Unreachable
-                            throw;
-                        }
-                    }
+                    await UpdateLeaderboardsAsync(cancellationToken).ConfigureAwait(false);
+                    await UpdateDailyLeaderboardsAsync(cancellationToken).ConfigureAwait(false);
 
                     operation.Telemetry.Success = true;
                 }
@@ -88,9 +39,69 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     // Unreachable
                     throw;
                 }
+            }
+        }
+
+        private async Task UpdateLeaderboardsAsync(CancellationToken cancellationToken)
+        {
+            var leaderboardsWorker = kernel.Get<LeaderboardsWorker>();
+            using (var op = TelemetryClient.StartOperation<RequestTelemetry>("Update leaderboards"))
+            using (new UpdateActivity(Log, "leaderboards"))
+            {
+                try
+                {
+                    var leaderboards = await leaderboardsWorker.GetLeaderboardsAsync(cancellationToken).ConfigureAwait(false);
+                    await leaderboardsWorker.UpdateLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                    await leaderboardsWorker.StoreLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+
+                    op.Telemetry.Success = true;
+                }
+                catch (HttpRequestStatusException ex)
+                {
+                    TelemetryClient.TrackException(ex);
+                    Log.Error("Failed to complete run due to an error.", ex);
+                    op.Telemetry.Success = false;
+                }
+                catch (Exception) when (Util.FailTelemetry(op.Telemetry))
+                {
+                    // Unreachable
+                    throw;
+                }
                 finally
                 {
-                    UpdateScope.Current = null;
+                    kernel.Release(leaderboardsWorker);
+                }
+            }
+        }
+
+        private async Task UpdateDailyLeaderboardsAsync(CancellationToken cancellationToken)
+        {
+            var dailyLeaderboardsWorker = kernel.Get<DailyLeaderboardsWorker>();
+            using (var op = TelemetryClient.StartOperation<RequestTelemetry>("Update daily leaderboards"))
+            using (new UpdateActivity(Log, "daily leaderboards"))
+            {
+                try
+                {
+                    var leaderboards = await dailyLeaderboardsWorker.GetDailyLeaderboardsAsync(Settings.DailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
+                    await dailyLeaderboardsWorker.UpdateDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                    await dailyLeaderboardsWorker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+
+                    op.Telemetry.Success = true;
+                }
+                catch (SteamClientApiException ex)
+                {
+                    TelemetryClient.TrackException(ex);
+                    Log.Error("Failed to complete run due to an error.", ex);
+                    op.Telemetry.Success = false;
+                }
+                catch (Exception) when (Util.FailTelemetry(op.Telemetry))
+                {
+                    // Unreachable
+                    throw;
+                }
+                finally
+                {
+                    kernel.Release(dailyLeaderboardsWorker);
                 }
             }
         }

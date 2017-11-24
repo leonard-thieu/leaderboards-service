@@ -3,6 +3,7 @@ using System.Net.Http;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Ninject;
+using Ninject.Extensions.NamedScope;
 using Polly;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
@@ -62,11 +63,14 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 return leaderboardsConnectionString.Decrypt();
             }).WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
 
-            kernel.Bind<ILeaderboardsContext>().To<LeaderboardsContext>();
-            kernel.Bind<ILeaderboardsStoreClient>().To<LeaderboardsStoreClient>();
+            kernel.Bind<ILeaderboardsContext>().To<LeaderboardsContext>().InParentScope();
+            kernel.Bind<ILeaderboardsStoreClient>().To<LeaderboardsStoreClient>().InParentScope();
 
             RegisterSteamCommunityDataClient(kernel);
             RegisterSteamClientApiClient(kernel);
+
+            kernel.Bind<LeaderboardsWorker>().ToSelf().InScope(c => c);
+            kernel.Bind<DailyLeaderboardsWorker>().ToSelf().InScope(c => c);
         }
 
         private static void RegisterSteamCommunityDataClient(StandardKernel kernel)
@@ -93,8 +97,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     new GZipHandler(),
                     new TransientFaultHandler(policy),
                 });
-            });
-            kernel.Bind<ISteamCommunityDataClient>().To<SteamCommunityDataClient>().InScope(x => UpdateScope.Current);
+            }).WhenInjectedInto(typeof(SteamCommunityDataClient)).InParentScope();
+            kernel.Bind<ISteamCommunityDataClient>().To<SteamCommunityDataClient>().InParentScope();
         }
 
         private static void RegisterSteamClientApiClient(StandardKernel kernel)
@@ -127,7 +131,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                         });
 
                 return new SteamClientApiClient(userName, password, policy, telemetryClient) { Timeout = timeout };
-            }).InScope(x => UpdateScope.Current);
+            }).InParentScope();
         }
     }
 }

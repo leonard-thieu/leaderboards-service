@@ -74,6 +74,12 @@
         <Component Id="owc3FC8434C1A84605AEEBC6A100CA2F3E1" Guid="47d7e276-db6d-424e-d797-1a69e1e24b3b">
           <File Id="owf3FC8434C1A84605AEEBC6A100CA2F3E1" Source="$(var.SourceDir)\Newtonsoft.Json.dll" KeyPath="yes" />
         </Component>
+        <Component Id="owc2225FD4C4CB1BAEDAB29A27C480A5AF2" Guid="542b6bfa-6724-2ca0-e7e0-a6fa6558a561">
+          <File Id="owf2225FD4C4CB1BAEDAB29A27C480A5AF2" Source="$(var.SourceDir)\Ninject.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owcDCC71C5143BAFEE231B8C41ACB36DA33" Guid="18b7ed6c-b172-eada-c2f6-a1cb1942657e">
+          <File Id="owfDCC71C5143BAFEE231B8C41ACB36DA33" Source="$(var.SourceDir)\Ninject.Extensions.NamedScope.dll" KeyPath="yes" />
+        </Component>
         <Component Id="owc40B857C5CC2CAC09BD1708FC7761B1BE" Guid="67a53e59-b39b-69b9-7a69-e125255e9c54">
           <File Id="owf40B857C5CC2CAC09BD1708FC7761B1BE" Source="$(var.SourceDir)\Polly.dll" KeyPath="yes" />
         </Component>
