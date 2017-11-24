@@ -94,10 +94,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     new TransientFaultHandler(policy),
                 });
             });
-            kernel.Bind<SteamCommunityDataClientSettings>().ToMethod(c =>
-            {
-                return new SteamCommunityDataClientSettings { IsCacheBustingEnabled = false };
-            });
             kernel.Bind<ISteamCommunityDataClient>().To<SteamCommunityDataClient>().InScope(x => UpdateScope.Current);
         }
 
@@ -130,7 +126,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                             if (log.IsDebugEnabled) { log.Debug($"Retrying in {duration}...", ex); }
                         });
 
-                return new SteamClientApiClient(userName, password, telemetryClient, policy) { Timeout = timeout };
+                return new SteamClientApiClient(userName, password, policy, telemetryClient) { Timeout = timeout };
             }).InScope(x => UpdateScope.Current);
         }
     }

@@ -73,11 +73,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 entryCount = 8462;
                 var leaderboardEntries_2047540_1 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047540_1);
                 mockSteamCommunityDataClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, leaderboardId, new GetLeaderboardEntriesParams { StartRange = 1 }, progress, cancellationToken))
+                    .Setup(c => c.GetLeaderboardEntriesAsync(appId.ToString(), leaderboardId, It.Is<GetLeaderboardEntriesParams>(p => p.StartRange == 1), progress, cancellationToken))
                     .ReturnsAsync(leaderboardEntries_2047540_1);
                 var leaderboardEntries_2047540_2 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047540_2);
                 mockSteamCommunityDataClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, leaderboardId, new GetLeaderboardEntriesParams { StartRange = 5002 }, progress, cancellationToken))
+                    .Setup(c => c.GetLeaderboardEntriesAsync(appId.ToString(), leaderboardId, It.Is<GetLeaderboardEntriesParams>(p => p.StartRange == 5002), progress, cancellationToken))
                     .ReturnsAsync(leaderboardEntries_2047540_2);
             }
 
@@ -128,7 +128,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var startRange = 1;
                 var leaderboardEntries_2047540_1 = DataHelper.DeserializeLeaderboardEntriesEnvelope(Resources.LeaderboardEntries_2047540_1);
                 mockSteamCommunityDataClient
-                    .Setup(c => c.GetLeaderboardEntriesAsync(appId, leaderboardId, new GetLeaderboardEntriesParams { StartRange = startRange }, progress, cancellationToken))
+                    .Setup(c => c.GetLeaderboardEntriesAsync(appId.ToString(), leaderboardId, It.Is<GetLeaderboardEntriesParams>(p => p.StartRange == startRange), progress, cancellationToken))
                     .ReturnsAsync(leaderboardEntries_2047540_1);
 
                 // Act
