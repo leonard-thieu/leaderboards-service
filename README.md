@@ -6,8 +6,7 @@
 ## Overview
 
 **toofz Leaderboards Service** is a backend service that handles updating [Crypt of the NecroDancer](http://necrodancer.com/) leaderboards for [toofz API](https://api.toofz.com/). 
-It runs as a service that polls [Steam Community Data](https://partner.steamgames.com/documentation/community_data) and Steam Client API at regular intervals to 
-provide up-to-date data.
+It polls [Steam Community Data](https://partner.steamgames.com/documentation/community_data) and Steam Client API at regular intervals to provide up-to-date data.
 
 ---
 
