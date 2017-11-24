@@ -6,6 +6,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Ninject;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
+using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
@@ -41,6 +42,12 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                             op.Telemetry.Success = true;
                         }
+                        catch (HttpRequestStatusException ex)
+                        {
+                            TelemetryClient.TrackException(ex);
+                            Log.Error("Failed to complete run due to an error.", ex);
+                            op.Telemetry.Success = false;
+                        }
                         catch (Exception)
                         {
                             op.Telemetry.Success = false;
@@ -60,6 +67,12 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                             await dailyLeaderboardsWorker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
 
                             op.Telemetry.Success = true;
+                        }
+                        catch (SteamClientApiException ex)
+                        {
+                            TelemetryClient.TrackException(ex);
+                            Log.Error("Failed to complete run due to an error.", ex);
+                            op.Telemetry.Success = false;
                         }
                         catch (Exception)
                         {

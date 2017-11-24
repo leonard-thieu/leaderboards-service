@@ -64,7 +64,7 @@
       <Version>12.2.4</Version>
     </PackageReference>
     <PackageReference Include="toofz.Services">
-      <Version>13.0.2</Version>
+      <Version>14.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
