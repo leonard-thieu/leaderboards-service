@@ -67,7 +67,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     orderby l.LastUpdate
                     where l.Date != today
                     select l)
-                    .Take(limit)
+                    .Take(() => limit)
                     .ToListAsync(cancellationToken);
         }
 
