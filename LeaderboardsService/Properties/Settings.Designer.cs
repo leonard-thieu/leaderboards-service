@@ -24,19 +24,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
         }
         
         /// <summary>
-        /// The version of the settings file format.
-        /// </summary>
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Configuration.SettingsDescriptionAttribute("The version of the settings file format.")]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int Version {
-            get {
-                return ((int)(this["Version"]));
-            }
-        }
-        
-        /// <summary>
         /// The product&apos;s application ID.
         /// </summary>
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
