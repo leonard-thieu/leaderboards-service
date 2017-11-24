@@ -106,17 +106,16 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             kernel.Bind<ISteamClientApiClient>().ToMethod(c =>
             {
                 var settings = c.Kernel.Get<ILeaderboardsSettings>();
+
+                if (string.IsNullOrEmpty(settings.SteamUserName) || settings.SteamPassword == null)
+                {
+                    return new FakeSteamClientApiClient();
+                }
+
                 var telemetryClient = c.Kernel.Get<TelemetryClient>();
                 var log = c.Kernel.Get<ILog>();
-
                 var userName = settings.SteamUserName;
-                if (string.IsNullOrEmpty(userName))
-                    throw new InvalidOperationException($"{nameof(Settings.SteamUserName)} is not set.");
-
                 var password = settings.SteamPassword.Decrypt();
-                if (password == null)
-                    throw new InvalidOperationException($"{nameof(Settings.SteamPassword)} is not set.");
-
                 var timeout = settings.SteamClientTimeout;
 
                 var policy = SteamClientApiClient
