@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,75 +15,50 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DailyLeaderboardsWorker));
 
-        public DailyLeaderboardsWorker(uint appId, string connectionString, TelemetryClient telemetryClient)
+        public DailyLeaderboardsWorker(
+            uint appId,
+            TelemetryClient telemetryClient,
+            ILeaderboardsContext db,
+            ISteamClientApiClient steamClientApiClient,
+            ILeaderboardsStoreClient storeClient)
         {
             this.appId = appId;
-            this.connectionString = connectionString;
             this.telemetryClient = telemetryClient;
+            this.db = db;
+            this.steamClientApiClient = steamClientApiClient;
+            this.storeClient = storeClient;
         }
 
         private readonly uint appId;
-        private readonly string connectionString;
         private readonly TelemetryClient telemetryClient;
-
-        public async Task UpdateAsync(ISteamClientApiClient steamClient, int limit, CancellationToken cancellationToken)
-        {
-            using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Update daily leaderboards"))
-            using (new UpdateActivity(Log, "daily leaderboards"))
-            {
-                try
-                {
-                    await steamClient.ConnectAndLogOnAsync().ConfigureAwait(false);
-
-                    IEnumerable<DailyLeaderboard> leaderboards;
-                    using (var db = new LeaderboardsContext(connectionString))
-                    {
-                        leaderboards = await GetDailyLeaderboardsAsync(db, steamClient, limit, cancellationToken).ConfigureAwait(false);
-                    }
-                    await UpdateDailyLeaderboardsAsync(steamClient, leaderboards, cancellationToken).ConfigureAwait(false);
-
-                    using (var connection = new SqlConnection(connectionString))
-                    {
-                        await connection.OpenAsync(cancellationToken).ConfigureAwait(false);
-
-                        var storeClient = new LeaderboardsStoreClient(connection);
-                        await StoreDailyLeaderboardsAsync(storeClient, leaderboards, cancellationToken).ConfigureAwait(false);
-                    }
-
-                    operation.Telemetry.Success = true;
-                }
-                catch (Exception)
-                {
-                    operation.Telemetry.Success = false;
-                    throw;
-                }
-            }
-        }
+        private readonly ILeaderboardsContext db;
+        private readonly ISteamClientApiClient steamClientApiClient;
+        private readonly ILeaderboardsStoreClient storeClient;
 
         #region Get daily leaderboards
 
-        internal async Task<IEnumerable<DailyLeaderboard>> GetDailyLeaderboardsAsync(
-            ILeaderboardsContext db,
-            ISteamClientApiClient steamClient,
+        public async Task<IEnumerable<DailyLeaderboard>> GetDailyLeaderboardsAsync(
             int limit,
             CancellationToken cancellationToken)
         {
+            // TOOD: Workaround thread safety issue.
+            await steamClientApiClient.ConnectAndLogOnAsync().ConfigureAwait(false);
+
             var leaderboards = new List<DailyLeaderboard>();
 
             var today = DateTime.UtcNow.Date;
             var productsCount = await db.Products.CountAsync(cancellationToken).ConfigureAwait(false);
-            var staleDailies = await GetStaleDailyLeaderboardsAsync(db, today, Math.Max(0, limit - productsCount), cancellationToken).ConfigureAwait(false);
+            var staleDailies = await GetStaleDailyLeaderboardsAsync(today, Math.Max(0, limit - productsCount), cancellationToken).ConfigureAwait(false);
             leaderboards.AddRange(staleDailies);
 
             // TODO: Should this do something if it doesn't return the expected number of leaderboards for today?
-            var currentDailies = await GetCurrentDailyLeaderboardsAsync(db, steamClient, today, cancellationToken).ConfigureAwait(false);
+            var currentDailies = await GetCurrentDailyLeaderboardsAsync(today, cancellationToken).ConfigureAwait(false);
             leaderboards.AddRange(currentDailies);
 
             return leaderboards;
         }
 
         internal Task<List<DailyLeaderboard>> GetStaleDailyLeaderboardsAsync(
-            ILeaderboardsContext db,
             DateTime today,
             int limit,
             CancellationToken cancellationToken)
@@ -98,14 +72,12 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         }
 
         internal async Task<IEnumerable<DailyLeaderboard>> GetCurrentDailyLeaderboardsAsync(
-            ILeaderboardsContext db,
-            ISteamClientApiClient steamClient,
             DateTime today,
             CancellationToken cancellationToken)
         {
             var dailyLeaderboards = new List<DailyLeaderboard>();
 
-            var existingCurrentDailyLeaderboards = await GetExistingCurrentDailyLeaderboardsAsync(db, today, cancellationToken).ConfigureAwait(false);
+            var existingCurrentDailyLeaderboards = await GetExistingCurrentDailyLeaderboardsAsync(today, cancellationToken).ConfigureAwait(false);
             dailyLeaderboards.AddRange(existingCurrentDailyLeaderboards);
 
             var productsIds = existingCurrentDailyLeaderboards.Select(l => l.ProductId).ToList();
@@ -115,14 +87,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                                          .ToListAsync(cancellationToken)
                                          .ConfigureAwait(false);
 
-            var newDailyLeaderboards = await GetNewCurrentDailyLeaderboardsAsync(steamClient, today, missingProducts, cancellationToken);
+            var newDailyLeaderboards = await GetNewCurrentDailyLeaderboardsAsync(today, missingProducts, cancellationToken);
             dailyLeaderboards.AddRange(newDailyLeaderboards);
 
             return dailyLeaderboards;
         }
 
         internal Task<List<DailyLeaderboard>> GetExistingCurrentDailyLeaderboardsAsync(
-            ILeaderboardsContext db,
             DateTime today,
             CancellationToken cancellationToken)
         {
@@ -133,7 +104,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         }
 
         internal async Task<IEnumerable<DailyLeaderboard>> GetNewCurrentDailyLeaderboardsAsync(
-            ISteamClientApiClient steamClient,
             DateTime today,
             IEnumerable<Product> missingProducts,
             CancellationToken cancellationToken)
@@ -142,7 +112,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
             foreach (var missingProduct in missingProducts)
             {
-                var newDailyLeaderboardTask = GetNewCurrentDailyLeaderboardAsync(steamClient, today, missingProduct, cancellationToken);
+                var newDailyLeaderboardTask = GetNewCurrentDailyLeaderboardAsync(today, missingProduct, cancellationToken);
                 newDailyLeaderboardTasks.Add(newDailyLeaderboardTask);
             }
 
@@ -150,13 +120,14 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         }
 
         internal async Task<DailyLeaderboard> GetNewCurrentDailyLeaderboardAsync(
-            ISteamClientApiClient steamClient,
             DateTime date,
             Product product,
             CancellationToken cancellationToken)
         {
+            await steamClientApiClient.ConnectAndLogOnAsync().ConfigureAwait(false);
+
             var name = GetDailyLeaderboardName(product.Name, date);
-            var leaderboard = await steamClient.FindLeaderboardAsync(appId, name, cancellationToken).ConfigureAwait(false);
+            var leaderboard = await steamClientApiClient.FindLeaderboardAsync(appId, name, cancellationToken).ConfigureAwait(false);
             var displayName = $"Daily ({date.ToString("yyyy-MM-dd")})";
             if (product.Name != "classic") { displayName += $" ({product.DisplayName})"; }
 
@@ -195,8 +166,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         #region Update daily leaderboards
 
-        internal async Task UpdateDailyLeaderboardsAsync(
-            ISteamClientApiClient steamClient,
+        public async Task UpdateDailyLeaderboardsAsync(
             IEnumerable<DailyLeaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
@@ -205,19 +175,21 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 try
                 {
-                    steamClient.Progress = activity;
+                    await steamClientApiClient.ConnectAndLogOnAsync().ConfigureAwait(false);
+
+                    steamClientApiClient.Progress = activity;
 
                     var leaderboardTasks = new List<Task>();
 
                     foreach (var leaderboard in leaderboards)
                     {
-                        var leaderboardTask = UpdateDailyLeaderboardAsync(steamClient, leaderboard, cancellationToken);
+                        var leaderboardTask = UpdateDailyLeaderboardAsync(leaderboard, cancellationToken);
                         leaderboardTasks.Add(leaderboardTask);
                     }
 
                     await Task.WhenAll(leaderboardTasks).ConfigureAwait(false);
 
-                    steamClient.Progress = null;
+                    steamClientApiClient.Progress = null;
 
                     operation.Telemetry.Success = true;
                 }
@@ -230,11 +202,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         }
 
         internal async Task UpdateDailyLeaderboardAsync(
-            ISteamClientApiClient steamClient,
             DailyLeaderboard leaderboard,
             CancellationToken cancellationToken)
         {
-            var response = await steamClient
+            var response = await steamClientApiClient
                 .GetLeaderboardEntriesAsync(appId, leaderboard.LeaderboardId, cancellationToken)
                 .ConfigureAwait(false);
 
@@ -259,8 +230,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         #region Store daily leaderboards
 
-        internal async Task StoreDailyLeaderboardsAsync(
-            ILeaderboardsStoreClient storeClient,
+        public async Task StoreDailyLeaderboardsAsync(
             IEnumerable<DailyLeaderboard> leaderboards,
             CancellationToken cancellationToken)
         {

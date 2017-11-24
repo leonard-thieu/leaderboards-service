@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
-using Polly;
+using Ninject;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
-using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
@@ -15,7 +14,12 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
-        public WorkerRole(ILeaderboardsSettings settings, TelemetryClient telemetryClient) : base("leaderboards", settings, telemetryClient) { }
+        public WorkerRole(ILeaderboardsSettings settings, TelemetryClient telemetryClient) : base("leaderboards", settings, telemetryClient)
+        {
+            kernel = KernelConfig.CreateKernel(telemetryClient);
+        }
+
+        private readonly IKernel kernel;
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
@@ -24,27 +28,44 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(Settings.SteamUserName))
-                        throw new InvalidOperationException($"{nameof(Settings.SteamUserName)} is not set.");
-                    if (Settings.SteamPassword == null)
-                        throw new InvalidOperationException($"{nameof(Settings.SteamPassword)} is not set.");
-                    if (Settings.LeaderboardsConnectionString == null)
-                        throw new InvalidOperationException($"{nameof(Settings.LeaderboardsConnectionString)} is not set.");
-
-                    var userName = Settings.SteamUserName;
-                    var password = Settings.SteamPassword.Decrypt();
-                    var appId = Settings.AppId;
-                    var leaderboardsConnectionString = Settings.LeaderboardsConnectionString.Decrypt();
-                    var dailyLeaderboardsPerUpdate = Settings.DailyLeaderboardsPerUpdate;
-                    var steamClientTimeout = Settings.SteamClientTimeout;
-
-                    using (var steamClient = CreateSteamClientApiClient(userName, password, steamClientTimeout))
+                    UpdateScope.Current = new object();
+                    var leaderboardsWorker = kernel.Get<LeaderboardsWorker>();
+                    using (var op = TelemetryClient.StartOperation<RequestTelemetry>("Update leaderboards"))
+                    using (new UpdateActivity(Log, "leaderboards"))
                     {
-                        var leaderboardsWorker = new LeaderboardsWorker(appId, leaderboardsConnectionString, TelemetryClient);
-                        await leaderboardsWorker.UpdateAsync(cancellationToken).ConfigureAwait(false);
+                        try
+                        {
+                            var leaderboards = await leaderboardsWorker.GetLeaderboardsAsync(cancellationToken).ConfigureAwait(false);
+                            await leaderboardsWorker.UpdateLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                            await leaderboardsWorker.StoreLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
 
-                        var dailyLeaderboardsWorker = new DailyLeaderboardsWorker(appId, leaderboardsConnectionString, TelemetryClient);
-                        await dailyLeaderboardsWorker.UpdateAsync(steamClient, dailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
+                            op.Telemetry.Success = true;
+                        }
+                        catch (Exception)
+                        {
+                            op.Telemetry.Success = false;
+                            throw;
+                        }
+                    }
+
+                    UpdateScope.Current = new object();
+                    var dailyLeaderboardsWorker = kernel.Get<DailyLeaderboardsWorker>();
+                    using (var op = TelemetryClient.StartOperation<RequestTelemetry>("Update daily leaderboards"))
+                    using (new UpdateActivity(Log, "daily leaderboards"))
+                    {
+                        try
+                        {
+                            var leaderboards = await dailyLeaderboardsWorker.GetDailyLeaderboardsAsync(Settings.DailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
+                            await dailyLeaderboardsWorker.UpdateDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                            await dailyLeaderboardsWorker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+
+                            op.Telemetry.Success = true;
+                        }
+                        catch (Exception)
+                        {
+                            op.Telemetry.Success = false;
+                            throw;
+                        }
                     }
 
                     operation.Telemetry.Success = true;
@@ -54,23 +75,21 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     operation.Telemetry.Success = false;
                     throw;
                 }
+                finally
+                {
+                    UpdateScope.Current = null;
+                }
             }
         }
 
-        private ISteamClientApiClient CreateSteamClientApiClient(string userName, string password, TimeSpan timeout)
+        protected override void Dispose(bool disposing)
         {
-            var policy = SteamClientApiClient
-                .GetRetryStrategy()
-                .WaitAndRetryAsync(
-                    3,
-                    ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
-                    (ex, duration) =>
-                    {
-                        TelemetryClient.TrackException(ex);
-                        if (Log.IsDebugEnabled) { Log.Debug($"Retrying in {duration}...", ex); }
-                    });
+            if (disposing)
+            {
+                kernel.Dispose();
+            }
 
-            return new SteamClientApiClient(userName, password, TelemetryClient, policy) { Timeout = timeout };
+            base.Dispose(disposing);
         }
     }
 }

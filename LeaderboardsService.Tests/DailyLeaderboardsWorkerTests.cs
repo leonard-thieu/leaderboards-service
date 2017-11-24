@@ -16,30 +16,24 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
     {
         public DailyLeaderboardsWorkerTests()
         {
-            worker = new DailyLeaderboardsWorker(appId, connectionString, telemetryClient);
-            db = mockDb.Object;
             var mockDbProducts = new MockDbSet<Product>(products);
             mockDb.Setup(d => d.Products).Returns(mockDbProducts.Object);
             var mockDailyLeaderboards = new MockDbSet<DailyLeaderboard>(dailyLeaderboards);
             mockDb.Setup(d => d.DailyLeaderboards).Returns(mockDailyLeaderboards.Object);
-            steamClient = mockSteamClient.Object;
-            storeClient = mockStoreClient.Object;
+
+            worker = new DailyLeaderboardsWorker(appId, telemetryClient, mockDb.Object, mockSteamClientApiClient.Object, mockStoreClient.Object);
         }
 
         private uint appId = 247080;
-        private string connectionString = "myConnectionString";
         private TelemetryClient telemetryClient = new TelemetryClient();
         private DailyLeaderboardsWorker worker;
         private CancellationToken cancellationToken = CancellationToken.None;
         private int limit = 100;
         private Mock<ILeaderboardsContext> mockDb = new Mock<ILeaderboardsContext>();
-        private ILeaderboardsContext db;
         private List<DailyLeaderboard> dailyLeaderboards = new List<DailyLeaderboard>();
         private List<Product> products = new List<Product>();
-        private Mock<ISteamClientApiClient> mockSteamClient = new Mock<ISteamClientApiClient>();
-        private ISteamClientApiClient steamClient;
+        private Mock<ISteamClientApiClient> mockSteamClientApiClient = new Mock<ISteamClientApiClient>();
         private Mock<ILeaderboardsStoreClient> mockStoreClient = new Mock<ILeaderboardsStoreClient>();
-        private ILeaderboardsStoreClient storeClient;
 
         public class Constructor
         {
@@ -48,11 +42,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             {
                 // Arrange
                 var appId = 247080U;
-                var connectionString = "myConnectionString";
                 var telemetryClient = new TelemetryClient();
+                var db = Mock.Of<ILeaderboardsContext>();
+                var steamClientApiClient = Mock.Of<ISteamClientApiClient>();
+                var storeClient = Mock.Of<ILeaderboardsStoreClient>();
 
                 // Act
-                var worker = new DailyLeaderboardsWorker(appId, connectionString, telemetryClient);
+                var worker = new DailyLeaderboardsWorker(appId, telemetryClient, db, steamClientApiClient, storeClient);
 
                 // Assert
                 Assert.IsAssignableFrom<DailyLeaderboardsWorker>(worker);
@@ -74,12 +70,12 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 {
                     new Product(0, "classic", "Classic"),
                 });
-                mockSteamClient
+                mockSteamClientApiClient
                     .Setup(s => s.FindLeaderboardAsync(appId, It.IsAny<string>(), cancellationToken))
                     .ReturnsAsync(Mock.Of<IFindOrCreateLeaderboardCallback>());
 
                 // Act
-                var dailyLeaderboards2 = await worker.GetDailyLeaderboardsAsync(db, steamClient, limit, cancellationToken);
+                var dailyLeaderboards2 = await worker.GetDailyLeaderboardsAsync(limit, cancellationToken);
 
                 // Assert
                 Assert.Equal(2, dailyLeaderboards2.Count());
@@ -100,7 +96,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 });
 
                 // Act
-                var staleDailyLeaderboards = await worker.GetStaleDailyLeaderboardsAsync(db, today, limit, cancellationToken);
+                var staleDailyLeaderboards = await worker.GetStaleDailyLeaderboardsAsync(today, limit, cancellationToken);
 
                 // Assert
                 Assert.IsAssignableFrom<IEnumerable<DailyLeaderboard>>(staleDailyLeaderboards);
@@ -127,13 +123,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 dailyLeaderboards.Add(current);
 
                 // Act
-                var leaderboards = await worker.GetCurrentDailyLeaderboardsAsync(db, steamClient, today, cancellationToken);
+                var leaderboards = await worker.GetCurrentDailyLeaderboardsAsync(today, cancellationToken);
 
                 // Assert
                 var leaderboard = leaderboards.First();
                 Assert.Equal(today, leaderboard.Date);
                 Assert.Equal("classic", leaderboard.Product.Name);
-                mockSteamClient.Verify(s => s.FindLeaderboardAsync(appId, It.IsAny<string>(), cancellationToken), Times.Never);
+                mockSteamClientApiClient.Verify(s => s.FindLeaderboardAsync(appId, It.IsAny<string>(), cancellationToken), Times.Never);
             }
 
             [Fact]
@@ -146,18 +142,18 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                     new Product(1, "amplified", "Amplified"),
                 });
                 var today = new DateTime(2017, 9, 13);
-                mockSteamClient
+                mockSteamClientApiClient
                     .Setup(s => s.FindLeaderboardAsync(appId, It.IsAny<string>(), cancellationToken))
                     .ReturnsAsync(Mock.Of<IFindOrCreateLeaderboardCallback>());
 
                 // Act
-                var leaderboards = await worker.GetCurrentDailyLeaderboardsAsync(db, steamClient, today, cancellationToken);
+                var leaderboards = await worker.GetCurrentDailyLeaderboardsAsync(today, cancellationToken);
 
                 // Assert
                 var leaderboard = leaderboards.First();
                 Assert.Equal(today, leaderboard.Date);
                 Assert.Equal(0, leaderboard.ProductId);
-                mockSteamClient.Verify(s => s.FindLeaderboardAsync(appId, It.IsAny<string>(), cancellationToken), Times.Exactly(2));
+                mockSteamClientApiClient.Verify(s => s.FindLeaderboardAsync(appId, It.IsAny<string>(), cancellationToken), Times.Exactly(2));
             }
         }
 
@@ -236,7 +232,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                     new LeaderboardEntry(),
                     new LeaderboardEntry(),
                 });
-                mockSteamClient
+                mockSteamClientApiClient
                     .Setup(c => c.GetLeaderboardEntriesAsync(appId, leaderboard1.LeaderboardId, cancellationToken))
                     .ReturnsAsync(leaderboardEntriesCallback1);
                 var leaderboardEntriesCallback2 = new LeaderboardEntriesCallback();
@@ -245,12 +241,12 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                     new LeaderboardEntry(),
                     new LeaderboardEntry(),
                 });
-                mockSteamClient
+                mockSteamClientApiClient
                     .Setup(c => c.GetLeaderboardEntriesAsync(appId, leaderboard2.LeaderboardId, cancellationToken))
                     .ReturnsAsync(leaderboardEntriesCallback2);
 
                 // Act
-                await worker.UpdateDailyLeaderboardsAsync(steamClient, leaderboards, cancellationToken);
+                await worker.UpdateDailyLeaderboardsAsync(leaderboards, cancellationToken);
 
                 // Assert
                 Assert.Equal(3, leaderboard1.Entries.Count);
@@ -264,7 +260,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             {
                 leaderboard = new DailyLeaderboard();
                 leaderboardEntriesCallback = new LeaderboardEntriesCallback();
-                mockSteamClient
+                mockSteamClientApiClient
                     .Setup(c => c.GetLeaderboardEntriesAsync(appId, leaderboard.LeaderboardId, cancellationToken))
                     .ReturnsAsync(leaderboardEntriesCallback);
             }
@@ -276,7 +272,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             public async Task SetsLastUpdate()
             {
                 // Arrange -> Act
-                await worker.UpdateDailyLeaderboardAsync(steamClient, leaderboard, cancellationToken);
+                await worker.UpdateDailyLeaderboardAsync(leaderboard, cancellationToken);
 
                 // Assert
                 Assert.NotNull(leaderboard.LastUpdate);
@@ -294,7 +290,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 });
 
                 // Act
-                await worker.UpdateDailyLeaderboardAsync(steamClient, leaderboard, cancellationToken);
+                await worker.UpdateDailyLeaderboardAsync(leaderboard, cancellationToken);
 
                 // Assert
                 Assert.Equal(3, leaderboard.Entries.Count);
@@ -311,7 +307,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var leaderboards = new List<DailyLeaderboard> { leaderboard };
 
                 // Act
-                await worker.StoreDailyLeaderboardsAsync(storeClient, leaderboards, cancellationToken);
+                await worker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken);
 
                 // Assert
                 mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<DailyLeaderboard>>(), cancellationToken), Times.Once);
@@ -326,7 +322,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var leaderboards = new List<DailyLeaderboard> { leaderboard };
 
                 // Act
-                await worker.StoreDailyLeaderboardsAsync(storeClient, leaderboards, cancellationToken);
+                await worker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken);
 
                 // Assert
                 mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Player>>(), It.IsAny<BulkUpsertOptions>(), cancellationToken), Times.Once);
@@ -341,7 +337,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var leaderboards = new List<DailyLeaderboard> { leaderboard };
 
                 // Act
-                await worker.StoreDailyLeaderboardsAsync(storeClient, leaderboards, cancellationToken);
+                await worker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken);
 
                 // Assert
                 mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Replay>>(), It.IsAny<BulkUpsertOptions>(), cancellationToken), Times.Once);
@@ -356,7 +352,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 var leaderboards = new List<DailyLeaderboard> { leaderboard };
 
                 // Act
-                await worker.StoreDailyLeaderboardsAsync(storeClient, leaderboards, cancellationToken);
+                await worker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken);
 
                 // Assert
                 mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<DailyEntry>>(), cancellationToken), Times.Once);
