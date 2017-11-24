@@ -108,6 +108,7 @@
     <Compile Include="UGCHandleExtensions.cs" />
     <Compile Include="UInt64Extensions.cs" />
     <Compile Include="UpdateScope.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="WorkerRole.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -74,9 +74,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception)
+                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
                 {
-                    operation.Telemetry.Success = false;
+                    // Unreachable
                     throw;
                 }
             }
@@ -116,9 +116,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception)
+                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
                 {
-                    operation.Telemetry.Success = false;
+                    // Unreachable
                     throw;
                 }
             }
@@ -164,9 +164,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     return entries;
                 }
-                catch (Exception)
+                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
                 {
-                    operation.Telemetry.Success = false;
+                    // Unreachable
                     throw;
                 }
             }
@@ -229,9 +229,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception)
+                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
                 {
-                    operation.Telemetry.Success = false;
+                    // Unreachable
                     throw;
                 }
             }

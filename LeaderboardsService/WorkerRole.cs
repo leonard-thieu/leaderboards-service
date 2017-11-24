@@ -48,9 +48,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                             Log.Error("Failed to complete run due to an error.", ex);
                             op.Telemetry.Success = false;
                         }
-                        catch (Exception)
+                        catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
                         {
-                            op.Telemetry.Success = false;
+                            // Unreachable
                             throw;
                         }
                     }
@@ -74,18 +74,18 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                             Log.Error("Failed to complete run due to an error.", ex);
                             op.Telemetry.Success = false;
                         }
-                        catch (Exception)
+                        catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
                         {
-                            op.Telemetry.Success = false;
+                            // Unreachable
                             throw;
                         }
                     }
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception)
+                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
                 {
-                    operation.Telemetry.Success = false;
+                    // Unreachable
                     throw;
                 }
                 finally
