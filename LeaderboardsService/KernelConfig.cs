@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlClient;
 using System.Net.Http;
 using log4net;
 using Microsoft.ApplicationInsights;
@@ -61,10 +60,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     throw new InvalidOperationException($"{nameof(Settings.LeaderboardsConnectionString)} is not set.");
 
                 return leaderboardsConnectionString.Decrypt();
-            }).WhenInjectedInto(typeof(ILeaderboardsContext), typeof(SqlConnection));
+            }).WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
 
-            kernel.Bind<ILeaderboardsContext>().ToConstructor(s => new LeaderboardsContext(s.Inject<string>()));
-            kernel.Bind<SqlConnection>().ToSelf().InScope(x => UpdateScope.Current);
+            kernel.Bind<ILeaderboardsContext>().To<LeaderboardsContext>();
             kernel.Bind<ILeaderboardsStoreClient>().To<LeaderboardsStoreClient>();
 
             RegisterSteamCommunityDataClient(kernel);
