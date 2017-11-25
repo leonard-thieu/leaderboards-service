@@ -51,7 +51,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             var staleDailies = await GetStaleDailyLeaderboardsAsync(today, Math.Max(0, limit - productsCount), cancellationToken).ConfigureAwait(false);
             leaderboards.AddRange(staleDailies);
 
-            // TODO: Should this do something if it doesn't return the expected number of leaderboards for today?
             var currentDailies = await GetCurrentDailyLeaderboardsAsync(today, cancellationToken).ConfigureAwait(false);
             leaderboards.AddRange(currentDailies);
 
@@ -86,7 +85,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                                          select p)
                                          .ToListAsync(cancellationToken)
                                          .ConfigureAwait(false);
-
             var newDailyLeaderboards = await GetNewCurrentDailyLeaderboardsAsync(today, missingProducts, cancellationToken);
             dailyLeaderboards.AddRange(newDailyLeaderboards);
 
@@ -116,7 +114,31 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 newDailyLeaderboardTasks.Add(newDailyLeaderboardTask);
             }
 
-            return await Task.WhenAll(newDailyLeaderboardTasks).ConfigureAwait(false);
+            var newDailyLeaderboards = new List<DailyLeaderboard>();
+
+            while (newDailyLeaderboardTasks.Any())
+            {
+                var newDailyLeaderboardTask = await Task.WhenAny(newDailyLeaderboardTasks).ConfigureAwait(false);
+                newDailyLeaderboardTasks.Remove(newDailyLeaderboardTask);
+
+                try
+                {
+                    var newDailyLeaderboard = await newDailyLeaderboardTask.ConfigureAwait(false);
+                    newDailyLeaderboards.Add(newDailyLeaderboard);
+                }
+                // This handles the case where the leaderboard does not exist (e.g. leaderboard not created yet or leaderboard has been deleted).
+                // Note: FakeSteamClientApiClient will always throw when FindLeaderboardAsync is called.
+                catch (SteamClientApiException ex)
+                {
+                    if (Log.IsWarnEnabled &&
+                        !(steamClientApiClient is FakeSteamClientApiClient))
+                    {
+                        Log.Warn("Could not find leaderboard.", ex);
+                    }
+                }
+            }
+
+            return newDailyLeaderboards;
         }
 
         internal async Task<DailyLeaderboard> GetNewCurrentDailyLeaderboardAsync(
