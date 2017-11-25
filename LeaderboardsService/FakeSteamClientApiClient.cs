@@ -41,7 +41,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             string name,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            IFindOrCreateLeaderboardCallback callback = new FakeFindOrCreateLeaderboardCallback();
+            IFindOrCreateLeaderboardCallback callback = new FakeFindOrCreateLeaderboardCallback
+            {
+                ID = random.Next(1, 10_000_000),
+            };
 
             return Task.FromResult(callback);
         }
