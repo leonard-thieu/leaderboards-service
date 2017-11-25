@@ -21,19 +21,18 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             var mockDailyLeaderboards = new MockDbSet<DailyLeaderboard>(dailyLeaderboards);
             mockDb.Setup(d => d.DailyLeaderboards).Returns(mockDailyLeaderboards.Object);
 
-            worker = new DailyLeaderboardsWorker(appId, telemetryClient, mockDb.Object, mockSteamClientApiClient.Object, mockStoreClient.Object);
+            worker = new DailyLeaderboardsWorker(appId, mockDb.Object, mockSteamClientApiClient.Object, mockStoreClient.Object, telemetryClient);
         }
 
-        private uint appId = 247080;
-        private TelemetryClient telemetryClient = new TelemetryClient();
-        private DailyLeaderboardsWorker worker;
-        private CancellationToken cancellationToken = CancellationToken.None;
-        private int limit = 100;
-        private Mock<ILeaderboardsContext> mockDb = new Mock<ILeaderboardsContext>();
-        private List<DailyLeaderboard> dailyLeaderboards = new List<DailyLeaderboard>();
-        private List<Product> products = new List<Product>();
-        private Mock<ISteamClientApiClient> mockSteamClientApiClient = new Mock<ISteamClientApiClient>();
-        private Mock<ILeaderboardsStoreClient> mockStoreClient = new Mock<ILeaderboardsStoreClient>();
+        private readonly uint appId = 247080;
+        private readonly Mock<ILeaderboardsContext> mockDb = new Mock<ILeaderboardsContext>();
+        private readonly Mock<ISteamClientApiClient> mockSteamClientApiClient = new Mock<ISteamClientApiClient>();
+        private readonly Mock<ILeaderboardsStoreClient> mockStoreClient = new Mock<ILeaderboardsStoreClient>();
+        private readonly TelemetryClient telemetryClient = new TelemetryClient();
+        private readonly DailyLeaderboardsWorker worker;
+
+        private readonly List<Product> products = new List<Product>();
+        private readonly List<DailyLeaderboard> dailyLeaderboards = new List<DailyLeaderboard>();
 
         public class Constructor
         {
@@ -42,13 +41,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             {
                 // Arrange
                 var appId = 247080U;
-                var telemetryClient = new TelemetryClient();
                 var db = Mock.Of<ILeaderboardsContext>();
                 var steamClientApiClient = Mock.Of<ISteamClientApiClient>();
                 var storeClient = Mock.Of<ILeaderboardsStoreClient>();
+                var telemetryClient = new TelemetryClient();
 
                 // Act
-                var worker = new DailyLeaderboardsWorker(appId, telemetryClient, db, steamClientApiClient, storeClient);
+                var worker = new DailyLeaderboardsWorker(appId, db, steamClientApiClient, storeClient, telemetryClient);
 
                 // Assert
                 Assert.IsAssignableFrom<DailyLeaderboardsWorker>(worker);
@@ -57,6 +56,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
         public class GetDailyLeaderboardsAsyncMethod : DailyLeaderboardsWorkerTests
         {
+            private readonly int limit = 100;
+            private readonly CancellationToken cancellationToken = CancellationToken.None;
+
             [Fact]
             public async Task ReturnsDailyLeaderboards()
             {
@@ -84,6 +86,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
         public class GetStaleDailyLeaderboardsAsyncMethod : DailyLeaderboardsWorkerTests
         {
+            private readonly int limit = 100;
+            private readonly CancellationToken cancellationToken = CancellationToken.None;
+
             [Fact]
             public async Task ReturnsStaleDailyLeaderboards()
             {
@@ -109,6 +114,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
         public class GetCurrentDailyLeaderboardsAsyncMethod : DailyLeaderboardsWorkerTests
         {
+            private readonly CancellationToken cancellationToken = CancellationToken.None;
+
             [Fact]
             public async Task CurrentDailyLeaderboardsExist_ReturnsExistingCurrentDailyLeaderboards()
             {
@@ -218,6 +225,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
         public class UpdateDailyLeaderboardsAsyncMethod : DailyLeaderboardsWorkerTests
         {
+            private readonly CancellationToken cancellationToken = CancellationToken.None;
+
             [Fact]
             public async Task UpdatesLeaderboards()
             {
@@ -267,6 +276,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
             private LeaderboardEntriesCallback leaderboardEntriesCallback;
             private DailyLeaderboard leaderboard;
+            private readonly CancellationToken cancellationToken = CancellationToken.None;
 
             [Fact]
             public async Task SetsLastUpdate()
@@ -299,6 +309,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
         public class StoreDailyLeaderboardsAsyncMethod : DailyLeaderboardsWorkerTests
         {
+            private readonly CancellationToken cancellationToken = CancellationToken.None;
+
             [Fact]
             public async Task StoresLeaderboards()
             {

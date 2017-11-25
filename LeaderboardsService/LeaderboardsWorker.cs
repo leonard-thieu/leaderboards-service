@@ -18,10 +18,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         public LeaderboardsWorker(
             uint appId,
-            TelemetryClient telemetryClient,
             ILeaderboardsContext db,
             ISteamCommunityDataClient steamCommunityDataClient,
-            ILeaderboardsStoreClient storeClient)
+            ILeaderboardsStoreClient storeClient,
+            TelemetryClient telemetryClient)
         {
             this.appId = appId;
             this.telemetryClient = telemetryClient;

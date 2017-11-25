@@ -44,15 +44,15 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         private async Task UpdateLeaderboardsAsync(CancellationToken cancellationToken)
         {
-            var leaderboardsWorker = kernel.Get<LeaderboardsWorker>();
+            var worker = kernel.Get<LeaderboardsWorker>();
             using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update leaderboards"))
             using (new UpdateActivity(Log, "leaderboards"))
             {
                 try
                 {
-                    var leaderboards = await leaderboardsWorker.GetLeaderboardsAsync(cancellationToken).ConfigureAwait(false);
-                    await leaderboardsWorker.UpdateLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                    await leaderboardsWorker.StoreLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                    var leaderboards = await worker.GetLeaderboardsAsync(cancellationToken).ConfigureAwait(false);
+                    await worker.UpdateLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                    await worker.StoreLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
 
                     operation.Telemetry.Success = true;
                 }
@@ -69,22 +69,22 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 }
                 finally
                 {
-                    kernel.Release(leaderboardsWorker);
+                    kernel.Release(worker);
                 }
             }
         }
 
         private async Task UpdateDailyLeaderboardsAsync(CancellationToken cancellationToken)
         {
-            var dailyLeaderboardsWorker = kernel.Get<DailyLeaderboardsWorker>();
+            var worker = kernel.Get<DailyLeaderboardsWorker>();
             using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update daily leaderboards"))
             using (new UpdateActivity(Log, "daily leaderboards"))
             {
                 try
                 {
-                    var leaderboards = await dailyLeaderboardsWorker.GetDailyLeaderboardsAsync(Settings.DailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
-                    await dailyLeaderboardsWorker.UpdateDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                    await dailyLeaderboardsWorker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                    var leaderboards = await worker.GetDailyLeaderboardsAsync(Settings.DailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
+                    await worker.UpdateDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
+                    await worker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
 
                     operation.Telemetry.Success = true;
                 }
@@ -101,7 +101,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 }
                 finally
                 {
-                    kernel.Release(dailyLeaderboardsWorker);
+                    kernel.Release(worker);
                 }
             }
         }

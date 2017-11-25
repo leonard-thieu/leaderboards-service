@@ -17,10 +17,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         public DailyLeaderboardsWorker(
             uint appId,
-            TelemetryClient telemetryClient,
             ILeaderboardsContext db,
             ISteamClientApiClient steamClientApiClient,
-            ILeaderboardsStoreClient storeClient)
+            ILeaderboardsStoreClient storeClient,
+            TelemetryClient telemetryClient)
         {
             this.appId = appId;
             this.telemetryClient = telemetryClient;
@@ -30,10 +30,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         }
 
         private readonly uint appId;
-        private readonly TelemetryClient telemetryClient;
         private readonly ILeaderboardsContext db;
         private readonly ISteamClientApiClient steamClientApiClient;
         private readonly ILeaderboardsStoreClient storeClient;
+        private readonly TelemetryClient telemetryClient;
 
         #region Get daily leaderboards
 

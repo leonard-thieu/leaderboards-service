@@ -17,17 +17,17 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 parser = new LeaderboardsArgsParser(inReader, outWriter, errorWriter);
             }
 
-            private Mock<TextReader> mockInReader = new Mock<TextReader>(MockBehavior.Strict);
-            private TextReader inReader;
-            private TextWriter outWriter = new StringWriter();
-            private TextWriter errorWriter = new StringWriter();
-            private LeaderboardsArgsParser parser;
+            private readonly Mock<TextReader> mockInReader = new Mock<TextReader>(MockBehavior.Strict);
+            private readonly TextReader inReader;
+            private readonly TextWriter outWriter = new StringWriter();
+            private readonly TextWriter errorWriter = new StringWriter();
+            private readonly LeaderboardsArgsParser parser;
 
             [Fact]
             public void HelpFlagIsSpecified_ShowUsageInformation()
             {
                 // Arrange
-                string[] args = new[] { "--help" };
+                string[] args = { "--help" };
                 ILeaderboardsSettings settings = Settings.Default;
                 settings.Reload();
 
@@ -59,7 +59,7 @@ options:
             public void UserNameIsSpecified_SetSteamUserName()
             {
                 // Arrange
-                string[] args = new[] { "--username=myUserName" };
+                string[] args = { "--username=myUserName" };
                 ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
@@ -78,7 +78,7 @@ options:
             public void UserNameIsNotSpecifiedAndSteamUserNameIsNotSet_PromptsUserForUserNameAndSetsSteamUserName()
             {
                 // Arrange
-                string[] args = new string[0];
+                string[] args = { };
                 ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = null,
@@ -100,7 +100,7 @@ options:
             public void UserNameIsNotSpecifiedAndSteamUserNameIsSet_DoesNotSetSteamUserName()
             {
                 // Arrange
-                string[] args = new string[0];
+                string[] args = { };
                 var mockSettings = new Mock<ILeaderboardsSettings>();
                 mockSettings
                     .SetupProperty(s => s.SteamUserName, "myUserName")
@@ -123,7 +123,7 @@ options:
             public void PasswordIsSpecified_SetsSteamPassword()
             {
                 // Arrange
-                string[] args = new[] { "--password=myPassword" };
+                string[] args = { "--password=myPassword" };
                 ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
@@ -143,7 +143,7 @@ options:
             public void PasswordFlagIsSpecified_PromptsUserForPasswordAndSetsSteamPassword()
             {
                 // Arrange
-                string[] args = new[] { "--password" };
+                string[] args = { "--password" };
                 ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
@@ -166,7 +166,7 @@ options:
             public void PasswordFlagIsNotSpecifiedAndSteamPasswordIsNotSet_PromptsUserForPasswordAndSetsSteamPassword()
             {
                 // Arrange
-                string[] args = new string[0];
+                string[] args = { };
                 ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
@@ -189,7 +189,7 @@ options:
             public void PasswordFlagIsNotSpecifiedAndSteamPasswordIsSet_DoesNotSetSteamPassword()
             {
                 // Arrange
-                string[] args = new string[0];
+                string[] args = { };
                 var mockSettings = new Mock<ILeaderboardsSettings>();
                 mockSettings
                     .SetupProperty(s => s.SteamUserName, "myUserName")
@@ -212,7 +212,7 @@ options:
             public void DailiesIsSpecified_SetsDailyLeaderboardsPerUpdate()
             {
                 // Arrange
-                string[] args = new[] { "--dailies=10" };
+                string[] args = { "--dailies=10" };
                 ILeaderboardsSettings settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
@@ -231,7 +231,7 @@ options:
             public void DailiesIsNotSpecified_DoesNotSetDailyLeaderboardsPerUpdate()
             {
                 // Arrange
-                string[] args = new string[0];
+                string[] args = { };
                 var mockSettings = new Mock<ILeaderboardsSettings>();
                 mockSettings
                     .SetupProperty(s => s.SteamUserName, "myUserName")
@@ -254,7 +254,7 @@ options:
             public void TimeoutIsSpecified_SetsSteamClientTimeout()
             {
                 // Arrange
-                var args = new[] { "--timeout=00:01:00" };
+                string[] args = { "--timeout=00:01:00" };
                 var settings = new StubLeaderboardsSettings
                 {
                     SteamUserName = "a",
@@ -273,7 +273,7 @@ options:
             public void TimeoutIsNotSpecified_DoesNotSetSteamClientTimeout()
             {
                 // Arrange
-                var args = new string[0];
+                string[] args = { };
                 var mockSettings = new Mock<ILeaderboardsSettings>();
                 mockSettings
                     .SetupProperty(s => s.SteamUserName, "myUserName")

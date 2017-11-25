@@ -22,10 +22,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         public int GlobalRank { get; set; }
         public int Score { get; set; }
         public UGCHandle UGCId { get; set; } = new UGCHandle();
-        public ReadOnlyCollection<int> Details
-        {
-            get => details.AsReadOnly();
-        }
+        public ReadOnlyCollection<int> Details => details.AsReadOnly();
         private readonly List<int> details = new List<int> { 0, 0 };
 
         public int Zone

@@ -55,12 +55,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             kernel.Bind<string>().ToMethod(c =>
             {
                 var settings = c.Kernel.Get<ILeaderboardsSettings>();
-                var leaderboardsConnectionString = settings.LeaderboardsConnectionString;
 
-                if (leaderboardsConnectionString == null)
+                if (settings.LeaderboardsConnectionString == null)
                     throw new InvalidOperationException($"{nameof(Settings.LeaderboardsConnectionString)} is not set.");
 
-                return leaderboardsConnectionString.Decrypt();
+                return settings.LeaderboardsConnectionString.Decrypt();
             }).WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
 
             kernel.Bind<ILeaderboardsContext>().To<LeaderboardsContext>().InParentScope();
