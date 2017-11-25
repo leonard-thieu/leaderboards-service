@@ -41,12 +41,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             string name,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            IFindOrCreateLeaderboardCallback callback = new FakeFindOrCreateLeaderboardCallback
-            {
-                ID = random.Next(1, 10_000_000),
-            };
-
-            return Task.FromResult(callback);
+            throw new SteamClientApiException($"Unable to find the leaderboard '{name}'.", EResult.OK);
         }
 
         public Task<ILeaderboardEntriesCallback> GetLeaderboardEntriesAsync(
@@ -55,7 +50,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var i = random.Next(entriesFiles.Length);
-
             using (var sr = File.OpenText(entriesFiles[i]))
             {
                 ILeaderboardEntriesCallback callback = JsonConvert.DeserializeObject<FakeLeaderboardEntriesCallback>(sr.ReadToEnd(), LeaderboardEntryConverter);
