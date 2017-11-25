@@ -146,8 +146,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             Product product,
             CancellationToken cancellationToken)
         {
-            await steamClientApiClient.ConnectAndLogOnAsync().ConfigureAwait(false);
-
             var name = GetDailyLeaderboardName(product.Name, date);
             var leaderboard = await steamClientApiClient.FindLeaderboardAsync(appId, name, cancellationToken).ConfigureAwait(false);
             var displayName = $"Daily ({date.ToString("yyyy-MM-dd")})";
