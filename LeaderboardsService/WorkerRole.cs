@@ -17,7 +17,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         public WorkerRole(ILeaderboardsSettings settings, TelemetryClient telemetryClient) : base("leaderboards", settings, telemetryClient)
         {
-            kernel = KernelConfig.CreateKernel(telemetryClient);
+            kernel = KernelConfig.CreateKernel(settings, telemetryClient);
         }
 
         private readonly IKernel kernel;
