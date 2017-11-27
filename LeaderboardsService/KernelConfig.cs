@@ -4,6 +4,7 @@ using System.Net.Http;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Ninject;
+using Ninject.Activation;
 using Ninject.Extensions.NamedScope;
 using Polly;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
@@ -77,8 +78,21 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             kernel.Bind<ILeaderboardsContext>()
                   .To<LeaderboardsContext>()
                   .InParentScope();
+
             kernel.Bind<ILeaderboardsStoreClient>()
                   .To<LeaderboardsStoreClient>()
+                  .WhenInjectedInto(typeof(LeaderboardsWorker))
+                  .InParentScope();
+            kernel.Bind<ILeaderboardsStoreClient>()
+                  .To<LeaderboardsStoreClient>()
+                  .When(r =>
+                  {
+                      return r.Target.Type == typeof(DailyLeaderboardsWorker) &&
+                             SteamClientApiCredentialsAreSet(r);
+                  })
+                  .InParentScope();
+            kernel.Bind<ILeaderboardsStoreClient>()
+                  .To<FakeLeaderboardsStoreClient>()
                   .InParentScope();
 
             RegisterSteamCommunityDataClient(kernel);
@@ -162,13 +176,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                       return new SteamClientApiClient(userName, password, policy, telemetryClient) { Timeout = timeout };
                   })
-                  .When(r =>
-                  {
-                      var settings = r.ParentContext.Kernel.Get<ILeaderboardsSettings>();
-
-                      return !string.IsNullOrEmpty(settings.SteamUserName) &&
-                             settings.SteamPassword != null;
-                  })
+                  .When(SteamClientApiCredentialsAreSet)
                   .InParentScope();
 
             kernel.Bind<ISteamClientApiClient>()
@@ -177,5 +185,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         }
 
         #endregion
+
+        private static bool SteamClientApiCredentialsAreSet(IRequest r)
+        {
+            var settings = r.ParentContext.Kernel.Get<ILeaderboardsSettings>();
+
+            return !string.IsNullOrEmpty(settings.SteamUserName) &&
+                   settings.SteamPassword != null;
+        }
     }
 }

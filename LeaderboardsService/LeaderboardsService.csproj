@@ -101,7 +101,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FakeSteamClientApiClient.cs" />
     <None Include="Data\SteamClientApi\Entries\247080_1005806.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -405,6 +404,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DailyLeaderboardsWorker.cs" />
+    <Compile Include="FakeLeaderboardsStoreClient.cs" />
+    <Compile Include="FakeSteamClientApiClient.cs" />
     <Compile Include="KernelConfig.cs" />
     <Compile Include="LeaderboardsArgsParser.cs" />
     <Compile Include="LeaderboardsOptions.cs" />
