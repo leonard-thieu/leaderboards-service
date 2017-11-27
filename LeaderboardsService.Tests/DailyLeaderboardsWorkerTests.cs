@@ -322,7 +322,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await worker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken);
 
                 // Assert
-                mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<DailyLeaderboard>>(), cancellationToken), Times.Once);
+                mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<DailyLeaderboard>>(), null, cancellationToken), Times.Once);
             }
 
             [Fact]
@@ -367,7 +367,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await worker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken);
 
                 // Assert
-                mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<DailyEntry>>(), cancellationToken), Times.Once);
+                mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<DailyEntry>>(), null, cancellationToken), Times.Once);
             }
         }
     }

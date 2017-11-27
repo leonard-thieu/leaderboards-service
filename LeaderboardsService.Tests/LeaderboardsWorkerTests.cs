@@ -159,7 +159,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                 await worker.StoreLeaderboardsAsync(leaderboards, cancellationToken);
 
                 // Assert
-                mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Leaderboard>>(), cancellationToken), Times.Once);
+                mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Leaderboard>>(), null, cancellationToken), Times.Once);
             }
 
             [Fact]

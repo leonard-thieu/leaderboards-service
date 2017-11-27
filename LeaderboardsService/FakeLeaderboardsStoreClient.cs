@@ -13,11 +13,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             throw new NotImplementedException();
         }
 
-        public Task<int> BulkUpsertAsync<TEntity>(IEnumerable<TEntity> items, CancellationToken cancellationToken) where TEntity : class
-        {
-            return BulkUpsertAsync(items, null, cancellationToken);
-        }
-
         public Task<int> BulkUpsertAsync<TEntity>(IEnumerable<TEntity> items, BulkUpsertOptions options, CancellationToken cancellationToken) where TEntity : class
         {
             return Task.FromResult(items.Count());
