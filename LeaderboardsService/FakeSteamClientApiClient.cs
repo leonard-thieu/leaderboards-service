@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using log4net;
 using Newtonsoft.Json;
 using SteamKit2;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
@@ -14,15 +13,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
     internal sealed class FakeSteamClientApiClient : ISteamClientApiClient
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FakeSteamClientApiClient));
         private static readonly Random random = new Random();
         private static readonly ILeaderboardEntryConverter LeaderboardEntryConverter = new ILeaderboardEntryConverter();
 
         public FakeSteamClientApiClient()
         {
-            Log.Warn("Using test data for calls to Steam Client API. Set your Steam user name and password to use the actual Steam Client API.");
-            Log.Warn("Run this application with --help to find out how to set your Steam user name and password.");
-
             var entriesPath = Path.Combine("Data", "SteamClientApi", "Entries");
             entriesFiles = Directory.GetFiles(entriesPath, "*.json");
         }

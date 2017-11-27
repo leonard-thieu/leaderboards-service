@@ -75,28 +75,6 @@ options:
             }
 
             [Fact]
-            public void UserNameIsNotSpecifiedAndSteamUserNameIsNotSet_PromptsUserForUserNameAndSetsSteamUserName()
-            {
-                // Arrange
-                string[] args = { };
-                ILeaderboardsSettings settings = new StubLeaderboardsSettings
-                {
-                    SteamUserName = null,
-                    SteamPassword = new EncryptedSecret("a", 1),
-                    KeyDerivationIterations = 1,
-                };
-                mockInReader
-                    .SetupSequence(r => r.ReadLine())
-                    .Returns("myUserName");
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                Assert.Equal("myUserName", settings.SteamUserName);
-            }
-
-            [Fact]
             public void UserNameIsNotSpecifiedAndSteamUserNameIsSet_DoesNotSetSteamUserName()
             {
                 // Arrange
@@ -148,29 +126,6 @@ options:
                 {
                     SteamUserName = "a",
                     SteamPassword = new EncryptedSecret("a", 1),
-                    KeyDerivationIterations = 1,
-                };
-                mockInReader
-                    .SetupSequence(r => r.ReadLine())
-                    .Returns("myPassword");
-
-                // Act
-                parser.Parse(args, settings);
-
-                // Assert
-                var encrypted = new EncryptedSecret("myPassword", 1);
-                Assert.Equal(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
-            }
-
-            [Fact]
-            public void PasswordFlagIsNotSpecifiedAndSteamPasswordIsNotSet_PromptsUserForPasswordAndSetsSteamPassword()
-            {
-                // Arrange
-                string[] args = { };
-                ILeaderboardsSettings settings = new StubLeaderboardsSettings
-                {
-                    SteamUserName = "a",
-                    SteamPassword = null,
                     KeyDerivationIterations = 1,
                 };
                 mockInReader

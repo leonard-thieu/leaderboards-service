@@ -9,8 +9,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
     internal sealed class LeaderboardsArgsParser : ArgsParser<LeaderboardsOptions, ILeaderboardsSettings>
     {
-        internal const string DefaultLeaderboardsConnectionString = "Data Source=localhost;Initial Catalog=NecroDancer;Integrated Security=SSPI;";
-
         public LeaderboardsArgsParser(TextReader inReader, TextWriter outWriter, TextWriter errorWriter) : base(inReader, outWriter, errorWriter) { }
 
         protected override string EntryAssemblyFileName { get; } = Path.GetFileName(Assembly.GetExecutingAssembly().Location);
@@ -38,17 +36,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 settings.SteamUserName = steamUserName;
             }
-            else if (string.IsNullOrEmpty(settings.SteamUserName))
-            {
-                settings.SteamUserName = ReadOption("Steam user name");
-            }
 
             #endregion
 
             #region SteamPassword
 
             var steamPassword = options.SteamPassword;
-            if (ShouldPromptForRequiredSetting(steamPassword, settings.SteamPassword))
+            if (ShouldPrompt(steamPassword))
             {
                 steamPassword = ReadOption("Steam password");
             }
