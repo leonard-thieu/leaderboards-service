@@ -13,7 +13,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
     internal sealed class FakeSteamClientApiClient : ISteamClientApiClient
     {
-        private static readonly Random random = new Random();
         private static readonly ILeaderboardEntryConverter LeaderboardEntryConverter = new ILeaderboardEntryConverter();
 
         public FakeSteamClientApiClient()
@@ -44,7 +43,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             int lbid,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            var i = random.Next(entriesFiles.Length);
+            var i = lbid % entriesFiles.Length;
             using (var sr = File.OpenText(entriesFiles[i]))
             {
                 ILeaderboardEntriesCallback callback = JsonConvert.DeserializeObject<FakeLeaderboardEntriesCallback>(sr.ReadToEnd(), LeaderboardEntryConverter);
