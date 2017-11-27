@@ -6,6 +6,7 @@ using Microsoft.ApplicationInsights;
 using Ninject;
 using Ninject.Activation;
 using Ninject.Extensions.NamedScope;
+using Ninject.Syntax;
 using Polly;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
@@ -85,12 +86,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                   .InParentScope();
             kernel.Bind<ILeaderboardsStoreClient>()
                   .To<LeaderboardsStoreClient>()
-                  .When(r =>
-                  {
-                      return r.Target.Type == typeof(DailyLeaderboardsWorker) &&
-                             SteamClientApiCredentialsAreSet(r);
-                  })
+                  .WhenInjectedInto(typeof(DailyLeaderboardsWorker))
+                  .AndWhen(SteamClientApiCredentialsAreSet)
                   .InParentScope();
+
             kernel.Bind<ILeaderboardsStoreClient>()
                   .To<FakeLeaderboardsStoreClient>()
                   .InParentScope();
@@ -197,6 +196,20 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         {
             return !string.IsNullOrEmpty(settings.SteamUserName) &&
                    settings.SteamPassword != null;
+        }
+    }
+
+    internal static class IBindingInNamedWithOrOnSyntaxExtensions
+    {
+        public static IBindingInNamedWithOrOnSyntax<T> AndWhen<T>(
+            this IBindingInNamedWithOrOnSyntax<T> binding,
+            Func<IRequest, bool> condition)
+        {
+            var config = binding.BindingConfiguration;
+            var originalCondition = config.Condition;
+            config.Condition = r => originalCondition(r) && condition(r);
+
+            return binding;
         }
     }
 }
