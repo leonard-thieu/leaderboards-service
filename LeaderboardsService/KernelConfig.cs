@@ -190,6 +190,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         {
             var settings = r.ParentContext.Kernel.Get<ILeaderboardsSettings>();
 
+            return SteamClientApiCredentialsAreSet(settings);
+        }
+
+        internal static bool SteamClientApiCredentialsAreSet(ILeaderboardsSettings settings)
+        {
             return !string.IsNullOrEmpty(settings.SteamUserName) &&
                    settings.SteamPassword != null;
         }
