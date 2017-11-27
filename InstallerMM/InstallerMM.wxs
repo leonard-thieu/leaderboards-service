@@ -2,7 +2,13 @@
 <?include ..\Installer\Code\Configuration.wxi?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define ComponentRules="OneToOne"?>
+  <!--
+    Workaround to get Files and Folders support in IsWix. IsWix does not support WiX variables so the path to 
+    the Debug TargetDir is hardcoded. IsWiX also happens to incorrectly only use the first instance of a 
+    custom variable so SourceDir can be redefined to the correct directory for building.
+  -->
   <?define SourceDir="..\LeaderboardsService\bin\Debug"?>
+  <?undef SourceDir?>
   <?define SourceDir="$(var.LeaderboardsService.TargetDir)"?>
   <Module Id="InstallerMM" Language="1033" Version="1.0.0.0">
     <Package Id="9bc9f190-d4f5-4cf7-bded-0d212a189cd9" Manufacturer="$(var.Manufacturer)" InstallerVersion="200" />
