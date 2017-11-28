@@ -112,14 +112,28 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             }
         }
 
+        #region IDisposable Implementation
+
+        private bool disposed;
+
         protected override void Dispose(bool disposing)
         {
+            if (disposed) { return; }
+
             if (disposing)
             {
-                kernel.Dispose();
+                try
+                {
+                    // This can throw
+                    kernel.Dispose();
+                }
+                catch (Exception) { }
             }
+            disposed = true;
 
             base.Dispose(disposing);
         }
+
+        #endregion
     }
 }
