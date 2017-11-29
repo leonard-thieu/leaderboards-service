@@ -7,7 +7,6 @@ using Microsoft.ApplicationInsights;
 using Moq;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests.Properties;
 using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
-using toofz.TestsShared;
 using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
@@ -16,8 +15,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
     {
         public LeaderboardsWorkerTests()
         {
-            var mockDbLeaderboards = new MockDbSet<Leaderboard>();
-            mockDb.Setup(d => d.Leaderboards).Returns(mockDbLeaderboards.Object);
+            var leaderboardsInner = new List<Leaderboard>();
+            var leaderboards = new FakeDbSet<Leaderboard>(leaderboardsInner);
+            mockDb.Setup(d => d.Leaderboards).Returns(leaderboards);
 
             worker = new LeaderboardsWorker(appId, mockDb.Object, mockSteamCommunityDataClient.Object, mockStoreClient.Object, telemetryClient);
         }

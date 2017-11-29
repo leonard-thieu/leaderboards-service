@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Moq;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
-using toofz.TestsShared;
 using Xunit;
 using static SteamKit2.SteamUserStats;
 
@@ -16,10 +15,10 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
     {
         public DailyLeaderboardsWorkerTests()
         {
-            var mockDbProducts = new MockDbSet<Product>(products);
-            mockDb.Setup(d => d.Products).Returns(mockDbProducts.Object);
-            var mockDailyLeaderboards = new MockDbSet<DailyLeaderboard>(dailyLeaderboards);
-            mockDb.Setup(d => d.DailyLeaderboards).Returns(mockDailyLeaderboards.Object);
+            var products = new FakeDbSet<Product>(productsInner);
+            mockDb.Setup(d => d.Products).Returns(products);
+            var dailyLeaderboards = new FakeDbSet<DailyLeaderboard>(dailyLeaderboardsInner);
+            mockDb.Setup(d => d.DailyLeaderboards).Returns(dailyLeaderboards);
 
             worker = new DailyLeaderboardsWorker(appId, mockDb.Object, mockSteamClientApiClient.Object, mockStoreClient.Object, telemetryClient);
         }
@@ -31,8 +30,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
         private readonly TelemetryClient telemetryClient = new TelemetryClient();
         private readonly DailyLeaderboardsWorker worker;
 
-        private readonly List<Product> products = new List<Product>();
-        private readonly List<DailyLeaderboard> dailyLeaderboards = new List<DailyLeaderboard>();
+        private readonly List<Product> productsInner = new List<Product>();
+        private readonly List<DailyLeaderboard> dailyLeaderboardsInner = new List<DailyLeaderboard>();
 
         public class Constructor
         {
@@ -64,11 +63,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             {
                 // Arrange
                 var today = DateTime.UtcNow.Date;
-                dailyLeaderboards.AddRange(new[]
+                dailyLeaderboardsInner.AddRange(new[]
                 {
                     new DailyLeaderboard { Date = today.AddDays(-1) },
                 });
-                products.AddRange(new[]
+                productsInner.AddRange(new[]
                 {
                     new Product(0, "classic", "Classic"),
                 });
@@ -94,7 +93,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             {
                 // Arrange
                 var today = new DateTime(2017, 9, 13);
-                dailyLeaderboards.AddRange(new[]
+                dailyLeaderboardsInner.AddRange(new[]
                 {
                     new DailyLeaderboard { Date = today },
                     new DailyLeaderboard { Date = today.AddDays(-1) },
@@ -127,7 +126,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
                     ProductId = 0,
                     Product = new Product(0, "classic", "Classic"),
                 };
-                dailyLeaderboards.Add(current);
+                dailyLeaderboardsInner.Add(current);
 
                 // Act
                 var leaderboards = await worker.GetCurrentDailyLeaderboardsAsync(today, cancellationToken);
@@ -143,7 +142,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             public async Task CurrentDailyLeaderboardsDoNotExist_GetsAndReturnsCurrentDailyLeaderboards()
             {
                 // Arrange
-                products.AddRange(new[]
+                productsInner.AddRange(new[]
                 {
                     new Product(0, "classic", "Classic"),
                     new Product(1, "amplified", "Amplified"),
