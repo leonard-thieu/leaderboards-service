@@ -80,6 +80,9 @@
     <Compile Include="Properties\ILeaderboardsSettings.cs">
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Properties\ILeaderboardsSettingsExtensions.cs">
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.cs">
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>

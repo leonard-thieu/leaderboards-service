@@ -54,26 +54,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                   .ToConstant(Log);
 
             kernel.Bind<uint>()
-                  .ToMethod(c => c.Kernel.Get<ILeaderboardsSettings>().AppId)
+                  .ToMethod(GetAppId)
                   .WhenInjectedInto(typeof(LeaderboardsWorker), typeof(DailyLeaderboardsWorker));
 
             kernel.Bind<string>()
-                  .ToMethod(c =>
-                  {
-                      var settings = c.Kernel.Get<ILeaderboardsSettings>();
-
-                      if (settings.LeaderboardsConnectionString == null)
-                      {
-                          var connectionFactory = new LocalDbConnectionFactory("mssqllocaldb");
-                          using (var connection = connectionFactory.CreateConnection("NecroDancer"))
-                          {
-                              settings.LeaderboardsConnectionString = new EncryptedSecret(connection.ConnectionString, settings.KeyDerivationIterations);
-                              settings.Save();
-                          }
-                      }
-
-                      return settings.LeaderboardsConnectionString.Decrypt();
-                  })
+                  .ToMethod(GetLeaderboardsConnectionString)
                   .WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
 
             kernel.Bind<ILeaderboardsContext>()
@@ -89,13 +74,25 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                   .WhenInjectedInto(typeof(DailyLeaderboardsWorker))
                   .AndWhen(SteamClientApiCredentialsAreSet)
                   .InParentScope();
-
             kernel.Bind<ILeaderboardsStoreClient>()
                   .To<FakeLeaderboardsStoreClient>()
                   .InParentScope();
 
-            RegisterSteamCommunityDataClient(kernel);
-            RegisterSteamClientApiClient(kernel);
+            kernel.Bind<HttpMessageHandler>()
+                  .ToMethod(GetSteamCommunityDataClientHandler)
+                  .WhenInjectedInto(typeof(SteamCommunityDataClient))
+                  .InParentScope();
+            kernel.Bind<ISteamCommunityDataClient>()
+                  .To<SteamCommunityDataClient>()
+                  .InParentScope();
+
+            kernel.Bind<ISteamClientApiClient>()
+                  .ToMethod(GetSteamClientApiClient)
+                  .When(SteamClientApiCredentialsAreSet)
+                  .InParentScope();
+            kernel.Bind<ISteamClientApiClient>()
+                  .To<FakeSteamClientApiClient>()
+                  .InParentScope();
 
             kernel.Bind<LeaderboardsWorker>()
                   .ToSelf()
@@ -105,23 +102,34 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                   .InScope(c => c);
         }
 
-        #region SteamCommunityDataClient
-
-        private static void RegisterSteamCommunityDataClient(StandardKernel kernel)
+        private static uint GetAppId(IContext c)
         {
-            kernel.Bind<HttpMessageHandler>()
-                  .ToMethod(c =>
-                  {
-                      var telemetryClient = c.Kernel.Get<TelemetryClient>();
-                      var log = c.Kernel.Get<ILog>();
+            return c.Kernel.Get<ILeaderboardsSettings>().AppId;
+        }
 
-                      return CreateSteamCommunityDataClientHandler(new WebRequestHandler(), log, telemetryClient);
-                  })
-                  .WhenInjectedInto(typeof(SteamCommunityDataClient))
-                  .InParentScope();
-            kernel.Bind<ISteamCommunityDataClient>()
-                  .To<SteamCommunityDataClient>()
-                  .InParentScope();
+        private static string GetLeaderboardsConnectionString(IContext c)
+        {
+            var settings = c.Kernel.Get<ILeaderboardsSettings>();
+
+            if (settings.LeaderboardsConnectionString == null)
+            {
+                var connectionFactory = new LocalDbConnectionFactory("mssqllocaldb");
+                using (var connection = connectionFactory.CreateConnection("NecroDancer"))
+                {
+                    settings.LeaderboardsConnectionString = new EncryptedSecret(connection.ConnectionString, settings.KeyDerivationIterations);
+                    settings.Save();
+                }
+            }
+
+            return settings.LeaderboardsConnectionString.Decrypt();
+        }
+
+        private static HttpMessageHandler GetSteamCommunityDataClientHandler(IContext c)
+        {
+            var telemetryClient = c.Kernel.Get<TelemetryClient>();
+            var log = c.Kernel.Get<ILog>();
+
+            return CreateSteamCommunityDataClientHandler(new WebRequestHandler(), log, telemetryClient);
         }
 
         internal static HttpMessageHandler CreateSteamCommunityDataClientHandler(WebRequestHandler innerHandler, ILog log, TelemetryClient telemetryClient)
@@ -129,13 +137,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             var policy = SteamCommunityDataClient
                 .GetRetryStrategy()
                 .WaitAndRetryAsync(
-                3,
-                ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
-                (ex, duration) =>
-                {
-                    telemetryClient.TrackException(ex);
-                    if (log.IsDebugEnabled) { log.Debug($"Retrying in {duration}...", ex); }
-                });
+                    3,
+                    ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
+                    (ex, duration) =>
+                    {
+                        telemetryClient.TrackException(ex);
+                        if (log.IsDebugEnabled) { log.Debug($"Retrying in {duration}...", ex); }
+                    });
 
             return HttpClientFactory.CreatePipeline(innerHandler, new DelegatingHandler[]
             {
@@ -145,57 +153,33 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             });
         }
 
-        #endregion
-
-        #region SteamClientApiClient
-
-        private static void RegisterSteamClientApiClient(StandardKernel kernel)
+        private static SteamClientApiClient GetSteamClientApiClient(IContext c)
         {
-            kernel.Bind<ISteamClientApiClient>()
-                  .ToMethod(c =>
-                  {
-                      var settings = c.Kernel.Get<ILeaderboardsSettings>();
-                      var telemetryClient = c.Kernel.Get<TelemetryClient>();
-                      var log = c.Kernel.Get<ILog>();
+            var settings = c.Kernel.Get<ILeaderboardsSettings>();
+            var telemetryClient = c.Kernel.Get<TelemetryClient>();
+            var log = c.Kernel.Get<ILog>();
 
-                      var userName = settings.SteamUserName;
-                      var password = settings.SteamPassword.Decrypt();
-                      var timeout = settings.SteamClientTimeout;
+            var userName = settings.SteamUserName;
+            var password = settings.SteamPassword.Decrypt();
+            var timeout = settings.SteamClientTimeout;
 
-                      var policy = SteamClientApiClient
-                          .GetRetryStrategy()
-                          .WaitAndRetryAsync(
-                              3,
-                              ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
-                              (ex, duration) =>
-                              {
-                                  telemetryClient.TrackException(ex);
-                                  if (log.IsDebugEnabled) { log.Debug($"Retrying in {duration}...", ex); }
-                              });
+            var policy = SteamClientApiClient
+                .GetRetryStrategy()
+                .WaitAndRetryAsync(
+                    3,
+                    ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
+                    (ex, duration) =>
+                    {
+                        telemetryClient.TrackException(ex);
+                        if (log.IsDebugEnabled) { log.Debug($"Retrying in {duration}...", ex); }
+                    });
 
-                      return new SteamClientApiClient(userName, password, policy, telemetryClient) { Timeout = timeout };
-                  })
-                  .When(SteamClientApiCredentialsAreSet)
-                  .InParentScope();
-
-            kernel.Bind<ISteamClientApiClient>()
-                  .To<FakeSteamClientApiClient>()
-                  .InParentScope();
+            return new SteamClientApiClient(userName, password, policy, telemetryClient) { Timeout = timeout };
         }
-
-        #endregion
 
         private static bool SteamClientApiCredentialsAreSet(IRequest r)
         {
-            var settings = r.ParentContext.Kernel.Get<ILeaderboardsSettings>();
-
-            return SteamClientApiCredentialsAreSet(settings);
-        }
-
-        internal static bool SteamClientApiCredentialsAreSet(ILeaderboardsSettings settings)
-        {
-            return !string.IsNullOrEmpty(settings.SteamUserName) &&
-                   settings.SteamPassword != null;
+            return r.ParentContext.Kernel.Get<ILeaderboardsSettings>().AreSteamClientCredentialsSet();
         }
     }
 
