@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Moq">
@@ -56,6 +57,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -72,17 +76,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DailyLeaderboardsWorkerTests.cs" />
+    <Compile Include="DatabaseTestsBase.cs" />
     <Compile Include="DataHelper.cs" />
     <Compile Include="LeaderboardsArgsParserTests.cs" />
     <Compile Include="LeaderboardsWorkerTests.cs" />
     <Compile Include="SteamIDExtensionsTests.cs" />
     <Compile Include="SteamKit.cs" />
+    <Compile Include="StorageHelper.cs" />
     <Compile Include="StubLeaderboardsSettings.cs" />
     <Compile Include="UGCHandleExtensionsTests.cs" />
     <Compile Include="UInt64ExtensionsTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <Compile Include="WorkerRoleTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -23,16 +23,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         /// Creates the kernel that will manage your application.
         /// </summary>
         /// <returns>The created kernel.</returns>
-        public static IKernel CreateKernel(ILeaderboardsSettings settings, TelemetryClient telemetryClient)
+        public static IKernel CreateKernel()
         {
             var kernel = new StandardKernel();
             try
             {
-                kernel.Bind<ILeaderboardsSettings>()
-                      .ToConstant(settings);
-                kernel.Bind<TelemetryClient>()
-                      .ToConstant(telemetryClient);
-
                 RegisterServices(kernel);
 
                 return kernel;
@@ -67,11 +62,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
             kernel.Bind<ILeaderboardsStoreClient>()
                   .To<LeaderboardsStoreClient>()
-                  .WhenInjectedInto(typeof(LeaderboardsWorker))
+                  .WhenInjectedInto<LeaderboardsWorker>()
                   .InParentScope();
             kernel.Bind<ILeaderboardsStoreClient>()
                   .To<LeaderboardsStoreClient>()
-                  .WhenInjectedInto(typeof(DailyLeaderboardsWorker))
+                  .WhenInjectedInto<DailyLeaderboardsWorker>()
                   .AndWhen(SteamClientApiCredentialsAreSet)
                   .InParentScope();
             kernel.Bind<ILeaderboardsStoreClient>()
@@ -80,7 +75,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
             kernel.Bind<HttpMessageHandler>()
                   .ToMethod(GetSteamCommunityDataClientHandler)
-                  .WhenInjectedInto(typeof(SteamCommunityDataClient))
+                  .WhenInjectedInto<SteamCommunityDataClient>()
                   .InParentScope();
             kernel.Bind<ISteamCommunityDataClient>()
                   .To<SteamCommunityDataClient>()

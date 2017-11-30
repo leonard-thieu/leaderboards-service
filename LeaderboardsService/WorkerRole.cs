@@ -13,21 +13,33 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
     using static Util;
 
-    internal class WorkerRole : WorkerRoleBase<ILeaderboardsSettings>
+    internal sealed class WorkerRole : WorkerRoleBase<ILeaderboardsSettings>
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
 
-        public WorkerRole(ILeaderboardsSettings settings, TelemetryClient telemetryClient) : base("leaderboards", settings, telemetryClient)
+        public WorkerRole(ILeaderboardsSettings settings, TelemetryClient telemetryClient)
+            : this(settings, telemetryClient, runOnce: false, kernel: null, log: null) { }
+
+        internal WorkerRole(ILeaderboardsSettings settings, TelemetryClient telemetryClient, bool runOnce, IKernel kernel, ILog log) :
+            base("leaderboards", settings, telemetryClient, runOnce)
         {
-            kernel = KernelConfig.CreateKernel(settings, telemetryClient);
+            kernel = kernel ?? KernelConfig.CreateKernel();
+            kernel.Bind<ILeaderboardsSettings>()
+                  .ToConstant(settings);
+            kernel.Bind<TelemetryClient>()
+                  .ToConstant(telemetryClient);
+            this.kernel = kernel;
+
+            this.log = log ?? Log;
         }
 
         private readonly IKernel kernel;
+        private readonly ILog log;
 
         protected override async Task RunAsyncOverride(CancellationToken cancellationToken)
         {
             using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update leaderboards cycle"))
-            using (new UpdateActivity(Log, "leaderboards cycle"))
+            using (new UpdateActivity(log, "leaderboards cycle"))
             {
                 try
                 {
@@ -48,7 +60,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         {
             var worker = kernel.Get<LeaderboardsWorker>();
             using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update leaderboards"))
-            using (new UpdateActivity(Log, "leaderboards"))
+            using (new UpdateActivity(log, "leaderboards"))
             {
                 try
                 {
@@ -61,7 +73,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 catch (HttpRequestStatusException ex)
                 {
                     TelemetryClient.TrackException(ex);
-                    Log.Error("Failed to complete run due to an error.", ex);
+                    log.Error("Failed to complete run due to an error.", ex);
                     operation.Telemetry.Success = false;
                 }
                 catch (Exception) when (FailTelemetry(operation.Telemetry))
@@ -80,14 +92,14 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         {
             var worker = kernel.Get<DailyLeaderboardsWorker>();
             using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update daily leaderboards"))
-            using (new UpdateActivity(Log, "daily leaderboards"))
+            using (new UpdateActivity(log, "daily leaderboards"))
             {
                 try
                 {
                     if (!Settings.AreSteamClientCredentialsSet())
                     {
-                        Log.Warn("Using test data for calls to Steam Client API. Set your Steam user name and password to use the actual Steam Client API.");
-                        Log.Warn("Run this application with --help to find out how to set your Steam user name and password.");
+                        log.Warn("Using test data for calls to Steam Client API. Set your Steam user name and password to use the actual Steam Client API.");
+                        log.Warn("Run this application with --help to find out how to set your Steam user name and password.");
                     }
 
                     var leaderboards = await worker.GetDailyLeaderboardsAsync(Settings.DailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
@@ -99,7 +111,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                 catch (SteamClientApiException ex)
                 {
                     TelemetryClient.TrackException(ex);
-                    Log.Error("Failed to complete run due to an error.", ex);
+                    log.Error("Failed to complete run due to an error.", ex);
                     operation.Telemetry.Success = false;
                 }
                 catch (Exception) when (FailTelemetry(operation.Telemetry))
