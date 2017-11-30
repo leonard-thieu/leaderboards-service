@@ -12,6 +12,8 @@ using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
+    using static Util;
+
     internal sealed class LeaderboardsWorker
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(LeaderboardsWorker));
@@ -74,7 +76,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
+                catch (Exception) when (FailTelemetry(operation.Telemetry))
                 {
                     // Unreachable
                     throw;
@@ -116,7 +118,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
+                catch (Exception) when (FailTelemetry(operation.Telemetry))
                 {
                     // Unreachable
                     throw;
@@ -164,7 +166,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     return entries;
                 }
-                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
+                catch (Exception) when (FailTelemetry(operation.Telemetry))
                 {
                     // Unreachable
                     throw;
@@ -182,21 +184,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             IEnumerable<Leaderboard> leaderboards,
             CancellationToken cancellationToken)
         {
-            var entries = leaderboards
-                .SelectMany(e => e.Entries)
-                .ToList();
-            var players = entries
-                .Select(e => e.SteamId)
-                .Distinct()
-                .Select(s => new Player { SteamId = s })
-                .ToList();
-            var replays = entries
-                .Where(e => e.ReplayId != null)
-                .Select(e => e.ReplayId.Value)
-                .Distinct()
-                .Select(r => new Replay { ReplayId = r })
-                .ToList();
-
             using (var operation = telemetryClient.StartOperation<RequestTelemetry>("Store leaderboards"))
             {
                 try
@@ -209,6 +196,12 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     using (var activity = new StoreActivity(Log, "players"))
                     {
+                        var players = leaderboards
+                            .SelectMany(l => l.Entries)
+                            .Select(e => e.SteamId)
+                            .Distinct()
+                            .Select(s => new Player { SteamId = s });
+
                         var options = new BulkUpsertOptions { UpdateWhenMatched = false };
                         var rowsAffected = await storeClient.BulkUpsertAsync(players, options, cancellationToken).ConfigureAwait(false);
                         activity.Report(rowsAffected);
@@ -216,6 +209,13 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     using (var activity = new StoreActivity(Log, "replays"))
                     {
+                        var replays = leaderboards
+                            .SelectMany(l => l.Entries)
+                            .Where(e => e.ReplayId != null)
+                            .Select(e => e.ReplayId.Value)
+                            .Distinct()
+                            .Select(r => new Replay { ReplayId = r });
+
                         var options = new BulkUpsertOptions { UpdateWhenMatched = false };
                         var rowsAffected = await storeClient.BulkUpsertAsync(replays, options, cancellationToken).ConfigureAwait(false);
                         activity.Report(rowsAffected);
@@ -223,13 +223,15 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     using (var activity = new StoreActivity(Log, "entries"))
                     {
+                        var entries = leaderboards.SelectMany(l => l.Entries);
+
                         var rowsAffected = await storeClient.BulkInsertAsync(entries, cancellationToken).ConfigureAwait(false);
                         activity.Report(rowsAffected);
                     }
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
+                catch (Exception) when (FailTelemetry(operation.Telemetry))
                 {
                     // Unreachable
                     throw;

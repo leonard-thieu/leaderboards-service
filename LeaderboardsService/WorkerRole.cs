@@ -11,6 +11,8 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
+    using static Util;
+
     internal class WorkerRole : WorkerRoleBase<ILeaderboardsSettings>
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WorkerRole));
@@ -34,7 +36,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
+                catch (Exception) when (FailTelemetry(operation.Telemetry))
                 {
                     // Unreachable
                     throw;
@@ -62,7 +64,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     Log.Error("Failed to complete run due to an error.", ex);
                     operation.Telemetry.Success = false;
                 }
-                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
+                catch (Exception) when (FailTelemetry(operation.Telemetry))
                 {
                     // Unreachable
                     throw;
@@ -100,7 +102,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     Log.Error("Failed to complete run due to an error.", ex);
                     operation.Telemetry.Success = false;
                 }
-                catch (Exception) when (Util.FailTelemetry(operation.Telemetry))
+                catch (Exception) when (FailTelemetry(operation.Telemetry))
                 {
                     // Unreachable
                     throw;
