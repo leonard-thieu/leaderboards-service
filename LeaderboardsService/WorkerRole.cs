@@ -138,7 +138,6 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 try
                 {
-                    // This can throw
                     kernel.Dispose();
                 }
                 catch (Exception) { }
