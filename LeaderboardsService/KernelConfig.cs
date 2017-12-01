@@ -131,8 +131,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
         internal static HttpMessageHandler CreateSteamCommunityDataClientHandler(WebRequestHandler innerHandler, ILog log, TelemetryClient telemetryClient)
         {
-            var policy = SteamCommunityDataClient
-                .GetRetryStrategy()
+            var policy = Policy
+                .Handle<Exception>(SteamCommunityDataClient.IsTransient)
                 .WaitAndRetryAsync(
                     3,
                     ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
@@ -160,8 +160,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             var password = settings.SteamPassword.Decrypt();
             var timeout = settings.SteamClientTimeout;
 
-            var policy = SteamClientApiClient
-                .GetRetryStrategy()
+            var policy = Policy
+                .Handle<Exception>(SteamClientApiClient.IsTransient)
                 .WaitAndRetryAsync(
                     3,
                     ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
