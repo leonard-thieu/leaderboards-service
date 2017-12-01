@@ -127,8 +127,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
                     kernel.Dispose();
                 }
                 catch (Exception) { }
+
+                disposed = true;
             }
-            disposed = true;
 
             base.Dispose(disposing);
         }
