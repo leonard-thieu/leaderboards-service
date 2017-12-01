@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -18,13 +19,14 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         public FakeSteamCommunityDataClient()
         {
             var leaderboardsPath = Path.Combine("Data", "SteamCommunityData", "Leaderboards");
-            leaderboardsFiles = Directory.GetFiles(leaderboardsPath, "*.xml");
+            leaderboardsFiles = Directory.GetFiles(leaderboardsPath, "*.xml").ToDictionary(f => Path.GetFileName(f));
+
             var entriesPath = Path.Combine("Data", "SteamCommunityData", "Entries");
-            entriesFiles = Directory.GetFiles(entriesPath, "*.xml");
+            entriesFiles = Directory.GetFiles(entriesPath, "*.xml").ToDictionary(f => Path.GetFileName(f));
         }
 
-        private readonly string[] leaderboardsFiles;
-        private readonly string[] entriesFiles;
+        private readonly Dictionary<string, string> leaderboardsFiles;
+        private readonly Dictionary<string, string> entriesFiles;
 
         public Task<LeaderboardsEnvelope> GetLeaderboardsAsync(
             string communityGameName,
@@ -32,9 +34,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             CancellationToken cancellationToken = default(CancellationToken))
         {
             var fileName = $"{communityGameName}.xml";
-            var leaderboardFile = leaderboardsFiles.FirstOrDefault(f => Path.GetFileName(f) == fileName);
-
-            using (var fs = File.OpenRead(leaderboardFile))
+            using (var fs = File.OpenRead(leaderboardsFiles[fileName]))
             {
                 var leaderboards = (LeaderboardsEnvelope)LeaderboardsEnvelopeSerializer.Deserialize(fs);
 
@@ -52,9 +52,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             @params = @params ?? new GetLeaderboardEntriesParams();
 
             var fileName = $"{communityGameName}_{leaderboardId}_{@params.StartRange}.xml";
-            var entriesFile = entriesFiles.FirstOrDefault(f => Path.GetFileName(f) == fileName);
-
-            using (var fs = File.OpenRead(entriesFile))
+            using (var fs = File.OpenRead(entriesFiles[fileName]))
             {
                 var entries = (LeaderboardEntriesEnvelope)LeaderboardEntriesEnvelopeSerializer.Deserialize(fs);
 
