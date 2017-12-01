@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using log4net;
 using Microsoft.ApplicationInsights;
@@ -15,6 +16,7 @@ using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
+    [ExcludeFromCodeCoverage]
     internal static class KernelConfig
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
