@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
+    [ExcludeFromCodeCoverage]
     internal sealed class FakeLeaderboardsStoreClient : ILeaderboardsStoreClient
     {
         public Task<int> BulkInsertAsync<TEntity>(IEnumerable<TEntity> items, CancellationToken cancellationToken) where TEntity : class

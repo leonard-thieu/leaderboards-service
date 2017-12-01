@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -8,6 +9,7 @@ using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
+    [ExcludeFromCodeCoverage]
     internal sealed class FakeSteamCommunityDataClient : ISteamCommunityDataClient
     {
         private static readonly XmlSerializer LeaderboardsEnvelopeSerializer = XmlSerializer.FromTypes(new[] { typeof(LeaderboardsEnvelope) })[0];
