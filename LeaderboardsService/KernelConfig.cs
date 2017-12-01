@@ -180,6 +180,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         }
     }
 
+    [ExcludeFromCodeCoverage]
     internal static class IBindingInNamedWithOrOnSyntaxExtensions
     {
         public static IBindingInNamedWithOrOnSyntax<T> AndWhen<T>(
