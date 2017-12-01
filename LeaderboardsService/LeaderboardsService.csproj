@@ -1934,11 +1934,11 @@
     <Compile Include="LeaderboardsArgsParser.cs" />
     <Compile Include="LeaderboardsOptions.cs" />
     <Compile Include="LeaderboardsWorker.cs" />
+    <Compile Include="OperationTelemetryExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="SteamIDExtensions.cs" />
     <Compile Include="UGCHandleExtensions.cs" />
     <Compile Include="UInt64Extensions.cs" />
-    <Compile Include="Util.cs" />
     <Compile Include="WorkerRole.cs">
       <SubType>Component</SubType>
     </Compile>

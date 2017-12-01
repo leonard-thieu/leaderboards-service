@@ -3,16 +3,16 @@
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
     /// <summary>
-    /// Contains utility methods.
+    /// Contains extension methods for <see cref="OperationTelemetry"/>.
     /// </summary>
-    internal static class Util
+    internal static class OperationTelemetryExtensions
     {
         /// <summary>
-        /// An exception filter that marks <paramref name="telemetry"/> as non-successful.
+        /// An exception filter that marks <paramref name="telemetry"/> as unsuccessful.
         /// </summary>
         /// <param name="telemetry">The telemetry item to fail.</param>
         /// <returns>Always returns false.</returns>
-        public static bool FailTelemetry(OperationTelemetry telemetry)
+        public static bool MarkAsUnsuccessful(this OperationTelemetry telemetry)
         {
             telemetry.Success = false;
 

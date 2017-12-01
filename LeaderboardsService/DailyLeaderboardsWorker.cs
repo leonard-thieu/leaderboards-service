@@ -11,8 +11,6 @@ using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    using static Util;
-
     internal sealed class DailyLeaderboardsWorker
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DailyLeaderboardsWorker));
@@ -215,11 +213,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception) when (FailTelemetry(operation.Telemetry))
-                {
-                    // Unreachable
-                    throw;
-                }
+                catch (Exception) when (operation.Telemetry.MarkAsUnsuccessful()) { }
             }
         }
 
@@ -303,11 +297,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception) when (FailTelemetry(operation.Telemetry))
-                {
-                    // Unreachable
-                    throw;
-                }
+                catch (Exception) when (operation.Telemetry.MarkAsUnsuccessful()) { }
             }
         }
 

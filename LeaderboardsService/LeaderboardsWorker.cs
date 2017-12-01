@@ -12,8 +12,6 @@ using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {
-    using static Util;
-
     internal sealed class LeaderboardsWorker
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(LeaderboardsWorker));
@@ -76,11 +74,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception) when (FailTelemetry(operation.Telemetry))
-                {
-                    // Unreachable
-                    throw;
-                }
+                catch (Exception) when (operation.Telemetry.MarkAsUnsuccessful()) { }
             }
         }
 
@@ -118,11 +112,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception) when (FailTelemetry(operation.Telemetry))
-                {
-                    // Unreachable
-                    throw;
-                }
+                catch (Exception) when (operation.Telemetry.MarkAsUnsuccessful()) { }
             }
         }
 
@@ -166,7 +156,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     return entries;
                 }
-                catch (Exception) when (FailTelemetry(operation.Telemetry))
+                catch (Exception) when (operation.Telemetry.MarkAsUnsuccessful())
                 {
                     // Unreachable
                     throw;
@@ -231,11 +221,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (Exception) when (FailTelemetry(operation.Telemetry))
-                {
-                    // Unreachable
-                    throw;
-                }
+                catch (Exception) when (operation.Telemetry.MarkAsUnsuccessful()) { }
             }
         }
 
