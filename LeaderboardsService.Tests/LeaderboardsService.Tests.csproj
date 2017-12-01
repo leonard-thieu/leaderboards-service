@@ -76,8 +76,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DailyLeaderboardsWorkerTests.cs" />
-    <Compile Include="DatabaseTestsBase.cs" />
     <Compile Include="DataHelper.cs" />
+    <Compile Include="IntegrationTestsBase.cs" />
     <Compile Include="LeaderboardsArgsParserTests.cs" />
     <Compile Include="LeaderboardsWorkerTests.cs" />
     <Compile Include="SteamIDExtensionsTests.cs" />
