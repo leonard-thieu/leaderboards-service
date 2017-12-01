@@ -7,6 +7,7 @@ using Microsoft.ApplicationInsights.DataContracts;
 using Ninject;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
+using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
 using toofz.Services;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
@@ -64,7 +65,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (HttpRequestStatusException ex)
+                catch (HttpRequestStatusException ex) when (SteamCommunityDataClient.IsTransient(ex))
                 {
                     TelemetryClient.TrackException(ex);
                     log.Error("Failed to complete run due to an error.", ex);
@@ -98,7 +99,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (SteamClientApiException ex)
+                catch (SteamClientApiException ex) when (SteamClientApiClient.IsTransient(ex))
                 {
                     TelemetryClient.TrackException(ex);
                     log.Error("Failed to complete run due to an error.", ex);
