@@ -15,8 +15,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
     {
         public LeaderboardsWorkerTests()
         {
-            var leaderboardsInner = new List<Leaderboard>();
-            var leaderboards = new FakeDbSet<Leaderboard>(leaderboardsInner);
+            var leaderboards = new FakeDbSet<Leaderboard>();
             mockDb.Setup(d => d.Leaderboards).Returns(leaderboards);
 
             worker = new LeaderboardsWorker(appId, mockDb.Object, mockSteamCommunityDataClient.Object, mockStoreClient.Object, telemetryClient);
