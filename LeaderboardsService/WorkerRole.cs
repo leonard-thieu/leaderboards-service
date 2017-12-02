@@ -65,7 +65,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (HttpRequestStatusException ex) when (SteamCommunityDataClient.IsTransient(ex))
+                catch (HttpRequestStatusException ex)
+                    when (SteamCommunityDataClient.IsTransient(ex) ||
+                          LeaderboardsStoreClient.IsTransient(ex))
                 {
                     TelemetryClient.TrackException(ex);
                     log.Error("Failed to complete run due to an error.", ex);
@@ -99,7 +101,9 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (SteamClientApiException ex) when (SteamClientApiClient.IsTransient(ex))
+                catch (SteamClientApiException ex)
+                    when (SteamClientApiClient.IsTransient(ex) ||
+                          LeaderboardsStoreClient.IsTransient(ex))
                 {
                     TelemetryClient.TrackException(ex);
                     log.Error("Failed to complete run due to an error.", ex);
