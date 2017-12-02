@@ -61,7 +61,7 @@
       <Version>1.3.2</Version>
     </PackageReference>
     <PackageReference Include="toofz.NecroDancer.Leaderboards">
-      <Version>24.0.2</Version>
+      <Version>24.0.3</Version>
     </PackageReference>
     <PackageReference Include="toofz.NecroDancer.Leaderboards.Data">
       <Version>13.2.0</Version>
