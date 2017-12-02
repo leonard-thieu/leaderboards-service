@@ -6,13 +6,16 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {
     internal static class StorageHelper
     {
-        public static string GetDatabaseConnectionString()
+        private const string ProjectName = "LeaderboardsService";
+
+        public static string GetDatabaseConnectionString(string name)
         {
-            var connectionString = GetConnectionString(nameof(LeaderboardsContext));
+            var baseName = $"Test{ProjectName}{name}";
+            var connectionString = GetConnectionString(baseName);
             if (connectionString != null) { return connectionString; }
 
             var connectionFactory = new LocalDbConnectionFactory("mssqllocaldb");
-            using (var connection = connectionFactory.CreateConnection("TestLeaderboardsService"))
+            using (var connection = connectionFactory.CreateConnection(baseName))
             {
                 return connection.ConnectionString;
             }
@@ -20,8 +23,8 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 
         private static string GetConnectionString(string baseName)
         {
-            return Environment.GetEnvironmentVariable($"{baseName}TestConnectionString", EnvironmentVariableTarget.Machine) ??
-                ConfigurationManager.ConnectionStrings[baseName]?.ConnectionString;
+            return Environment.GetEnvironmentVariable($"{baseName}ConnectionString", EnvironmentVariableTarget.Machine) ??
+                   ConfigurationManager.ConnectionStrings[baseName]?.ConnectionString;
         }
     }
 }

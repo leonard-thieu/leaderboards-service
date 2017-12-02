@@ -28,12 +28,11 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             db.Database.Delete(); // Make sure it really dropped - needed for dirty database
             Database.SetInitializer(new LeaderboardsContextInitializer());
             db.Database.Initialize(force: true);
-            Database.SetInitializer(new NullDatabaseInitializer<LeaderboardsContext>());
         }
 
         internal readonly Settings settings;
         private readonly string settingsFileName = Path.GetTempFileName();
-        protected readonly string databaseConnectionString = StorageHelper.GetDatabaseConnectionString();
+        protected readonly string databaseConnectionString = StorageHelper.GetDatabaseConnectionString(nameof(LeaderboardsContext));
         protected readonly LeaderboardsContext db;
 
         public void Dispose()
@@ -46,7 +45,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
             if (disposing)
             {
                 if (File.Exists(settingsFileName)) { File.Delete(settingsFileName); }
-                db.Database.Delete();
+                db?.Database.Delete();
             }
         }
     }
