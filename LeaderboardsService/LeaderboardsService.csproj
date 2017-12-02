@@ -1946,6 +1946,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(APPVEYOR_REPO_NAME)' != '' ">nuget install SourceLink -ExcludeVersion -SolutionDirectory $(SolutionDir) -Verbosity quiet
-$(SolutionDir)packages\SourceLink\tools\SourceLink.exe index --proj $(ProjectPath) --proj-prop Configuration $(ConfigurationName) --url "https://raw.githubusercontent.com/%25APPVEYOR_REPO_NAME%25/{0}/%25%25var2%25%25"</PostBuildEvent>
+$(SolutionDir)packages\SourceLink\tools\SourceLink.exe index --proj $(ProjectPath) --proj-prop Configuration $(ConfigurationName) --url "https://raw.githubusercontent.com/%25APPVEYOR_REPO_NAME%25/{0}/%25%25var2%25%25" --repo %25APPVEYOR_BUILD_FOLDER%25</PostBuildEvent>
   </PropertyGroup>
 </Project>
