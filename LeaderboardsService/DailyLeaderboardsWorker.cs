@@ -42,7 +42,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             CancellationToken cancellationToken)
         {
             // TOOD: Workaround thread safety issue.
-            await steamClientApiClient.ConnectAndLogOnAsync().ConfigureAwait(false);
+            await steamClientApiClient.ConnectAndLogOnAsync(cancellationToken).ConfigureAwait(false);
 
             var leaderboards = new List<DailyLeaderboard>();
 
@@ -195,7 +195,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
             {
                 try
                 {
-                    await steamClientApiClient.ConnectAndLogOnAsync().ConfigureAwait(false);
+                    await steamClientApiClient.ConnectAndLogOnAsync(cancellationToken).ConfigureAwait(false);
 
                     steamClientApiClient.Progress = activity;
 

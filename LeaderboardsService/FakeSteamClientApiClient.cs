@@ -28,7 +28,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
         public IProgress<long> Progress { get; set; }
         public TimeSpan Timeout { get; set; }
 
-        public Task ConnectAndLogOnAsync() => Task.CompletedTask;
+        public Task ConnectAndLogOnAsync(CancellationToken cancellationToken = default(CancellationToken)) => Task.CompletedTask;
         public void Disconnect() { }
         public void Dispose() { }
 
