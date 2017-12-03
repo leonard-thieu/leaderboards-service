@@ -12,7 +12,6 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -42,6 +41,10 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GitInfo">
+      <Version>2.0.8</Version>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.ApplicationInsights.Log4NetAppender">
       <Version>2.4.1</Version>
     </PackageReference>
@@ -1944,8 +1947,8 @@
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(APPVEYOR_REPO_NAME)' != '' ">nuget install SourceLink -ExcludeVersion -SolutionDirectory $(SolutionDir) -Verbosity quiet
-$(SolutionDir)packages\SourceLink\tools\SourceLink.exe index --proj $(ProjectPath) --proj-prop Configuration $(ConfigurationName) --url "https://raw.githubusercontent.com/%25APPVEYOR_REPO_NAME%25/{0}/%25%25var2%25%25" --repo %25APPVEYOR_BUILD_FOLDER%25</PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="IndexSource" AfterTargets="CopyFilesToOutputDirectory" Condition=" '$(APPVEYOR_REPO_NAME)' != '' ">
+    <Exec Command="nuget install SourceLink -ExcludeVersion -SolutionDirectory $(ProjectDir) -Verbosity quiet" />
+    <Exec Command="$(ProjectDir)packages\SourceLink\tools\SourceLink.exe index --proj $(ProjectPath) --proj-prop Configuration $(Configuration) --proj-prop Platform $(Platform) --url %22https://raw.githubusercontent.com/$(APPVEYOR_REPO_NAME)/{0}/%25%25var2%25%25%22 --repo $(GitRoot)" />
+  </Target>
 </Project>
