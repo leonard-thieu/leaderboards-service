@@ -61,7 +61,7 @@
       <Version>1.1.1</Version>
     </PackageReference>
     <PackageReference Include="toofz.ExceptionRenderer">
-      <Version>1.4.0</Version>
+      <Version>1.4.1</Version>
     </PackageReference>
     <PackageReference Include="toofz.NecroDancer.Leaderboards">
       <Version>24.0.5</Version>
