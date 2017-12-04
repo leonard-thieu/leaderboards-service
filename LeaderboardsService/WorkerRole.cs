@@ -65,7 +65,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (HttpRequestStatusException ex)
+                catch (Exception ex)
                     when (SteamCommunityDataClient.IsTransient(ex) ||
                           LeaderboardsStoreClient.IsTransient(ex))
                 {
@@ -101,7 +101,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 
                     operation.Telemetry.Success = true;
                 }
-                catch (SteamClientApiException ex)
+                catch (Exception ex)
                     when (SteamClientApiClient.IsTransient(ex) ||
                           LeaderboardsStoreClient.IsTransient(ex))
                 {
