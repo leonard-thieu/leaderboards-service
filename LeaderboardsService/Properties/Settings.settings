@@ -30,7 +30,7 @@
       <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="SteamClientTimeout" Description="The amount of time to wait before a request to the Steam Client API times out." Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:01:40</Value>
+      <Value Profile="(Default)">00:00:30</Value>
     </Setting>
   </Settings>
 </SettingsFile>

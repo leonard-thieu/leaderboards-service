@@ -12,7 +12,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.3.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.5.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -166,7 +166,7 @@ namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsDescriptionAttribute("The amount of time to wait before a request to the Steam Client API times out.")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:01:40")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:30")]
         public global::System.TimeSpan SteamClientTimeout {
             get {
                 return ((global::System.TimeSpan)(this["SteamClientTimeout"]));
