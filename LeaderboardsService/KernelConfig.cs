@@ -10,9 +10,10 @@ using Ninject.Extensions.NamedScope;
 using Ninject.Syntax;
 using Polly;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
-using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
-using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
 using toofz.Services;
+using toofz.Steam;
+using toofz.Steam.ClientApi;
+using toofz.Steam.CommunityData;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
-using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
+using toofz.Steam.CommunityData;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {

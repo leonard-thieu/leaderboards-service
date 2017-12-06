@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
-using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
+using toofz.Steam.CommunityData;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {

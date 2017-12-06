@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Moq;
-using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
+using toofz.Steam.ClientApi;
 using Xunit;
 using static SteamKit2.SteamUserStats;
 

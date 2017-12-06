@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
+using toofz.Steam.CommunityData;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {

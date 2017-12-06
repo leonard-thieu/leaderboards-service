@@ -6,9 +6,9 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Ninject;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
-using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
-using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
 using toofz.Services;
+using toofz.Steam.ClientApi;
+using toofz.Steam.CommunityData;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
 {

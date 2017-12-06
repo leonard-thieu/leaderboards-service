@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Moq;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests.Properties;
-using toofz.NecroDancer.Leaderboards.Steam.CommunityData;
+using toofz.Steam.CommunityData;
 using Xunit;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests

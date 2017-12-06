@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SteamKit2;
-using toofz.NecroDancer.Leaderboards.Steam.ClientApi;
+using toofz.Steam.ClientApi;
 using static SteamKit2.SteamUserStats;
 using static SteamKit2.SteamUserStats.LeaderboardEntriesCallback;
 
