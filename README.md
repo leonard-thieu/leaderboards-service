@@ -19,8 +19,8 @@ Information about other projects that support **toofz** can be found in the [met
 
 ### Dependencies
 
-* [toofz Leaderboards Core](https://github.com/leonard-thieu/toofz-leaderboards-core)
-* [toofz Leaderboards Core (Data)](https://github.com/leonard-thieu/toofz-leaderboards-core-data)
+* [toofz Steam](https://github.com/leonard-thieu/toofz-steam)
+* [toofz Data](https://github.com/leonard-thieu/toofz-data)
 * [toofz Services Core](https://github.com/leonard-thieu/toofz-services-core)
 
 ## Requirements
