@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using log4net.Config;
 
-[assembly: AssemblyVersion("4.4.15.0")]
+[assembly: AssemblyVersion("4.4.16.0")]
 
 [assembly: AssemblyCopyright("Copyright © Leonard Thieu 2017")]
 [assembly: AssemblyProduct("toofz")]
