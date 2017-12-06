@@ -9,6 +9,7 @@ using Ninject.Activation;
 using Ninject.Extensions.NamedScope;
 using Ninject.Syntax;
 using Polly;
+using toofz.Data;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
 using toofz.Services;
 using toofz.Steam;

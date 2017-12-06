@@ -5,9 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
 using Moq;
+using toofz.Data;
 using toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests.Properties;
 using toofz.Steam.CommunityData;
 using Xunit;
+using Leaderboard = toofz.Data.Leaderboard;
 
 namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
 {

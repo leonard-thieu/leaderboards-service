@@ -5,6 +5,7 @@ using log4net;
 using Microsoft.ApplicationInsights;
 using Moq;
 using Ninject.Extensions.NamedScope;
+using toofz.Data;
 using toofz.Steam.ClientApi;
 using toofz.Steam.CommunityData;
 using Xunit;
