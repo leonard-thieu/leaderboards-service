@@ -10,7 +10,7 @@ using toofz.Steam.ClientApi;
 using static SteamKit2.SteamUserStats;
 using static SteamKit2.SteamUserStats.LeaderboardEntriesCallback;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+namespace toofz.Services.LeaderboardsService
 {
     [ExcludeFromCodeCoverage]
     internal sealed class FakeSteamClientApiClient : ISteamClientApiClient

@@ -1,8 +1,7 @@
 ﻿using System;
-using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
-using toofz.Services;
+using toofz.Services.LeaderboardsService.Properties;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
+namespace toofz.Services.LeaderboardsService.Tests
 {
     internal sealed class StubLeaderboardsSettings : ILeaderboardsSettings
     {

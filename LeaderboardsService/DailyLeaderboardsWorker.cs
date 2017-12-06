@@ -10,7 +10,7 @@ using Microsoft.ApplicationInsights.DataContracts;
 using toofz.Data;
 using toofz.Steam.ClientApi;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+namespace toofz.Services.LeaderboardsService
 {
     internal sealed class DailyLeaderboardsWorker
     {

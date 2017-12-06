@@ -10,13 +10,12 @@ using Ninject.Extensions.NamedScope;
 using Ninject.Syntax;
 using Polly;
 using toofz.Data;
-using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
-using toofz.Services;
+using toofz.Services.LeaderboardsService.Properties;
 using toofz.Steam;
 using toofz.Steam.ClientApi;
 using toofz.Steam.CommunityData;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+namespace toofz.Services.LeaderboardsService
 {
     [ExcludeFromCodeCoverage]
     internal static class KernelConfig

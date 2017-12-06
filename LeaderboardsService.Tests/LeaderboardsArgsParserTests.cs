@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
 using Moq;
-using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
-using toofz.Services;
+using toofz.Services.LeaderboardsService.Properties;
 using Xunit;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
+namespace toofz.Services.LeaderboardsService.Tests
 {
     public class LeaderboardsArgsParserTests
     {

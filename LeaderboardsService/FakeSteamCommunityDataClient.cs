@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using toofz.Steam.CommunityData;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+namespace toofz.Services.LeaderboardsService
 {
     [ExcludeFromCodeCoverage]
     internal sealed class FakeSteamCommunityDataClient : ISteamCommunityDataClient

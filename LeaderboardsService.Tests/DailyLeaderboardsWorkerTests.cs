@@ -10,7 +10,7 @@ using toofz.Steam.ClientApi;
 using Xunit;
 using static SteamKit2.SteamUserStats;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
+namespace toofz.Services.LeaderboardsService.Tests
 {
     public class DailyLeaderboardsWorkerTests
     {

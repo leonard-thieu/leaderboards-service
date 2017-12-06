@@ -12,7 +12,7 @@ using toofz.Data;
 using toofz.Steam.CommunityData;
 using Leaderboard = toofz.Data.Leaderboard;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+namespace toofz.Services.LeaderboardsService
 {
     internal sealed class LeaderboardsWorker
     {

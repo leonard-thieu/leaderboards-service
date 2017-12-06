@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.ApplicationInsights.Extensibility.Implementation;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+namespace toofz.Services.LeaderboardsService
 {
     /// <summary>
     /// Contains extension methods for <see cref="OperationTelemetry"/>.

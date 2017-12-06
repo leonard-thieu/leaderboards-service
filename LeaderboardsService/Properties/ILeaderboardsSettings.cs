@@ -1,7 +1,6 @@
 ﻿using System;
-using toofz.Services;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties
+namespace toofz.Services.LeaderboardsService.Properties
 {
     internal interface ILeaderboardsSettings : ISettings
     {

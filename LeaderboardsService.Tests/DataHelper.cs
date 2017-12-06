@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 using toofz.Steam.CommunityData;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
+namespace toofz.Services.LeaderboardsService.Tests
 {
     internal static class DataHelper
     {

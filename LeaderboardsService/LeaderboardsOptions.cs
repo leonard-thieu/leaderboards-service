@@ -1,7 +1,6 @@
 ﻿using System;
-using toofz.Services;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+namespace toofz.Services.LeaderboardsService
 {
     internal sealed class LeaderboardsOptions : Options
     {

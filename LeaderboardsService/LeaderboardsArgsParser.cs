@@ -2,10 +2,9 @@
 using System.IO;
 using System.Reflection;
 using Mono.Options;
-using toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties;
-using toofz.Services;
+using toofz.Services.LeaderboardsService.Properties;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+namespace toofz.Services.LeaderboardsService
 {
     internal sealed class LeaderboardsArgsParser : ArgsParser<LeaderboardsOptions, ILeaderboardsSettings>
     {

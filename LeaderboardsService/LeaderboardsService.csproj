@@ -7,7 +7,7 @@
     <ProjectGuid>{1678334C-DE8C-4DC4-B493-4454BC209E18}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>toofz.NecroDancer.Leaderboards.LeaderboardsService</RootNamespace>
+    <RootNamespace>toofz.Services.LeaderboardsService</RootNamespace>
     <AssemblyName>LeaderboardsService</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

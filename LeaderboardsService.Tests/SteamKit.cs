@@ -4,7 +4,7 @@ using SteamKit2;
 using static SteamKit2.SteamUserStats;
 using static SteamKit2.SteamUserStats.LeaderboardEntriesCallback;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Tests
+namespace toofz.Services.LeaderboardsService.Tests
 {
     internal class LeaderboardEntriesCallback : ILeaderboardEntriesCallback
     {

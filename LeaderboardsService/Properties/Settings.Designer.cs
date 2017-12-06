@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties {
+namespace toofz.Services.LeaderboardsService.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

@@ -1,4 +1,4 @@
-﻿namespace toofz.NecroDancer.Leaderboards.LeaderboardsService.Properties
+﻿namespace toofz.Services.LeaderboardsService.Properties
 {
     internal static class ILeaderboardsSettingsExtensions
     {

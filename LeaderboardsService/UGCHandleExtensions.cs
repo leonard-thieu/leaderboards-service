@@ -1,6 +1,6 @@
 ﻿using SteamKit2;
 
-namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+namespace toofz.Services.LeaderboardsService
 {
     internal static class UGCHandleExtensions
     {

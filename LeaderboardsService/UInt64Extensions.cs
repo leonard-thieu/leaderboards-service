@@ -1,4 +1,4 @@
-﻿namespace toofz.NecroDancer.Leaderboards.LeaderboardsService
+﻿namespace toofz.Services.LeaderboardsService
 {
     internal static class UInt64Extensions
     {
