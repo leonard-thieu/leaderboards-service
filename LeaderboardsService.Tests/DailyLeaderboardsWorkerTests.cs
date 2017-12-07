@@ -36,7 +36,7 @@ namespace toofz.Services.LeaderboardsService.Tests
 
         public class Constructor
         {
-            [Fact]
+            [DisplayFact]
             public void ReturnsInstance()
             {
                 // Arrange
@@ -59,7 +59,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             private readonly int limit = 100;
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact]
             public async Task ReturnsDailyLeaderboards()
             {
                 // Arrange
@@ -89,7 +89,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             private readonly int limit = 100;
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact]
             public async Task ReturnsStaleDailyLeaderboards()
             {
                 // Arrange
@@ -116,7 +116,7 @@ namespace toofz.Services.LeaderboardsService.Tests
         {
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact]
             public async Task CurrentDailyLeaderboardsExist_ReturnsExistingCurrentDailyLeaderboards()
             {
                 // Arrange
@@ -139,7 +139,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 mockSteamClientApiClient.Verify(s => s.FindLeaderboardAsync(appId, It.IsAny<string>(), cancellationToken), Times.Never);
             }
 
-            [Fact]
+            [DisplayFact]
             public async Task CurrentDailyLeaderboardsDoNotExist_GetsAndReturnsCurrentDailyLeaderboards()
             {
                 // Arrange
@@ -166,7 +166,7 @@ namespace toofz.Services.LeaderboardsService.Tests
 
         public class GetDailyLeaderboardNameMethod
         {
-            [Fact]
+            [DisplayFact("Amplified")]
             public void ProductIsAmplified_ReturnsNameStartingWithDLC()
             {
                 // Arrange
@@ -180,7 +180,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 Assert.Equal("DLC 13/9/2017_PROD", name);
             }
 
-            [Fact]
+            [DisplayFact("Classic")]
             public void ProductIsClassic_ReturnsName()
             {
                 // Arrange
@@ -194,7 +194,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 Assert.Equal("13/9/2017_PROD", name);
             }
 
-            [Fact]
+            [DisplayFact(nameof(ArgumentException))]
             public void ProductIsInvalid_ThrowsArgumentException()
             {
                 // Arrange
@@ -208,7 +208,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 });
             }
 
-            [Fact]
+            [DisplayFact]
             public void ReturnsName()
             {
                 // Arrange
@@ -227,7 +227,7 @@ namespace toofz.Services.LeaderboardsService.Tests
         {
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact]
             public async Task UpdatesLeaderboards()
             {
                 // Arrange
@@ -278,7 +278,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             private DailyLeaderboard leaderboard;
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact(nameof(DailyLeaderboard.LastUpdate))]
             public async Task SetsLastUpdate()
             {
                 // Arrange -> Act
@@ -288,7 +288,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 Assert.NotNull(leaderboard.LastUpdate);
             }
 
-            [Fact]
+            [DisplayFact]
             public async Task UpdatesLeaderboard()
             {
                 // Arrange
@@ -311,7 +311,7 @@ namespace toofz.Services.LeaderboardsService.Tests
         {
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact]
             public async Task StoresLeaderboards()
             {
                 // Arrange
@@ -325,7 +325,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<DailyLeaderboard>>(), null, cancellationToken), Times.Once);
             }
 
-            [Fact]
+            [DisplayFact]
             public async Task StoresPlayers()
             {
                 // Arrange
@@ -340,7 +340,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Player>>(), It.IsAny<BulkUpsertOptions>(), cancellationToken), Times.Once);
             }
 
-            [Fact]
+            [DisplayFact]
             public async Task StoresReplays()
             {
                 // Arrange
@@ -355,7 +355,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Replay>>(), It.IsAny<BulkUpsertOptions>(), cancellationToken), Times.Once);
             }
 
-            [Fact]
+            [DisplayFact]
             public async Task StoresEntries()
             {
                 // Arrange

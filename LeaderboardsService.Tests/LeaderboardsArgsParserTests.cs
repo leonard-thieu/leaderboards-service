@@ -22,7 +22,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             private readonly TextWriter errorWriter = new StringWriter();
             private readonly LeaderboardsArgsParser parser;
 
-            [Fact]
+            [DisplayFact]
             public void HelpFlagIsSpecified_ShowUsageInformation()
             {
                 // Arrange
@@ -54,7 +54,7 @@ options:
 
             #region SteamUserName
 
-            [Fact]
+            [DisplayFact(nameof(ILeaderboardsSettings.SteamUserName))]
             public void UserNameIsSpecified_SetSteamUserName()
             {
                 // Arrange
@@ -73,7 +73,7 @@ options:
                 Assert.Equal("myUserName", settings.SteamUserName);
             }
 
-            [Fact]
+            [DisplayFact(nameof(ILeaderboardsSettings.SteamUserName))]
             public void UserNameIsNotSpecifiedAndSteamUserNameIsSet_DoesNotSetSteamUserName()
             {
                 // Arrange
@@ -96,7 +96,7 @@ options:
 
             #region SteamPassword
 
-            [Fact]
+            [DisplayFact(nameof(ILeaderboardsSettings.SteamPassword))]
             public void PasswordIsSpecified_SetsSteamPassword()
             {
                 // Arrange
@@ -116,7 +116,7 @@ options:
                 Assert.Equal(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
             }
 
-            [Fact]
+            [DisplayFact(nameof(ILeaderboardsSettings.SteamPassword))]
             public void PasswordFlagIsSpecified_PromptsUserForPasswordAndSetsSteamPassword()
             {
                 // Arrange
@@ -139,7 +139,7 @@ options:
                 Assert.Equal(encrypted.Decrypt(), settings.SteamPassword.Decrypt());
             }
 
-            [Fact]
+            [DisplayFact(nameof(ILeaderboardsSettings.SteamPassword))]
             public void PasswordFlagIsNotSpecifiedAndSteamPasswordIsSet_DoesNotSetSteamPassword()
             {
                 // Arrange
@@ -162,7 +162,7 @@ options:
 
             #region DailyLeaderboardsPerUpdate
 
-            [Fact]
+            [DisplayFact(nameof(ILeaderboardsSettings.DailyLeaderboardsPerUpdate))]
             public void DailiesIsSpecified_SetsDailyLeaderboardsPerUpdate()
             {
                 // Arrange
@@ -181,7 +181,7 @@ options:
                 Assert.Equal(10, settings.DailyLeaderboardsPerUpdate);
             }
 
-            [Fact]
+            [DisplayFact(nameof(ILeaderboardsSettings.DailyLeaderboardsPerUpdate))]
             public void DailiesIsNotSpecified_DoesNotSetDailyLeaderboardsPerUpdate()
             {
                 // Arrange
@@ -204,7 +204,7 @@ options:
 
             #region SteamClientTimeout
 
-            [Fact]
+            [DisplayFact(nameof(ILeaderboardsSettings.SteamClientTimeout))]
             public void TimeoutIsSpecified_SetsSteamClientTimeout()
             {
                 // Arrange
@@ -223,7 +223,7 @@ options:
                 Assert.Equal(TimeSpan.FromMinutes(1), settings.SteamClientTimeout);
             }
 
-            [Fact]
+            [DisplayFact(nameof(ILeaderboardsSettings.SteamClientTimeout))]
             public void TimeoutIsNotSpecified_DoesNotSetSteamClientTimeout()
             {
                 // Arrange

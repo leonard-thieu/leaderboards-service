@@ -1,4 +1,5 @@
-﻿using SteamKit2;
+﻿using System;
+using SteamKit2;
 using Xunit;
 
 namespace toofz.Services.LeaderboardsService.Tests
@@ -7,14 +8,14 @@ namespace toofz.Services.LeaderboardsService.Tests
     {
         public class ToInt64Method
         {
-            [Fact]
-            public void ReturnsSteamIdAsInt64()
+            [DisplayFact(nameof(SteamID), nameof(Int64))]
+            public void ReturnsSteamIDAsInt64()
             {
                 // Arrange
                 var steamId = new SteamID(3489758347583);
 
                 // Act
-                var int64 = SteamIDExtensions.ToInt64(steamId);
+                var int64 = steamId.ToInt64();
 
                 // Assert
                 Assert.Equal(3489758347583, int64);

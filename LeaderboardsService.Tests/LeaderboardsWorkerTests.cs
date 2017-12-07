@@ -32,7 +32,7 @@ namespace toofz.Services.LeaderboardsService.Tests
 
         public class Constructor
         {
-            [Fact]
+            [DisplayFact]
             public void ReturnsInstance()
             {
                 // Arrange
@@ -54,7 +54,7 @@ namespace toofz.Services.LeaderboardsService.Tests
         {
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact]
             public async Task ReturnsLeaderboards()
             {
                 // Arrange -> Act
@@ -87,7 +87,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             private readonly IProgress<long> progress = Mock.Of<IProgress<long>>();
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact(nameof(ArgumentException))]
             public async Task NoEntries_DoesNotThrowArgumentException()
             {
                 // Arrange
@@ -100,7 +100,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 Assert.NotNull(leaderboard.LastUpdate);
             }
 
-            [Fact]
+            [DisplayFact]
             public async Task AddsUpdatedEntries()
             {
                 // Arrange -> Act
@@ -110,7 +110,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 Assert.Equal(entryCount, leaderboard.Entries.Count());
             }
 
-            [Fact]
+            [DisplayFact(nameof(Leaderboard.LastUpdate))]
             public async Task SetsLastUpdate()
             {
                 // Arrange -> Act
@@ -126,7 +126,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             private readonly IProgress<long> progress = Mock.Of<IProgress<long>>();
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact]
             public async Task ReturnsEntries()
             {
                 // Arrange
@@ -149,7 +149,7 @@ namespace toofz.Services.LeaderboardsService.Tests
         {
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
-            [Fact]
+            [DisplayFact]
             public async Task StoresLeaderboards()
             {
                 // Arrange
@@ -163,7 +163,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Leaderboard>>(), null, cancellationToken), Times.Once);
             }
 
-            [Fact]
+            [DisplayFact]
             public async Task StoresPlayers()
             {
                 // Arrange
@@ -178,7 +178,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Player>>(), It.IsAny<BulkUpsertOptions>(), cancellationToken), Times.Once);
             }
 
-            [Fact]
+            [DisplayFact]
             public async Task StoresReplays()
             {
                 // Arrange
@@ -193,7 +193,7 @@ namespace toofz.Services.LeaderboardsService.Tests
                 mockStoreClient.Verify(s => s.BulkUpsertAsync(It.IsAny<IEnumerable<Replay>>(), It.IsAny<BulkUpsertOptions>(), cancellationToken), Times.Once);
             }
 
-            [Fact]
+            [DisplayFact]
             public async Task StoresEntries()
             {
                 // Arrange

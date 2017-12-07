@@ -18,7 +18,7 @@ namespace toofz.Services.LeaderboardsService.Tests
         {
             private readonly Mock<ILog> mockLog = new Mock<ILog>();
 
-            [Fact]
+            [DisplayFact]
             public async Task ExecutesUpdateCycle()
             {
                 // Arrange
