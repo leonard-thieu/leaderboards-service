@@ -130,6 +130,9 @@
         <Component Id="owc8CC124ECA60830593E855269F2C68614" Guid="0cbd8724-812b-82e5-1498-9c99299e2890">
           <File Id="owf8CC124ECA60830593E855269F2C68614" Source="$(var.SourceDir)\System.ComponentModel.TypeConverter.dll" KeyPath="yes" />
         </Component>
+        <Component Id="owc87825AD24088BA4AD9E5EDAFF3FCD501" Guid="7f214f94-efe2-3088-7bcb-dcec926269c3">
+          <File Id="owf87825AD24088BA4AD9E5EDAFF3FCD501" Source="$(var.SourceDir)\System.Configuration.ConfigurationManager.dll" KeyPath="yes" />
+        </Component>
         <Component Id="owcA90D9D10E6DAB6E67011458672887086" Guid="054993ce-0abb-9441-3124-21f972454715">
           <File Id="owfA90D9D10E6DAB6E67011458672887086" Source="$(var.SourceDir)\System.Console.dll" KeyPath="yes" />
         </Component>
@@ -342,6 +345,9 @@
         </Component>
         <Component Id="owcCD07048BAA4A186C4C46EDDAE7408BE9" Guid="fec26fc5-0f79-ae52-46a4-1ed20b673c35">
           <File Id="owfCD07048BAA4A186C4C46EDDAE7408BE9" Source="$(var.SourceDir)\System.Security.SecureString.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc4A1838ED7CC671182334B29E19327C8B" Guid="e85e2712-f9f0-93e2-cacd-2d193c4aada8">
+          <File Id="owf4A1838ED7CC671182334B29E19327C8B" Source="$(var.SourceDir)\System.ServiceProcess.ServiceController.dll" KeyPath="yes" />
         </Component>
         <Component Id="owc9DE717553DF308353E4F1AD8553191F3" Guid="113c0221-beb8-56b6-2c47-3cf70203c0a4">
           <File Id="owf9DE717553DF308353E4F1AD8553191F3" Source="$(var.SourceDir)\System.Text.Encoding.dll" KeyPath="yes" />
