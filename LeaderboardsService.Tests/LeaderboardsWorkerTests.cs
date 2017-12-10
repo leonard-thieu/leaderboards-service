@@ -32,8 +32,8 @@ namespace toofz.Services.LeaderboardsService.Tests
 
         public class Constructor
         {
-            [DisplayFact]
-            public void ReturnsInstance()
+            [DisplayFact(nameof(LeaderboardsWorker))]
+            public void ReturnsLeaderboardsWorker()
             {
                 // Arrange
                 var appId = 247080U;
@@ -94,10 +94,13 @@ namespace toofz.Services.LeaderboardsService.Tests
                 entryCount = 0;
 
                 // Act
-                await worker.UpdateLeaderboardAsync(leaderboard, entryCount, progress, cancellationToken);
+                var ex = await Record.ExceptionAsync(() =>
+                {
+                    return worker.UpdateLeaderboardAsync(leaderboard, entryCount, progress, cancellationToken);
+                });
 
                 // Assert
-                Assert.NotNull(leaderboard.LastUpdate);
+                Assert.IsNotType<ArgumentException>(ex);
             }
 
             [DisplayFact]

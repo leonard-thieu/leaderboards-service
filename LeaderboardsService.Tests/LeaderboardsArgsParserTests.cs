@@ -55,7 +55,7 @@ options:
             #region SteamUserName
 
             [DisplayFact(nameof(ILeaderboardsSettings.SteamUserName))]
-            public void UserNameIsSpecified_SetSteamUserName()
+            public void UserNameIsSpecified_SetsSteamUserName()
             {
                 // Arrange
                 string[] args = { "--username=myUserName" };

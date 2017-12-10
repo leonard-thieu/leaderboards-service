@@ -36,8 +36,8 @@ namespace toofz.Services.LeaderboardsService.Tests
 
         public class Constructor
         {
-            [DisplayFact]
-            public void ReturnsInstance()
+            [DisplayFact(nameof(DailyLeaderboardsWorker))]
+            public void ReturnsDailyLeaderboardsWorker()
             {
                 // Arrange
                 var appId = 247080U;
@@ -209,7 +209,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             }
 
             [DisplayFact]
-            public void ReturnsName()
+            public void ReturnsDailyLeaderboardName()
             {
                 // Arrange
                 var product = "classic";
@@ -228,7 +228,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
             [DisplayFact]
-            public async Task UpdatesLeaderboards()
+            public async Task UpdatesLeaderboardsWithFreshEntries()
             {
                 // Arrange
                 var leaderboard1 = new DailyLeaderboard { LeaderboardId = 1 };
@@ -289,7 +289,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             }
 
             [DisplayFact]
-            public async Task UpdatesLeaderboard()
+            public async Task UpdatesLeaderboardWithFreshEntries()
             {
                 // Arrange
                 leaderboardEntriesCallback.Entries.AddRange(new[]
@@ -312,7 +312,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             private readonly CancellationToken cancellationToken = CancellationToken.None;
 
             [DisplayFact]
-            public async Task StoresLeaderboards()
+            public async Task StoresDailyLeaderboards()
             {
                 // Arrange
                 var leaderboard = new DailyLeaderboard();
@@ -356,7 +356,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             }
 
             [DisplayFact]
-            public async Task StoresEntries()
+            public async Task StoresDailyEntries()
             {
                 // Arrange
                 var leaderboard = new DailyLeaderboard();
