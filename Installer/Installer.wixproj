@@ -7,23 +7,20 @@
     <ProjectGuid>383589ec-4c17-46f6-aaa2-54091e88c202</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Package</OutputType>
-    <!-- If MSIProductVersion not passed in, try to get it from AppVeyor environment -->
-    <MSIProductVersion Condition=" '$(MSIProductVersion)' == '' AND '$(APPVEYOR_BUILD_VERSION)' != '' ">$(APPVEYOR_BUILD_VERSION)</MSIProductVersion>
-    <!-- Default to 0.0.1 for developer builds -->
-    <MSIProductVersion Condition=" '$(MSIProductVersion)' == '' ">0.0.1</MSIProductVersion>
-    <OutputName>toofz-leaderboards-service-v$(MSIProductVersion)</OutputName>
+    <FileVersion Condition="'$(FileVersion)' == ''">0.0.0</FileVersion>
+    <OutputName>toofz-leaderboards-service-v$(FileVersion)</OutputName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;MSIProductVersion=$(MSIProductVersion)</DefineConstants>
+    <DefineConstants>Debug;MSIProductVersion=$(FileVersion)</DefineConstants>
     <WixVariables>WixUIBannerBmp=Resources\Banner.jpg;WixUIDialogBmp=Resources\Dialog.jpg</WixVariables>
     <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>MSIProductVersion=$(MSIProductVersion)</DefineConstants>
+    <DefineConstants>MSIProductVersion=$(FileVersion)</DefineConstants>
     <WixVariables>WixUIBannerBmp=Resources\Banner.jpg;WixUIDialogBmp=Resources\Dialog.jpg</WixVariables>
     <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
