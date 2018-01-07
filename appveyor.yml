@@ -27,11 +27,11 @@ build:
   
 test_script:
   - ps: |
-      $projectPath = Resolve-Path .\LeaderboardsService.Tests\LeaderboardsService.Tests.csproj
+      $projectPath = Resolve-Path .\test\LeaderboardsService.Tests\LeaderboardsService.Tests.csproj
       msbuild $projectPath /nologo /verbosity:minimal /target:Test
       
 artifacts:
-  - path: \Installer\bin\$(Configuration)\*.msi
+  - path: \src\Installer\bin\$(Configuration)\*.msi
     name: LeaderboardsService
 
 deploy:
