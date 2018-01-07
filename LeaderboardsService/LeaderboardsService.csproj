@@ -67,7 +67,7 @@
       <Version>1.5.1</Version>
     </PackageReference>
     <PackageReference Include="toofz.Services">
-      <Version>16.0.0</Version>
+      <Version>15.0.8</Version>
     </PackageReference>
     <PackageReference Include="toofz.Steam">
       <Version>26.0.2</Version>
