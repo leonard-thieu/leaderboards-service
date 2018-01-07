@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using toofz.Data;
 using toofz.Steam.ClientApi;
@@ -16,23 +17,20 @@ namespace toofz.Services.LeaderboardsService.Tests
     {
         public DailyLeaderboardsWorkerTests()
         {
-            var products = new FakeDbSet<Product>(productsInner);
-            mockDb.Setup(d => d.Products).Returns(products);
-            var dailyLeaderboards = new FakeDbSet<DailyLeaderboard>(dailyLeaderboardsInner);
-            mockDb.Setup(d => d.DailyLeaderboards).Returns(dailyLeaderboards);
+            necroDancerContextOptions = new DbContextOptionsBuilder<NecroDancerContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .Options;
+            var db = new NecroDancerContext(necroDancerContextOptions);
 
-            worker = new DailyLeaderboardsWorker(appId, mockDb.Object, mockSteamClientApiClient.Object, mockStoreClient.Object, telemetryClient);
+            worker = new DailyLeaderboardsWorker(appId, db, mockSteamClientApiClient.Object, mockStoreClient.Object, telemetryClient);
         }
 
         private readonly uint appId = 247080;
-        private readonly Mock<ILeaderboardsContext> mockDb = new Mock<ILeaderboardsContext>();
+        private readonly DbContextOptions<NecroDancerContext> necroDancerContextOptions;
         private readonly Mock<ISteamClientApiClient> mockSteamClientApiClient = new Mock<ISteamClientApiClient>();
         private readonly Mock<ILeaderboardsStoreClient> mockStoreClient = new Mock<ILeaderboardsStoreClient>();
         private readonly TelemetryClient telemetryClient = new TelemetryClient();
         private readonly DailyLeaderboardsWorker worker;
-
-        private readonly List<Product> productsInner = new List<Product>();
-        private readonly List<DailyLeaderboard> dailyLeaderboardsInner = new List<DailyLeaderboard>();
 
         public class Constructor
         {
@@ -64,14 +62,19 @@ namespace toofz.Services.LeaderboardsService.Tests
             {
                 // Arrange
                 var today = DateTime.UtcNow.Date;
-                dailyLeaderboardsInner.AddRange(new[]
+                using (var db = new NecroDancerContext(necroDancerContextOptions))
                 {
-                    new DailyLeaderboard { Date = today.AddDays(-1) },
-                });
-                productsInner.AddRange(new[]
-                {
-                    new Product(0, "classic", "Classic"),
-                });
+                    db.DailyLeaderboards.AddRange(new[]
+                    {
+                        new DailyLeaderboard { Date = today.AddDays(-1) },
+                    });
+                    db.Products.AddRange(new[]
+                    {
+                        new Product(0, "classic", "Classic"),
+                    });
+
+                    db.SaveChanges();
+                }
                 mockSteamClientApiClient
                     .Setup(s => s.FindLeaderboardAsync(appId, It.IsAny<string>(), cancellationToken))
                     .ReturnsAsync(Mock.Of<IFindOrCreateLeaderboardCallback>());
@@ -94,11 +97,24 @@ namespace toofz.Services.LeaderboardsService.Tests
             {
                 // Arrange
                 var today = new DateTime(2017, 9, 13);
-                dailyLeaderboardsInner.AddRange(new[]
+                using (var db = new NecroDancerContext(necroDancerContextOptions))
                 {
-                    new DailyLeaderboard { Date = today },
-                    new DailyLeaderboard { Date = today.AddDays(-1) },
-                });
+                    db.DailyLeaderboards.AddRange(new[]
+                    {
+                        new DailyLeaderboard
+                        {
+                            LeaderboardId = 1,
+                            Date = today.AddDays(-1),
+                        },
+                        new DailyLeaderboard
+                        {
+                            LeaderboardId = 2,
+                            Date = today,
+                        },
+                    });
+
+                    db.SaveChanges();
+                }
 
                 // Act
                 var staleDailyLeaderboards = await worker.GetStaleDailyLeaderboardsAsync(today, limit, cancellationToken);
@@ -127,7 +143,12 @@ namespace toofz.Services.LeaderboardsService.Tests
                     ProductId = 0,
                     Product = new Product(0, "classic", "Classic"),
                 };
-                dailyLeaderboardsInner.Add(current);
+                using (var db = new NecroDancerContext(necroDancerContextOptions))
+                {
+                    db.DailyLeaderboards.Add(current);
+
+                    db.SaveChanges();
+                }
 
                 // Act
                 var leaderboards = await worker.GetCurrentDailyLeaderboardsAsync(today, cancellationToken);
@@ -143,12 +164,17 @@ namespace toofz.Services.LeaderboardsService.Tests
             public async Task CurrentDailyLeaderboardsDoNotExist_GetsAndReturnsCurrentDailyLeaderboards()
             {
                 // Arrange
-                productsInner.AddRange(new[]
-                {
-                    new Product(0, "classic", "Classic"),
-                    new Product(1, "amplified", "Amplified"),
-                });
                 var today = new DateTime(2017, 9, 13);
+                using (var db = new NecroDancerContext(necroDancerContextOptions))
+                {
+                    db.Products.AddRange(new[]
+                    {
+                        new Product(0, "classic", "Classic"),
+                        new Product(1, "amplified", "Amplified"),
+                    });
+
+                    db.SaveChanges();
+                }
                 mockSteamClientApiClient
                     .Setup(s => s.FindLeaderboardAsync(appId, It.IsAny<string>(), cancellationToken))
                     .ReturnsAsync(Mock.Of<IFindOrCreateLeaderboardCallback>());

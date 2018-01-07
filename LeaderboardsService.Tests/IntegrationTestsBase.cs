@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.Entity;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 using toofz.Data;
 using toofz.Services.LeaderboardsService.Properties;
 using Xunit;
@@ -24,16 +24,19 @@ namespace toofz.Services.LeaderboardsService.Tests
                 ssp.GetSettingsWriter = () => File.CreateText(settingsFileName);
             }
 
-            db = new LeaderboardsContext(databaseConnectionString);
-            db.Database.Delete(); // Make sure it really dropped - needed for dirty database
-            Database.SetInitializer(new LeaderboardsContextInitializer());
-            db.Database.Initialize(force: true);
+            var options = new DbContextOptionsBuilder<NecroDancerContext>()
+                .UseSqlServer(databaseConnectionString)
+                .Options;
+
+            db = new NecroDancerContext(options);
+            db.Database.EnsureDeleted();
+            db.Database.Migrate();
         }
 
         internal readonly Settings settings;
         private readonly string settingsFileName = Path.GetTempFileName();
-        protected readonly string databaseConnectionString = StorageHelper.GetDatabaseConnectionString(nameof(LeaderboardsContext));
-        protected readonly LeaderboardsContext db;
+        protected readonly string databaseConnectionString = StorageHelper.GetDatabaseConnectionString(Constants.NecroDancerContextName);
+        protected readonly NecroDancerContext db;
 
         public void Dispose()
         {
@@ -45,7 +48,7 @@ namespace toofz.Services.LeaderboardsService.Tests
             if (disposing)
             {
                 if (File.Exists(settingsFileName)) { File.Delete(settingsFileName); }
-                db?.Database.Delete();
+                db.Database.EnsureDeleted();
             }
         }
     }

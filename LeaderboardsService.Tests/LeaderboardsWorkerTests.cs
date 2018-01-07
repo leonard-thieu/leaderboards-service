@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using toofz.Data;
 using toofz.Services.LeaderboardsService.Tests.Properties;
@@ -17,18 +18,20 @@ namespace toofz.Services.LeaderboardsService.Tests
     {
         public LeaderboardsWorkerTests()
         {
-            var leaderboards = new FakeDbSet<Leaderboard>();
-            mockDb.Setup(d => d.Leaderboards).Returns(leaderboards);
+            var db = new NecroDancerContext(necroDancerContextOptions);
 
-            worker = new LeaderboardsWorker(appId, mockDb.Object, mockSteamCommunityDataClient.Object, mockStoreClient.Object, telemetryClient);
+            worker = new LeaderboardsWorker(appId, db, mockSteamCommunityDataClient.Object, mockStoreClient.Object, telemetryClient);
         }
 
         private readonly uint appId = 247080;
-        private readonly Mock<ILeaderboardsContext> mockDb = new Mock<ILeaderboardsContext>();
         private readonly Mock<ISteamCommunityDataClient> mockSteamCommunityDataClient = new Mock<ISteamCommunityDataClient>();
         private readonly Mock<ILeaderboardsStoreClient> mockStoreClient = new Mock<ILeaderboardsStoreClient>();
         private readonly TelemetryClient telemetryClient = new TelemetryClient();
         private readonly LeaderboardsWorker worker;
+
+        private readonly DbContextOptions<NecroDancerContext> necroDancerContextOptions = new DbContextOptionsBuilder<NecroDancerContext>()
+            .UseInMemoryDatabase(databaseName: Constants.NecroDancerContextName)
+            .Options;
 
         public class Constructor
         {

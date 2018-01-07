@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using Ninject;
 using Ninject.Extensions.NamedScope;
 using toofz.Data;
 using toofz.Steam.ClientApi;
@@ -28,10 +30,18 @@ namespace toofz.Services.LeaderboardsService.Tests
 
                 var kernel = KernelConfig.CreateKernel();
 
+                kernel.Rebind<DbContextOptions<NecroDancerContext>>()
+                      .ToMethod(c =>
+                      {
+                          return new DbContextOptionsBuilder<NecroDancerContext>()
+                            .UseSqlServer(databaseConnectionString)
+                            .Options;
+                      })
+                      .WhenInjectedInto<NecroDancerContext>();
+
                 kernel.Rebind<string>()
                       .ToConstant(databaseConnectionString)
-                      .WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
-
+                      .WhenInjectedInto<LeaderboardsStoreClient>();
                 kernel.Rebind<ILeaderboardsStoreClient>()
                       .To<LeaderboardsStoreClient>()
                       .InParentScope();
@@ -43,6 +53,11 @@ namespace toofz.Services.LeaderboardsService.Tests
                 kernel.Rebind<ISteamClientApiClient>()
                       .To<FakeSteamClientApiClient>()
                       .InParentScope();
+
+                using (var context = kernel.Get<NecroDancerContext>())
+                {
+                    context.EnsureSeedData();
+                }
 
                 var log = mockLog.Object;
 

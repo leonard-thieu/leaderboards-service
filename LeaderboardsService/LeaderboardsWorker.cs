@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.EntityFrameworkCore;
 using toofz.Data;
 using toofz.Steam.CommunityData;
 using Leaderboard = toofz.Data.Leaderboard;

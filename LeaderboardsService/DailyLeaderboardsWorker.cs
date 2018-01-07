@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.EntityFrameworkCore;
 using toofz.Data;
 using toofz.Steam.ClientApi;
 
@@ -67,7 +67,7 @@ namespace toofz.Services.LeaderboardsService
                     orderby l.LastUpdate
                     where l.Date != today
                     select l)
-                    .Take(() => limit)
+                    .Take(limit)
                     .ToListAsync(cancellationToken);
         }
 

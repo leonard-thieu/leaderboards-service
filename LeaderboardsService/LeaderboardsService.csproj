@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
     <DocumentationFile>bin\Release\net461\LeaderboardsService.xml</DocumentationFile>
   </PropertyGroup>
 
@@ -26,7 +28,7 @@
     <PackageReference Include="toofz.Build" Version="2.3.1">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="toofz.Data" Version="9.0.1" />
+    <PackageReference Include="toofz.Data" Version="10.0.1" />
     <PackageReference Include="toofz.ExceptionRenderer" Version="1.5.1" />
     <PackageReference Include="toofz.Services" Version="15.0.8" />
     <PackageReference Include="toofz.Steam" Version="26.0.2" />
@@ -46,4 +48,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="_DebugSymbolsProjectOutputGroup" AfterTargets="GetTargetPath">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="DebugSymbolsProjectOutputGroupDependencies">
+      <Output TaskParameter="TargetOutputs" ItemName="ReferenceCopyLocalPaths" />
+    </MSBuild>
+  </Target>
 </Project>

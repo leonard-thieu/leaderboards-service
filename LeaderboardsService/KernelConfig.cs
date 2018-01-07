@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using log4net;
 using Microsoft.ApplicationInsights;
+using Microsoft.EntityFrameworkCore;
 using Ninject;
 using Ninject.Activation;
 using Ninject.Extensions.NamedScope;
@@ -32,7 +32,6 @@ namespace toofz.Services.LeaderboardsService
             try
             {
                 RegisterServices(kernel);
-
                 return kernel;
             }
             catch
@@ -55,14 +54,16 @@ namespace toofz.Services.LeaderboardsService
                   .ToMethod(GetAppId)
                   .WhenInjectedInto(typeof(LeaderboardsWorker), typeof(DailyLeaderboardsWorker));
 
-            kernel.Bind<string>()
-                  .ToMethod(GetLeaderboardsConnectionString)
-                  .WhenInjectedInto(typeof(LeaderboardsContext), typeof(LeaderboardsStoreClient));
-
+            kernel.Bind<DbContextOptions<NecroDancerContext>>()
+                  .ToMethod(GetNecroDancerContextOptions)
+                  .WhenInjectedInto<NecroDancerContext>();
             kernel.Bind<ILeaderboardsContext>()
-                  .To<LeaderboardsContext>()
+                  .To<NecroDancerContext>()
                   .InParentScope();
 
+            kernel.Bind<string>()
+                  .ToMethod(GetLeaderboardsConnectionString)
+                  .WhenInjectedInto<LeaderboardsStoreClient>();
             kernel.Bind<ILeaderboardsStoreClient>()
                   .To<LeaderboardsStoreClient>()
                   .WhenInjectedInto<LeaderboardsWorker>()
@@ -111,15 +112,21 @@ namespace toofz.Services.LeaderboardsService
 
             if (settings.LeaderboardsConnectionString == null)
             {
-                var connectionFactory = new LocalDbConnectionFactory("mssqllocaldb");
-                using (var connection = connectionFactory.CreateConnection("NecroDancer"))
-                {
-                    settings.LeaderboardsConnectionString = new EncryptedSecret(connection.ConnectionString, settings.KeyDerivationIterations);
-                    settings.Save();
-                }
+                var connectionString = StorageHelper.GetLocalDbConnectionString("NecroDancer");
+                settings.LeaderboardsConnectionString = new EncryptedSecret(connectionString, settings.KeyDerivationIterations);
+                settings.Save();
             }
 
             return settings.LeaderboardsConnectionString.Decrypt();
+        }
+
+        private static DbContextOptions<NecroDancerContext> GetNecroDancerContextOptions(IContext c)
+        {
+            var connectionString = GetLeaderboardsConnectionString(c);
+
+            return new DbContextOptionsBuilder<NecroDancerContext>()
+                .UseSqlServer(connectionString)
+                .Options;
         }
 
         private static HttpMessageHandler GetSteamCommunityDataClientHandler(IContext c)
