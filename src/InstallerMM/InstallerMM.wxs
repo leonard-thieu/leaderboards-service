@@ -7,7 +7,7 @@
     the Debug TargetDir is hardcoded. IsWiX also happens to incorrectly only use the first instance of a 
     custom variable so SourceDir can be redefined to the correct directory for building.
   -->
-  <?define SourceDir="..\LeaderboardsService\bin\Debug"?>
+  <?define SourceDir="..\LeaderboardsService\bin\Debug\net461"?>
   <?undef SourceDir?>
   <?define SourceDir="$(var.LeaderboardsService.TargetDir)"?>
   <Module Id="InstallerMM" Language="1033" Version="1.0.0.0">
@@ -171,6 +171,9 @@
         </Component>
         <Component Id="owc8CC124ECA60830593E855269F2C68614" Guid="0cbd8724-812b-82e5-1498-9c99299e2890">
           <File Id="owf8CC124ECA60830593E855269F2C68614" Source="$(var.SourceDir)\System.ComponentModel.TypeConverter.dll" KeyPath="yes" />
+        </Component>
+        <Component Id="owc87825AD24088BA4AD9E5EDAFF3FCD501" Guid="7f214f94-efe2-3088-7bcb-dcec926269c3">
+          <File Id="owf87825AD24088BA4AD9E5EDAFF3FCD501" Source="$(var.SourceDir)\System.Configuration.ConfigurationManager.dll" KeyPath="yes" />
         </Component>
         <Component Id="owcA90D9D10E6DAB6E67011458672887086" Guid="054993ce-0abb-9441-3124-21f972454715">
           <File Id="owfA90D9D10E6DAB6E67011458672887086" Source="$(var.SourceDir)\System.Console.dll" KeyPath="yes" />

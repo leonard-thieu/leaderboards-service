@@ -10,8 +10,6 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
     <DocumentationFile>bin\Release\net461\LeaderboardsService.xml</DocumentationFile>
   </PropertyGroup>
 
@@ -24,14 +22,14 @@
     <PackageReference Include="Microsoft.ApplicationInsights.WindowsServer" Version="2.4.1" />
     <PackageReference Include="Ninject" Version="3.3.4" />
     <PackageReference Include="Ninject.Extensions.NamedScope" Version="3.3.0" />
-    <PackageReference Include="toofz.ActivityTracing" Version="1.1.1" />
+    <PackageReference Include="toofz.ActivityTracing" Version="1.1.3" />
     <PackageReference Include="toofz.Build" Version="2.3.1">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="toofz.Data" Version="10.0.1" />
-    <PackageReference Include="toofz.ExceptionRenderer" Version="1.5.1" />
-    <PackageReference Include="toofz.Services" Version="15.0.8" />
-    <PackageReference Include="toofz.Steam" Version="26.0.2" />
+    <PackageReference Include="toofz.Data" Version="10.0.3" />
+    <PackageReference Include="toofz.ExceptionRenderer" Version="1.5.3" />
+    <PackageReference Include="toofz.Services" Version="15.0.10" />
+    <PackageReference Include="toofz.Steam" Version="26.0.4" />
   </ItemGroup>
 
   <ItemGroup>
