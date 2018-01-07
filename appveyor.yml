@@ -14,13 +14,12 @@ environment:
   FileVersion: '%APPVEYOR_BUILD_VERSION%'
   PackageServerApiKey:
     secure: XZmbJDCK5oiqhbLt1y7UXM6aCYPpF2tm/bJMUJzBsCe1fd2TuwXyaz99RN+bDpHw
-  PROJECT_PACKAGE: toofz-leaderboards-service-v%APPVEYOR_BUILD_VERSION%.msi
 notifications:
   - provider: Slack
     incoming_webhook:
       secure: c7l1UmXHWpIDLL1awU4r0QYVPToYM/XjV8trFyD1oHArKxs/vBTYiKYScr1EhCUgmEX6sAFBTvkUHF/k5B+cGjzqRBR2XkAO+lzk8cHQ1FI=
 artifacts:
-  - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
+  - path: \Installer\bin\$(Configuration)\*.msi
     name: LeaderboardsService
   
 before_build:
