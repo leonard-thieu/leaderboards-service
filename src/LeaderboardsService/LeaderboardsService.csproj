@@ -10,6 +10,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <!-- DebugSymbols is set to true so that dependency symbols are copied into the output directory. -->
+    <DebugSymbols>true</DebugSymbols>
     <DocumentationFile>bin\Release\net461\LeaderboardsService.xml</DocumentationFile>
   </PropertyGroup>
 
