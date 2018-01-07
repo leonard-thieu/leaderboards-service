@@ -1,16 +1,5 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.CompilerServices;
 using log4net.Config;
-
-[assembly: AssemblyVersion("4.4.17.0")]
-
-[assembly: AssemblyCopyright("Copyright © Leonard Thieu 2017")]
-[assembly: AssemblyProduct("toofz")]
-
-[assembly: AssemblyTitle("toofz Leaderboards Service")]
-
-[assembly: ComVisible(false)]
 
 [assembly: InternalsVisibleTo("LeaderboardsService.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

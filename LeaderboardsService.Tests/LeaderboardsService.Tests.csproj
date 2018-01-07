@@ -1,100 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{19061691-0AAB-4AF6-B7E5-8349E6060CAC}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net461</TargetFramework>
     <RootNamespace>toofz.Services.LeaderboardsService.Tests</RootNamespace>
-    <AssemblyName>LeaderboardsService.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
+    <PackageReference Include="Moq" Version="4.7.145" />
+    <PackageReference Include="toofz.Build" Version="2.3.1" />
+    <PackageReference Include="toofz.FakeDbSet" Version="1.1.5" />
+    <PackageReference Include="toofz.Xunit" Version="1.0.9" />
+    <PackageReference Include="xunit.assert" Version="2.3.1" />
+    <PackageReference Include="xunit.core" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="Moq">
-      <Version>4.7.145</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.FakeDbSet">
-      <Version>1.1.5</Version>
-    </PackageReference>
-    <PackageReference Include="toofz.Xunit">
-      <Version>1.0.9</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.assert">
-      <Version>2.3.1</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.core">
-      <Version>2.3.1</Version>
-    </PackageReference>
-    <PackageReference Include="xunit.runner.visualstudio">
-      <Version>2.3.1</Version>
-    </PackageReference>
+    <ProjectReference Include="..\LeaderboardsService\LeaderboardsService.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\LeaderboardsService\LeaderboardsService.csproj">
-      <Project>{1678334c-de8c-4dc4-b493-4454bc209e18}</Project>
-      <Name>LeaderboardsService</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="log.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Content Include="Resources\LeaderboardEntries_2047387_1.xml" />
-    <Content Include="Resources\LeaderboardEntries_2047540_1.xml" />
-    <Content Include="Resources\LeaderboardEntries_2047540_2.xml" />
-    <Content Include="Resources\Leaderboards_247080.xml" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="DailyLeaderboardsWorkerTests.cs" />
-    <Compile Include="DataHelper.cs" />
-    <Compile Include="IntegrationTestsBase.cs" />
-    <Compile Include="LeaderboardsArgsParserTests.cs" />
-    <Compile Include="LeaderboardsWorkerTests.cs" />
-    <Compile Include="SteamIDExtensionsTests.cs" />
-    <Compile Include="SteamKit.cs" />
-    <Compile Include="StorageHelper.cs" />
-    <Compile Include="StubLeaderboardsSettings.cs" />
-    <Compile Include="UGCHandleExtensionsTests.cs" />
-    <Compile Include="UInt64ExtensionsTests.cs" />
-    <Compile Include="WorkerRoleTests.cs" />
+    <None Update="log.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

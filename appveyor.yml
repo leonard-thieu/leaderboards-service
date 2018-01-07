@@ -1,42 +1,38 @@
-version: 4.4.17.{build}
+version: $(VersionPrefix).{build}
 image: Visual Studio 2017
 
-branches:
-  only:
-    - master
+skip_branch_with_pr: true
+skip_commits:
+  files:
+    - LICENSE
+    - README.md
 configuration:
   - Release
 environment:
-  PROJECT: LeaderboardsService
+  VersionPrefix: 0.0.0
+  VersionSuffix: dev
+  FileVersion: '%APPVEYOR_BUILD_VERSION%'
+  PackageServerApiKey:
+    secure: XZmbJDCK5oiqhbLt1y7UXM6aCYPpF2tm/bJMUJzBsCe1fd2TuwXyaz99RN+bDpHw
   PROJECT_PACKAGE: toofz-leaderboards-service-v%APPVEYOR_BUILD_VERSION%.msi
 notifications:
   - provider: Slack
     incoming_webhook:
       secure: c7l1UmXHWpIDLL1awU4r0QYVPToYM/XjV8trFyD1oHArKxs/vBTYiKYScr1EhCUgmEX6sAFBTvkUHF/k5B+cGjzqRBR2XkAO+lzk8cHQ1FI=
-assembly_info:
-  patch: true
-  file: AssemblyInfo.cs
-  assembly_version: $(appveyor_build_version)
 artifacts:
   - path: Installer\bin\$(configuration)\$(PROJECT_PACKAGE)
-    name: $(PROJECT)
-
-init:
-  - git config --global core.autocrlf input
-install:
-  - nuget update -Self
-  - git clone https://github.com/leonard-thieu/toofz-build.git Scripts
-
+    name: LeaderboardsService
+  
 before_build:
-  - appveyor-retry nuget restore -Verbosity quiet
+  - nuget restore -Verbosity quiet
 build:
-  project: $(PROJECT).sln
+  project: LeaderboardsService.sln
   verbosity: minimal
-
+  
 test_script:
-  - ps: .\Scripts\Test-Project.ps1
-after_test:
-  - ps: .\Scripts\Submit-CodeCoverageResults.ps1
+  - ps: |
+      $projectPath = Resolve-Path .\LeaderboardsService.Tests\LeaderboardsService.Tests.csproj
+      msbuild $projectPath /nologo /verbosity:minimal /target:Test
 
 deploy:
   - provider: Environment
