@@ -18,9 +18,6 @@ notifications:
   - provider: Slack
     incoming_webhook:
       secure: c7l1UmXHWpIDLL1awU4r0QYVPToYM/XjV8trFyD1oHArKxs/vBTYiKYScr1EhCUgmEX6sAFBTvkUHF/k5B+cGjzqRBR2XkAO+lzk8cHQ1FI=
-artifacts:
-  - path: \Installer\bin\$(Configuration)\*.msi
-    name: LeaderboardsService
   
 before_build:
   - nuget restore -Verbosity quiet
@@ -32,6 +29,10 @@ test_script:
   - ps: |
       $projectPath = Resolve-Path .\LeaderboardsService.Tests\LeaderboardsService.Tests.csproj
       msbuild $projectPath /nologo /verbosity:minimal /target:Test
+      
+artifacts:
+  - path: \Installer\bin\$(Configuration)\*.msi
+    name: LeaderboardsService
 
 deploy:
   - provider: Environment
