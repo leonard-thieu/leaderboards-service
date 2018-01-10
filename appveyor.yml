@@ -12,8 +12,6 @@ environment:
   VersionPrefix: 0.0.0
   VersionSuffix: dev
   FileVersion: '%APPVEYOR_BUILD_VERSION%'
-  PackageServerApiKey:
-    secure: XZmbJDCK5oiqhbLt1y7UXM6aCYPpF2tm/bJMUJzBsCe1fd2TuwXyaz99RN+bDpHw
 notifications:
   - provider: Slack
     incoming_webhook:
