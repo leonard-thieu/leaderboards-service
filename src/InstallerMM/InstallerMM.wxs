@@ -4,10 +4,10 @@
   <?define ComponentRules="OneToOne"?>
   <!--
     Workaround to get Files and Folders support in IsWix. IsWix does not support WiX variables so the path to 
-    the Debug TargetDir is hardcoded. IsWiX also happens to incorrectly only use the first instance of a 
+    the Release TargetDir is hardcoded. IsWiX also happens to incorrectly only use the first instance of a 
     custom variable so SourceDir can be redefined to the correct directory for building.
   -->
-  <?define SourceDir="..\LeaderboardsService\bin\Debug\net461"?>
+  <?define SourceDir="..\LeaderboardsService\bin\Release\net461"?>
   <?undef SourceDir?>
   <?define SourceDir="$(var.LeaderboardsService.TargetDir)"?>
   <Module Id="InstallerMM" Language="1033" Version="1.0.0.0">
@@ -454,17 +454,11 @@
         <Component Id="owc3DB53B2906C145586B6B72A09D1A0258" Guid="5c15e329-3e8c-a000-86f1-a8a8f4f89384">
           <File Id="owf3DB53B2906C145586B6B72A09D1A0258" Source="$(var.SourceDir)\toofz.ActivityTracing.pdb" KeyPath="yes" />
         </Component>
-        <Component Id="owcC3D444C949E13544F1A10FBA4B81CAEF" Guid="e92b9340-8070-61ea-8f0c-5d1f239ffd25">
-          <File Id="owfC3D444C949E13544F1A10FBA4B81CAEF" Source="$(var.SourceDir)\toofz.Data.Core.dll" KeyPath="yes" />
+        <Component Id="owcFB822A131C20A0331063BA97786290E7" Guid="83f17df4-2490-a708-394c-8a63f64faf68">
+          <File Id="owfFB822A131C20A0331063BA97786290E7" Source="$(var.SourceDir)\toofz.Data.dll" KeyPath="yes" />
         </Component>
-        <Component Id="owc2022B848E094C4A8D281A55A476C53C1" Guid="ad5ca5b6-cd53-4b86-8b8d-34f79924b70d">
-          <File Id="owf2022B848E094C4A8D281A55A476C53C1" Source="$(var.SourceDir)\toofz.Data.Core.pdb" KeyPath="yes" />
-        </Component>
-        <Component Id="owc7200FEA5446FE81B754D858B7348C061" Guid="27638721-1974-2b7b-0f94-bc90343ed16c">
-          <File Id="owf7200FEA5446FE81B754D858B7348C061" Source="$(var.SourceDir)\toofz.Data.LeaderboardsStoreClient.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="owc2C8A906934F5684E49E7F9AA6C860BF5" Guid="79325142-7ff8-9e5a-651f-02e2976afdd4">
-          <File Id="owf2C8A906934F5684E49E7F9AA6C860BF5" Source="$(var.SourceDir)\toofz.Data.LeaderboardsStoreClient.pdb" KeyPath="yes" />
+        <Component Id="owc8E6EE74B72B86ECE1DEC983DFF898219" Guid="220ec6dd-a6d1-82d8-88f2-0a805249ef75">
+          <File Id="owf8E6EE74B72B86ECE1DEC983DFF898219" Source="$(var.SourceDir)\toofz.Data.pdb" KeyPath="yes" />
         </Component>
         <Component Id="owc33F0D99DD7C4188BDD78532D39650910" Guid="23099e66-0afa-bb58-a24c-929a6bcfdc10">
           <File Id="owf33F0D99DD7C4188BDD78532D39650910" Source="$(var.SourceDir)\toofz.ExceptionRenderer.dll" KeyPath="yes" />

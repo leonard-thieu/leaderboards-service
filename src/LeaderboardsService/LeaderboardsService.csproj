@@ -27,7 +27,7 @@
     <PackageReference Include="toofz.Build" Version="2.4.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="toofz.Data" Version="10.0.3" />
+    <PackageReference Include="toofz.Data" Version="10.0.4" />
     <PackageReference Include="toofz.ExceptionRenderer" Version="1.5.3" />
     <PackageReference Include="toofz.Services" Version="15.0.10" />
     <PackageReference Include="toofz.Steam" Version="26.0.4" />
