@@ -7,12 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Ninject;
 using Ninject.Activation;
 using Ninject.Extensions.NamedScope;
-using Ninject.Syntax;
 using Polly;
 using toofz.Data;
 using toofz.Services.LeaderboardsService.Properties;
 using toofz.Steam;
-using toofz.Steam.ClientApi;
 using toofz.Steam.CommunityData;
 
 namespace toofz.Services.LeaderboardsService
@@ -20,6 +18,9 @@ namespace toofz.Services.LeaderboardsService
     [ExcludeFromCodeCoverage]
     internal static class KernelConfig
     {
+        // The dev database is intended for development and demonstration scenarios.
+        private const string DevDatabaseName = "DevNecroDancer";
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
         /// <summary>
@@ -52,30 +53,20 @@ namespace toofz.Services.LeaderboardsService
 
             kernel.Bind<uint>()
                   .ToMethod(GetAppId)
-                  .WhenInjectedInto(typeof(LeaderboardsWorker), typeof(DailyLeaderboardsWorker));
-
-            kernel.Bind<DbContextOptions<NecroDancerContext>>()
-                  .ToMethod(GetNecroDancerContextOptions)
-                  .WhenInjectedInto<NecroDancerContext>();
-            kernel.Bind<ILeaderboardsContext>()
-                  .To<NecroDancerContext>()
-                  .InParentScope();
+                  .WhenInjectedInto<LeaderboardsWorker>();
 
             kernel.Bind<string>()
                   .ToMethod(GetLeaderboardsConnectionString)
-                  .WhenInjectedInto<LeaderboardsStoreClient>();
-            kernel.Bind<ILeaderboardsStoreClient>()
-                  .To<LeaderboardsStoreClient>()
-                  .WhenInjectedInto<LeaderboardsWorker>()
-                  .InParentScope();
-            kernel.Bind<ILeaderboardsStoreClient>()
-                  .To<LeaderboardsStoreClient>()
-                  .WhenInjectedInto<DailyLeaderboardsWorker>()
-                  .AndWhen(SteamClientApiCredentialsAreSet)
-                  .InParentScope();
-            kernel.Bind<ILeaderboardsStoreClient>()
-                  .To<FakeLeaderboardsStoreClient>()
-                  .InParentScope();
+                  .WhenInjectedInto(typeof(NecroDancerContextOptionsBuilder), typeof(LeaderboardsStoreClient))
+                  .InScope(c => UpdateCycleScope.Instance);
+            kernel.Bind<DbContextOptionsBuilder<NecroDancerContext>>()
+                  .To<NecroDancerContextOptionsBuilder>();
+            kernel.Bind<DbContextOptions<NecroDancerContext>>()
+                  .ToMethod(GetNecroDancerContextOptions);
+            kernel.Bind<ILeaderboardsContext>()
+                  .To<NecroDancerContext>()
+                  .InParentScope()
+                  .OnActivation(InitializeNecroDancerContext);
 
             kernel.Bind<HttpMessageHandler>()
                   .ToMethod(GetSteamCommunityDataClientHandler)
@@ -85,20 +76,14 @@ namespace toofz.Services.LeaderboardsService
                   .To<SteamCommunityDataClient>()
                   .InParentScope();
 
-            kernel.Bind<ISteamClientApiClient>()
-                  .ToMethod(GetSteamClientApiClient)
-                  .When(SteamClientApiCredentialsAreSet)
-                  .InParentScope();
-            kernel.Bind<ISteamClientApiClient>()
-                  .To<FakeSteamClientApiClient>()
+            kernel.Bind<ILeaderboardsStoreClient>()
+                  .To<LeaderboardsStoreClient>()
                   .InParentScope();
 
             kernel.Bind<LeaderboardsWorker>()
                   .ToSelf()
-                  .InScope(c => c);
-            kernel.Bind<DailyLeaderboardsWorker>()
-                  .ToSelf()
-                  .InScope(c => c);
+                  .InScope(c => UpdateCycleScope.Instance)
+                  .OnDeactivation(_ => UpdateCycleScope.Instance = new object());
         }
 
         private static uint GetAppId(IContext c)
@@ -106,28 +91,42 @@ namespace toofz.Services.LeaderboardsService
             return c.Kernel.Get<ILeaderboardsSettings>().AppId;
         }
 
+        #region Database
+
         private static string GetLeaderboardsConnectionString(IContext c)
         {
             var settings = c.Kernel.Get<ILeaderboardsSettings>();
 
-            if (settings.LeaderboardsConnectionString == null)
+            // Get the connection string from settings if it's available; otherwise, use the default.
+            var connectionString = settings.LeaderboardsConnectionString?.Decrypt() ??
+                                   StorageHelper.GetLocalDbConnectionString("NecroDancer");
+
+            // Check if any players are in the database. If there are none (i.e. toofz Leaderboards Service hasn't been run),
+            // use the dev database instead as it will be seeded with test data.
+            var options = new DbContextOptionsBuilder<NecroDancerContext>()
+                .UseSqlServer(connectionString)
+                .Options;
+
+            using (var context = new NecroDancerContext(options))
             {
-                var connectionString = StorageHelper.GetLocalDbConnectionString("NecroDancer");
-                settings.LeaderboardsConnectionString = new EncryptedSecret(connectionString, settings.KeyDerivationIterations);
-                settings.Save();
+                InitializeNecroDancerContext(context);
             }
 
-            return settings.LeaderboardsConnectionString.Decrypt();
+            return connectionString;
         }
 
         private static DbContextOptions<NecroDancerContext> GetNecroDancerContextOptions(IContext c)
         {
-            var connectionString = GetLeaderboardsConnectionString(c);
-
-            return new DbContextOptionsBuilder<NecroDancerContext>()
-                .UseSqlServer(connectionString)
-                .Options;
+            return c.Kernel.Get<NecroDancerContextOptionsBuilder>().Options;
         }
+
+        private static void InitializeNecroDancerContext(NecroDancerContext context)
+        {
+            context.Database.Migrate();
+            context.EnsureSeedData();
+        }
+
+        #endregion
 
         private static HttpMessageHandler GetSteamCommunityDataClientHandler(IContext c)
         {
@@ -158,48 +157,17 @@ namespace toofz.Services.LeaderboardsService
             });
         }
 
-        private static SteamClientApiClient GetSteamClientApiClient(IContext c)
+        private sealed class UpdateCycleScope
         {
-            var settings = c.Kernel.Get<ILeaderboardsSettings>();
-            var telemetryClient = c.Kernel.Get<TelemetryClient>();
-            var log = c.Kernel.Get<ILog>();
-
-            var userName = settings.SteamUserName;
-            var password = settings.SteamPassword.Decrypt();
-            var timeout = settings.SteamClientTimeout;
-
-            var policy = Policy
-                .Handle<Exception>(SteamClientApiClient.IsTransient)
-                .WaitAndRetryAsync(
-                    3,
-                    ExponentialBackoff.GetSleepDurationProvider(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2)),
-                    (ex, duration) =>
-                    {
-                        telemetryClient.TrackException(ex);
-                        if (log.IsDebugEnabled) { log.Debug($"Retrying in {duration}...", ex); }
-                    });
-
-            return new SteamClientApiClient(userName, password, policy, telemetryClient) { Timeout = timeout };
-        }
-
-        private static bool SteamClientApiCredentialsAreSet(IRequest r)
-        {
-            return r.ParentContext.Kernel.Get<ILeaderboardsSettings>().AreSteamClientCredentialsSet();
+            public static object Instance { get; set; } = new object();
         }
     }
 
-    [ExcludeFromCodeCoverage]
-    internal static class IBindingInNamedWithOrOnSyntaxExtensions
+    internal sealed class NecroDancerContextOptionsBuilder : DbContextOptionsBuilder<NecroDancerContext>
     {
-        public static IBindingInNamedWithOrOnSyntax<T> AndWhen<T>(
-            this IBindingInNamedWithOrOnSyntax<T> binding,
-            Func<IRequest, bool> condition)
+        public NecroDancerContextOptionsBuilder(string connectionString)
         {
-            var config = binding.BindingConfiguration;
-            var originalCondition = config.Condition;
-            config.Condition = r => originalCondition(r) && condition(r);
-
-            return binding;
+            this.UseSqlServer(connectionString);
         }
     }
 }

@@ -7,7 +7,6 @@ using Microsoft.ApplicationInsights.DataContracts;
 using Ninject;
 using toofz.Data;
 using toofz.Services.LeaderboardsService.Properties;
-using toofz.Steam.ClientApi;
 using toofz.Steam.CommunityData;
 
 namespace toofz.Services.LeaderboardsService
@@ -43,7 +42,6 @@ namespace toofz.Services.LeaderboardsService
                 try
                 {
                     await UpdateLeaderboardsAsync(cancellationToken).ConfigureAwait(false);
-                    await UpdateDailyLeaderboardsAsync(cancellationToken).ConfigureAwait(false);
 
                     operation.Telemetry.Success = true;
                 }
@@ -67,42 +65,6 @@ namespace toofz.Services.LeaderboardsService
                 }
                 catch (Exception ex)
                     when (SteamCommunityDataClient.IsTransient(ex) ||
-                          LeaderboardsStoreClient.IsTransient(ex))
-                {
-                    TelemetryClient.TrackException(ex);
-                    log.Error("Failed to complete run due to an error.", ex);
-                    operation.Telemetry.Success = false;
-                }
-                catch (Exception) when (operation.Telemetry.MarkAsUnsuccessful()) { }
-                finally
-                {
-                    kernel.Release(worker);
-                }
-            }
-        }
-
-        private async Task UpdateDailyLeaderboardsAsync(CancellationToken cancellationToken)
-        {
-            var worker = kernel.Get<DailyLeaderboardsWorker>();
-            using (var operation = TelemetryClient.StartOperation<RequestTelemetry>("Update daily leaderboards"))
-            using (new UpdateActivity(log, "daily leaderboards"))
-            {
-                try
-                {
-                    if (!Settings.AreSteamClientCredentialsSet())
-                    {
-                        log.Warn("Using test data for calls to Steam Client API. Set your Steam user name and password to use the actual Steam Client API.");
-                        log.Warn("Run this application with --help to find out how to set your Steam user name and password.");
-                    }
-
-                    var leaderboards = await worker.GetDailyLeaderboardsAsync(Settings.DailyLeaderboardsPerUpdate, cancellationToken).ConfigureAwait(false);
-                    await worker.UpdateDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-                    await worker.StoreDailyLeaderboardsAsync(leaderboards, cancellationToken).ConfigureAwait(false);
-
-                    operation.Telemetry.Success = true;
-                }
-                catch (Exception ex)
-                    when (SteamClientApiClient.IsTransient(ex) ||
                           LeaderboardsStoreClient.IsTransient(ex))
                 {
                     TelemetryClient.TrackException(ex);

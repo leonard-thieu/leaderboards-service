@@ -8,7 +8,6 @@ using Moq;
 using Ninject;
 using Ninject.Extensions.NamedScope;
 using toofz.Data;
-using toofz.Steam.ClientApi;
 using toofz.Steam.CommunityData;
 using Xunit;
 
@@ -50,10 +49,6 @@ namespace toofz.Services.LeaderboardsService.Tests
                       .To<FakeSteamCommunityDataClient>()
                       .InParentScope();
 
-                kernel.Rebind<ISteamClientApiClient>()
-                      .To<FakeSteamClientApiClient>()
-                      .InParentScope();
-
                 using (var context = kernel.Get<NecroDancerContext>())
                 {
                     context.EnsureSeedData();
@@ -70,7 +65,6 @@ namespace toofz.Services.LeaderboardsService.Tests
 
                 // Assert
                 Assert.True(db.Leaderboards.Any(l => l.LastUpdate != null));
-                Assert.True(db.DailyLeaderboards.Any(l => l.LastUpdate != null));
             }
         }
     }

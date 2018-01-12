@@ -100,36 +100,6 @@ namespace toofz.Services.LeaderboardsService.Properties {
         }
         
         /// <summary>
-        /// The user name used to log on to Steam.
-        /// </summary>
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.SettingsDescriptionAttribute("The user name used to log on to Steam.")]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public string SteamUserName {
-            get {
-                return ((string)(this["SteamUserName"]));
-            }
-            set {
-                this["SteamUserName"] = value;
-            }
-        }
-        
-        /// <summary>
-        /// The password used to log on to Steam.
-        /// </summary>
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.SettingsDescriptionAttribute("The password used to log on to Steam.")]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::toofz.Services.EncryptedSecret SteamPassword {
-            get {
-                return ((global::toofz.Services.EncryptedSecret)(this["SteamPassword"]));
-            }
-            set {
-                this["SteamPassword"] = value;
-            }
-        }
-        
-        /// <summary>
         /// The connection string used to connect to the leaderboards database.
         /// </summary>
         [global::System.Configuration.UserScopedSettingAttribute()]
@@ -141,38 +111,6 @@ namespace toofz.Services.LeaderboardsService.Properties {
             }
             set {
                 this["LeaderboardsConnectionString"] = value;
-            }
-        }
-        
-        /// <summary>
-        /// The maxinum number of daily leaderboards to update per cycle.
-        /// </summary>
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.SettingsDescriptionAttribute("The maxinum number of daily leaderboards to update per cycle.")]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public int DailyLeaderboardsPerUpdate {
-            get {
-                return ((int)(this["DailyLeaderboardsPerUpdate"]));
-            }
-            set {
-                this["DailyLeaderboardsPerUpdate"] = value;
-            }
-        }
-        
-        /// <summary>
-        /// The amount of time to wait before a request to the Steam Client API times out.
-        /// </summary>
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.SettingsDescriptionAttribute("The amount of time to wait before a request to the Steam Client API times out.")]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:00:30")]
-        public global::System.TimeSpan SteamClientTimeout {
-            get {
-                return ((global::System.TimeSpan)(this["SteamClientTimeout"]));
-            }
-            set {
-                this["SteamClientTimeout"] = value;
             }
         }
     }

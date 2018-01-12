@@ -17,20 +17,8 @@
     <Setting Name="KeyDerivationIterations" Description="The number of rounds to execute a key derivation function." Type="System.Int32" Scope="User">
       <Value Profile="(Default)">20000</Value>
     </Setting>
-    <Setting Name="SteamUserName" Description="The user name used to log on to Steam." GenerateDefaultValueInCode="false" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="SteamPassword" Description="The password used to log on to Steam." GenerateDefaultValueInCode="false" Type="toofz.Services.EncryptedSecret" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="LeaderboardsConnectionString" Description="The connection string used to connect to the leaderboards database." GenerateDefaultValueInCode="false" Type="toofz.Services.EncryptedSecret" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="DailyLeaderboardsPerUpdate" Description="The maxinum number of daily leaderboards to update per cycle." Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
-    <Setting Name="SteamClientTimeout" Description="The amount of time to wait before a request to the Steam Client API times out." Type="System.TimeSpan" Scope="User">
-      <Value Profile="(Default)">00:00:30</Value>
     </Setting>
   </Settings>
 </SettingsFile>
