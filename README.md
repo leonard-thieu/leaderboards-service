@@ -22,11 +22,31 @@ Information about other projects that support **toofz** can be found in the [met
 * [toofz Steam](https://github.com/leonard-thieu/toofz-steam)
 * [toofz Data](https://github.com/leonard-thieu/toofz-data)
 * [toofz Services Core](https://github.com/leonard-thieu/toofz-services-core)
+* [toofz Build](https://github.com/leonard-thieu/toofz-build)
 
 ## Requirements
 
 * .NET Framework 4.6.1
-* MS SQL Server
+* SQL Server
+
+## Contributing
+
+Contributions are welcome for toofz Leaderboards Service.
+
+* Want to report a bug or request a feature? [File a new issue](https://github.com/leonard-thieu/leaderboards-service/issues).
+* Join in design conversations.
+* Fix an issue or add a new feature.
+  * Aside from trivial issues, please raise a discussion before submitting a pull request.
+
+### Development
+
+#### Requirements
+
+* Visual Studio 2017
+
+#### Getting started
+
+Open the solution file and build. Use Test Explorer to run tests.
 
 ## License
 
